@@ -31,9 +31,26 @@ Siehe [Umsetzungsplan](../../../../docs/umsetzungsplan.md), Abschnitte 3, 5.3 un
 
 ## Erster Schritt (B0)
 
-Reine Fachlogik in `domain/`, nur mit Vitest:
-- `rules.ts` mit den Regeln aus Spec B 3.2 und 3.3, angepasst nach Umsetzungsplan 5.3
-- `state.ts` mit der State Machine aus Spec B 4
-- zod-Schemas aus Spec B 7.4
-- Prompt-Dateien P1 bis P5
-- `content/missions.json`, `help_cards.json`, `checklists.json`
+Umgesetzt: reine Fachlogik ohne Datenbank, ohne UI und ohne KI-Aufrufe, getestet mit Vitest. Alle Abweichungen von der Spec und alle Ermessensentscheidungen stehen in [DECISIONS.md](DECISIONS.md).
+
+- `domain/rules.ts`: Regeln aus Spec B 3.2 bis 3.4, angepasst nach Umsetzungsplan 5.3. "Mission abgeschlossen" statt "bestanden", Stufenaufstieg, Boss, Planfreigabe per Code, Vorschlag für den E-Pfad, formative Sterne mit Schnittstelle für Dimension D, Schlüssel, Joker, Hilfskarten, XP, Streak nach Berliner Kalendertag, Abzeichen.
+- `domain/state.ts`: State Machine aus Spec B 4 als reine Funktion `transition(lauf, ereignis)` mit Guards und Fehlerergebnis statt Ausnahme. Stufenvarianten, höchstens zwei Planrunden, ein zweiter Überarbeitungsversuch, Zustand `held_for_adult`. Jeder Zustand ist reine JSON-Daten und damit wiederaufnehmbar.
+- `domain/exercises.ts`: Bewertung der sieben Übungstypen aus Spec B 5, Station bestanden bei 3 von 4, Ziehung mit Seed ohne Wiederholung innerhalb der letzten 10 Aufgaben.
+- `domain/quotes.ts`: Prüfung, ob alle Zitate eines Text-Feedbacks wörtlich im bestätigten Text stehen.
+- `schemas/`: zod-Schemas für die Ausgaben von P1 bis P5 (Spec B 7.4), für Übungen, Inhalte, Selbstkontrolle und das Frontmatter der Prompts.
+- `prompts/`: P1 bis P5 als `<name>.v1.md` mit Frontmatter (`name`, `version`, `model_tier`, `output_schema`).
+- `content/`: Missionen, Hilfskarten, Checklisten, Stationen und 14 Beispielübungen (zwei je Typ). Alles mit `approved: false`, bis die Deutschlehrkraft es freigibt.
+- `tests/`: 134 Tests für Regeln, State Machine, Übungen, Zitate, Schemas, Inhalte und Prompts.
+
+Prüfen im Repo-Wurzelverzeichnis:
+
+```
+npx vitest run modules/gesamtschule/klasse-07/deutsch-schreibwerkstatt
+npx tsc -p modules/gesamtschule/klasse-07/deutsch-schreibwerkstatt
+```
+
+Offen für die nächsten Schritte:
+- Freigabe aller Inhalte und der Boss-Themen durch die Deutschlehrkraft
+- Rubrik als Inhalt für P4; für Stufe 1 und 2 gibt es noch keine passende Rubrik
+- mindestens 14 freigegebene Übungen je Station, damit die Ziehung ohne Wiederholung immer gelingt
+- LanguageTool für Dimension D, Meldeweg für `held_for_adult` (Schutzkonzept)

@@ -1,0 +1,150 @@
+[
+  {
+    "id": "HK-01",
+    "title": "Einleitung",
+    "stufe": 3,
+    "niveau": "M",
+    "cost": 1,
+    "content": {
+      "intro": "So kannst du deine Einleitung beginnen und deinen Standpunkt nennen.",
+      "phrases": [
+        "Zurzeit wird viel darüber diskutiert, ob ...",
+        "An unserer Schule stellt sich die Frage, ob ...",
+        "Ich bin der Meinung, dass ..."
+      ]
+    },
+    "approved": false
+  },
+  {
+    "id": "HK-02",
+    "title": "Behauptung",
+    "stufe": 1,
+    "niveau": "M",
+    "cost": 1,
+    "content": {
+      "intro": "So leitest du eine Behauptung ein.",
+      "phrases": [
+        "Ein wichtiger Grund dafür ist ...",
+        "Außerdem spricht dafür, dass ...",
+        "Das stärkste Argument ist ..."
+      ]
+    },
+    "approved": false
+  },
+  {
+    "id": "HK-03",
+    "title": "Begründung",
+    "stufe": 1,
+    "niveau": "M",
+    "cost": 1,
+    "content": {
+      "intro": "So begründest du eine Behauptung.",
+      "phrases": [
+        "..., weil ...",
+        "Das liegt daran, dass ...",
+        "Dadurch ..."
+      ]
+    },
+    "approved": false
+  },
+  {
+    "id": "HK-04",
+    "title": "Beispiel",
+    "stufe": 2,
+    "niveau": "M",
+    "cost": 1,
+    "content": {
+      "intro": "So führst du ein Beispiel oder einen Beleg ein.",
+      "phrases": [
+        "Ein Beispiel dafür ist ...",
+        "Das zeigt sich, wenn ...",
+        "In unserer Klasse ..."
+      ]
+    },
+    "approved": false
+  },
+  {
+    "id": "HK-05",
+    "title": "Verknüpfung und Reihenfolge",
+    "stufe": 3,
+    "niveau": "M",
+    "cost": 1,
+    "content": {
+      "intro": "Mit diesen Wörtern verbindest du deine Argumente und zeigst die Reihenfolge.",
+      "phrases": [
+        "Zunächst",
+        "Außerdem",
+        "Darüber hinaus",
+        "Vor allem aber",
+        "Schließlich"
+      ]
+    },
+    "approved": false
+  },
+  {
+    "id": "HK-06",
+    "title": "Schluss",
+    "stufe": 4,
+    "niveau": "M",
+    "cost": 1,
+    "content": {
+      "intro": "So beginnst du deinen Schluss. Bring dort kein neues Argument.",
+      "phrases": [
+        "Aus diesen Gründen ...",
+        "Deshalb fordere ich ...",
+        "Zusammenfassend lässt sich sagen ..."
+      ]
+    },
+    "approved": false
+  },
+  {
+    "id": "HK-07",
+    "title": "Gegenargument",
+    "stufe": 6,
+    "niveau": "E",
+    "cost": 1,
+    "content": {
+      "intro": "So nennst du ein Gegenargument der anderen Seite und entkräftest es.",
+      "phrases": [
+        "Manche meinen zwar, dass ..., doch ...",
+        "Dagegen lässt sich einwenden, dass ...",
+        "Dieser Einwand überzeugt nicht, weil ..."
+      ]
+    },
+    "approved": false
+  },
+  {
+    "id": "HK-08",
+    "title": "Sachlich statt umgangssprachlich",
+    "stufe": 5,
+    "niveau": "M",
+    "cost": 1,
+    "content": {
+      "intro": "So ersetzt du Umgangssprache durch sachliche Wörter.",
+      "phrases": [
+        "\"voll gut\" wird zu \"sehr sinnvoll\"",
+        "\"krass viele\" wird zu \"sehr viele\"",
+        "\"halt\" streichen"
+      ]
+    },
+    "approved": false
+  },
+  {
+    "id": "HK-09",
+    "title": "Beispielgliederung",
+    "stufe": 4,
+    "niveau": "M",
+    "cost": 1,
+    "content": {
+      "intro": "So ist eine Stellungnahme aufgebaut. Den Inhalt findest du selbst.",
+      "phrases": [
+        "Einleitung: Thema und Anlass, dein Standpunkt",
+        "Argument 1, das schwächste: Behauptung, Begründung, Beispiel",
+        "Argument 2: Behauptung, Begründung, Beispiel",
+        "Argument 3, das stärkste: Behauptung, Begründung, Beispiel",
+        "Schluss: Fazit mit deinem Standpunkt, dazu ein Appell oder Ausblick, kein neues Argument"
+      ]
+    },
+    "approved": false
+  }
+]
