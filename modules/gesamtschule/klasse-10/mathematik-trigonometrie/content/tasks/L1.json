@@ -1,0 +1,118 @@
+[
+  {
+    "id": "L1-A1",
+    "lesson": 1,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(16)"],
+    "levels": {
+      "G": {
+        "text": "Dreieck 1 ist rechtwinklig. Seine Katheten sind a₁ = {{a1}} cm und b₁ = {{b1}} cm lang, seine Hypotenuse ist c₁ = {{c1}} cm lang. Dreieck 2 ist ähnlich zu Dreieck 1 mit dem Streckfaktor k = {{k}}. Berechne die Seiten a₂, b₂ und c₂ von Dreieck 2. Zeige, dass das Verhältnis kurze Kathete zu Hypotenuse in beiden Dreiecken gleich ist.",
+        "sought": ["a2", "b2", "c2", "ratio"],
+        "steps": [
+          "Skizze: zwei rechtwinklige Dreiecke, beschrifte alle Seiten.",
+          "a₂ = k · a₁ = {{a2}} cm, b₂ = k · b₁ = {{b2}} cm, c₂ = k · c₁ = {{c2}} cm",
+          "Dreieck 1: kurze Kathete : Hypotenuse = {{ratio_1}}",
+          "Dreieck 2: kurze Kathete : Hypotenuse = {{ratio_2}}",
+          "Antwortsatz: Die Seiten von Dreieck 2 und das gleiche Verhältnis in beiden Dreiecken."
+        ]
+      },
+      "M": {
+        "text": "Dreieck 1 ist rechtwinklig. Seine Katheten sind a₁ = {{a1}} cm und b₁ = {{b1}} cm lang, seine Hypotenuse ist c₁ = {{c1}} cm lang. Dreieck 2 ist ähnlich zu Dreieck 1 mit dem Streckfaktor k = {{k}}. Berechne die Seiten a₂, b₂ und c₂ von Dreieck 2. Zeige, dass das Verhältnis kurze Kathete zu Hypotenuse in beiden Dreiecken gleich ist.",
+        "sought": ["a2", "b2", "c2", "ratio"],
+        "steps": [
+          "Skizze: zwei rechtwinklige Dreiecke, beschrifte alle Seiten.",
+          "a₂ = k · a₁ = {{a2}} cm, b₂ = k · b₁ = {{b2}} cm, c₂ = k · c₁ = {{c2}} cm",
+          "Dreieck 1: kurze Kathete : Hypotenuse = {{ratio_1}}",
+          "Dreieck 2: kurze Kathete : Hypotenuse = {{ratio_2}}",
+          "Antwortsatz: Die Seiten von Dreieck 2 und das gleiche Verhältnis in beiden Dreiecken."
+        ]
+      },
+      "E": {
+        "text": "Dreieck 1 ist rechtwinklig. Seine Katheten sind a₁ = {{a1}} cm und b₁ = {{b1}} cm lang, seine Hypotenuse ist c₁ = {{c1}} cm lang. Dreieck 2 ist ähnlich zu Dreieck 1 mit dem Streckfaktor k = {{k}}. Berechne die Seiten a₂, b₂ und c₂ von Dreieck 2. Zeige, dass das Verhältnis kurze Kathete zu Hypotenuse in beiden Dreiecken gleich ist.",
+        "sought": ["a2", "b2", "c2", "ratio"],
+        "steps": [
+          "Skizze: zwei rechtwinklige Dreiecke, beschrifte alle Seiten.",
+          "a₂ = k · a₁ = {{a2}} cm, b₂ = k · b₁ = {{b2}} cm, c₂ = k · c₁ = {{c2}} cm",
+          "Dreieck 1: kurze Kathete : Hypotenuse = {{ratio_1}}",
+          "Dreieck 2: kurze Kathete : Hypotenuse = {{ratio_2}}",
+          "Antwortsatz: Die Seiten von Dreieck 2 und das gleiche Verhältnis in beiden Dreiecken."
+        ],
+        "extra": "Begründe, warum das Verhältnis für jeden Streckfaktor k gleich bleibt."
+      }
+    },
+    "parameters": {
+      "a1": { "min": 3, "max": 3, "step": 1, "unit": "cm" },
+      "b1": { "min": 4, "max": 4, "step": 1, "unit": "cm" },
+      "c1": { "min": 5, "max": 5, "step": 1, "unit": "cm" },
+      "k": { "min": 2.5, "max": 2.5, "step": 0.5, "unit": "" }
+    },
+    "solution_fn": "L1-A1",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F7", "F8", "F11", "F13"],
+    "hints": [
+      "Multipliziere jede Seite von Dreieck 1 mit k.",
+      "Welche Seite ist die kürzere Kathete, welche die Hypotenuse?",
+      "Teile in beiden Dreiecken die kurze Kathete durch die Hypotenuse."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L1-A2",
+    "lesson": 1,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(16)", "BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(18)"],
+    "levels": {
+      "G": {
+        "text": "Ein {{stick}} m hoher Stab wirft einen {{stick_shadow}} m langen Schatten. Ein Baum wirft zur gleichen Zeit einen {{tree_shadow}} m langen Schatten. Wie hoch ist der Baum?",
+        "sought": ["h"],
+        "steps": [
+          "Skizze: Stab und Schatten bilden ein rechtwinkliges Dreieck, Baum und Schatten auch.",
+          "Höhe zu Schatten ist in beiden Dreiecken gleich: h : {{tree_shadow}} = {{stick}} : {{stick_shadow}}",
+          "h = {{stick}} : {{stick_shadow}} · {{tree_shadow}} = {{h}} m",
+          "Antwortsatz: Der Baum ist {{h}} m hoch."
+        ]
+      },
+      "M": {
+        "text": "Ein {{stick}} m hoher Stab wirft einen {{stick_shadow}} m langen Schatten. Ein Baum wirft zur gleichen Zeit einen {{tree_shadow}} m langen Schatten. Wie hoch ist der Baum?",
+        "sought": ["h"],
+        "steps": [
+          "Skizze: Stab und Schatten bilden ein rechtwinkliges Dreieck, Baum und Schatten auch.",
+          "Höhe zu Schatten ist in beiden Dreiecken gleich: h : {{tree_shadow}} = {{stick}} : {{stick_shadow}}",
+          "h = {{stick}} : {{stick_shadow}} · {{tree_shadow}} = {{h}} m",
+          "Antwortsatz: Der Baum ist {{h}} m hoch."
+        ]
+      },
+      "E": {
+        "text": "Ein {{stick}} m hoher Stab wirft einen {{stick_shadow}} m langen Schatten. Ein Baum wirft zur gleichen Zeit einen {{tree_shadow}} m langen Schatten. Wie hoch ist der Baum?",
+        "sought": ["h"],
+        "steps": [
+          "Skizze: Stab und Schatten bilden ein rechtwinkliges Dreieck, Baum und Schatten auch.",
+          "Beide Dreiecke haben einen rechten Winkel und denselben Sonnenwinkel, also sind sie ähnlich.",
+          "Höhe zu Schatten ist in beiden Dreiecken gleich: h : {{tree_shadow}} = {{stick}} : {{stick_shadow}}",
+          "h = {{stick}} : {{stick_shadow}} · {{tree_shadow}} = {{h}} m",
+          "Antwortsatz: Der Baum ist {{h}} m hoch."
+        ],
+        "extra": "Begründe mit einem Ähnlichkeitssatz, warum die beiden Dreiecke ähnlich sind.",
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(17)"]
+      }
+    },
+    "parameters": {
+      "stick": { "min": 1.5, "max": 1.5, "step": 0.1, "unit": "m" },
+      "stick_shadow": { "min": 2, "max": 2, "step": 0.1, "unit": "m" },
+      "tree_shadow": { "min": 12, "max": 12, "step": 1, "unit": "m" }
+    },
+    "solution_fn": "L1-A2",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F5", "F6", "F7", "F10", "F11", "F13"],
+    "hints": [
+      "Zeichne beide Dreiecke: Höhe und Schatten stehen jeweils senkrecht aufeinander.",
+      "Die Sonnenstrahlen sind parallel. Was bedeutet das für die beiden Dreiecke?",
+      "Höhe zu Schatten ist beim Stab und beim Baum gleich. Stelle damit eine Gleichung auf."
+    ],
+    "interleaving_of": null
+  }
+]

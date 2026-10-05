@@ -1,0 +1,120 @@
+[
+  {
+    "id": "L4-A2",
+    "lesson": 4,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und α = {{alpha}}°. Berechne die Seite a.",
+        "sought": ["a"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a und die Hypotenuse c.",
+          "sin α = a/c, also a = c · sin α",
+          "a = {{c}} cm · sin {{alpha}}° ≈ {{a}} cm",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "M": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und α = {{alpha}}°. Berechne a und b und kontrolliere mit dem Satz des Pythagoras.",
+        "sought": ["a", "b"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a, die Ankathete b und die Hypotenuse c.",
+          "sin α = a/c, also a = c · sin α",
+          "a = {{c}} cm · sin {{alpha}}° ≈ {{a}} cm",
+          "cos α = b/c, also b = c · cos α",
+          "b = {{c}} cm · cos {{alpha}}° ≈ {{b}} cm",
+          "Kontrolle: a² + b² ≈ {{pythagoras_check}} ≈ c² = {{c}}²",
+          "Antwortsatz mit Einheit"
+        ],
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      },
+      "E": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und α = {{alpha}}°. Berechne a und b und kontrolliere mit dem Satz des Pythagoras.",
+        "sought": ["a", "b"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a, die Ankathete b und die Hypotenuse c.",
+          "sin α = a/c, also a = c · sin α",
+          "a = {{c}} cm · sin {{alpha}}° ≈ {{a}} cm",
+          "cos α = b/c, also b = c · cos α",
+          "b = {{c}} cm · cos {{alpha}}° ≈ {{b}} cm",
+          "Kontrolle: a² + b² ≈ {{pythagoras_check}} ≈ c² = {{c}}²",
+          "Antwortsatz mit Einheit"
+        ],
+        "extra": "Begründe, warum du a und b mit dem Satz des Pythagoras kontrollieren kannst und warum die Kontrolle mit gerundeten Werten nur ungefähr aufgeht.",
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      }
+    },
+    "parameters": {
+      "c": { "min": 6, "max": 12, "step": 0.5, "unit": "cm" },
+      "alpha": { "min": 25, "max": 65, "step": 1, "unit": "°" }
+    },
+    "solution_fn": "L4-A2",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F5", "F6", "F7", "F11", "F13"],
+    "hints": [
+      "Welche Seite liegt α gegenüber?",
+      "Welches Verhältnis enthält c und die gesuchte Seite?",
+      "Multipliziere beide Seiten mit c."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L4-A3",
+    "lesson": 4,
+    "type": "faded",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und β = {{beta}}°. Berechne die Seite b. Ergänze die fehlenden Schritte.",
+        "sought": ["b"],
+        "steps": [
+          "b liegt β gegenüber, ist also die Gegenkathete von β. c ist die Hypotenuse.",
+          "Ansatz: sin β = b/c",
+          "Umstellen: b = c · sin β",
+          "Ergebnis: b = {{c}} cm · sin {{beta}}° ≈ {{b}} cm"
+        ],
+        "hidden_steps": [3]
+      },
+      "M": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und β = {{beta}}°. Berechne die Seite b. Ergänze die fehlenden Schritte.",
+        "sought": ["b"],
+        "steps": [
+          "b liegt β gegenüber, ist also die Gegenkathete von β. c ist die Hypotenuse.",
+          "Ansatz: sin β = b/c",
+          "Umstellen: b = c · sin β",
+          "Ergebnis: b = {{c}} cm · sin {{beta}}° ≈ {{b}} cm"
+        ],
+        "hidden_steps": [2, 3]
+      },
+      "E": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und β = {{beta}}°. Berechne die Seite b. Ergänze die fehlenden Schritte.",
+        "sought": ["b"],
+        "steps": [
+          "b liegt β gegenüber, ist also die Gegenkathete von β. c ist die Hypotenuse.",
+          "Ansatz: sin β = b/c",
+          "Umstellen: b = c · sin β",
+          "Ergebnis: b = {{c}} cm · sin {{beta}}° ≈ {{b}} cm"
+        ],
+        "hidden_steps": [1, 2, 3]
+      }
+    },
+    "parameters": {
+      "c": { "min": 10, "max": 10, "step": 1, "unit": "cm" },
+      "beta": { "min": 50, "max": 50, "step": 1, "unit": "°" }
+    },
+    "solution_fn": "L4-A3",
+    "requires_sketch": false,
+    "requires_answer_sentence": false,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F6"],
+    "hints": [
+      "Welche Seite liegt β gegenüber?",
+      "Welches Verhältnis enthält b und c?",
+      "Multipliziere beide Seiten mit c."
+    ],
+    "interleaving_of": null
+  }
+]

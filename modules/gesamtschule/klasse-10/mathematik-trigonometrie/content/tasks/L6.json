@@ -1,0 +1,150 @@
+[
+  {
+    "id": "L6-A1",
+    "lesson": 6,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Du legst ein Winkelmessgerät auf den Boden, {{d}} m vom Fuß eines Turms entfernt. Es zeigt zur Turmspitze einen Erhebungswinkel von {{alpha}}°. Wie hoch ist der Turm?",
+        "sought": ["h"],
+        "steps": [
+          "Skizze: rechtwinkliges Dreieck aus Boden, Turm und Sichtlinie. Markiere den Erhebungswinkel.",
+          "tan α = Turmhöhe/Abstand",
+          "h = {{d}} m · tan {{alpha}}° ≈ {{h}} m",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "M": {
+        "text": "Du stehst {{d}} m vom Fuß eines Turms entfernt und siehst die Turmspitze unter einem Erhebungswinkel von {{alpha}}°. Deine Augenhöhe beträgt {{eye}} m. Wie hoch ist der Turm?",
+        "sought": ["h"],
+        "steps": [
+          "Skizze: Das rechtwinklige Dreieck beginnt auf Augenhöhe. Markiere den Erhebungswinkel.",
+          "tan α = x/{{d}} m, dabei ist x die Höhe über deiner Augenhöhe.",
+          "x = {{d}} m · tan {{alpha}}° ≈ {{x}} m",
+          "h = x + {{eye}} m ≈ {{h}} m",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "E": {
+        "text": "Du stehst {{d}} m vom Fuß eines Turms entfernt und siehst die Turmspitze unter einem Erhebungswinkel von {{alpha}}°. Deine Augenhöhe beträgt {{eye}} m. Wie hoch ist der Turm?",
+        "sought": ["h"],
+        "steps": [
+          "Skizze: Das rechtwinklige Dreieck beginnt auf Augenhöhe. Markiere den Erhebungswinkel.",
+          "tan α = x/{{d}} m, dabei ist x die Höhe über deiner Augenhöhe.",
+          "x = {{d}} m · tan {{alpha}}° ≈ {{x}} m",
+          "h = x + {{eye}} m ≈ {{h}} m",
+          "Antwortsatz mit Einheit"
+        ],
+        "extra": "Erkläre, warum du die Augenhöhe addieren musst."
+      }
+    },
+    "parameters": {
+      "d": { "min": 50, "max": 50, "step": 1, "unit": "m" },
+      "alpha": { "min": 32, "max": 32, "step": 1, "unit": "°" },
+      "eye": { "min": 1.6, "max": 1.6, "step": 0.1, "unit": "m" }
+    },
+    "solution_fn": "L6-A1",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F5", "F6", "F7", "F11", "F13"],
+    "hints": [
+      "Zeichne das rechtwinklige Dreieck: Wo ist der rechte Winkel?",
+      "Du kennst die Ankathete und suchst die Gegenkathete. Welches Verhältnis passt?",
+      "Multipliziere beide Seiten mit dem Abstand zum Turm."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L6-A2",
+    "lesson": 6,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "M": {
+        "text": "Eine {{ladder}} m lange Leiter lehnt an einer senkrechten Wand. Ihr Fuß steht {{distance}} m von der Wand entfernt. Unter welchem Winkel α steht die Leiter zum Boden? Wie hoch reicht sie an der Wand?",
+        "sought": ["alpha", "h"],
+        "steps": [
+          "Skizze: Die Leiter ist die Hypotenuse, Boden und Wand sind die Katheten, α liegt am Fuß der Leiter.",
+          "cos α = {{distance}}/{{ladder}} = {{cos_alpha}}",
+          "α = cos⁻¹({{cos_alpha}}) ≈ {{alpha}}°",
+          "h = {{ladder}} m · sin α ≈ {{h}} m",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "E": {
+        "text": "Eine {{ladder}} m lange Leiter lehnt an einer senkrechten Wand. Ihr Fuß steht {{distance}} m von der Wand entfernt. Unter welchem Winkel α steht die Leiter zum Boden? Wie hoch reicht sie an der Wand?",
+        "sought": ["alpha", "h"],
+        "steps": [
+          "Skizze: Die Leiter ist die Hypotenuse, Boden und Wand sind die Katheten, α liegt am Fuß der Leiter.",
+          "cos α = {{distance}}/{{ladder}} = {{cos_alpha}}",
+          "α = cos⁻¹({{cos_alpha}}) ≈ {{alpha}}°",
+          "h = {{ladder}} m · sin α ≈ {{h}} m",
+          "Kontrolle: h = √({{ladder}}² - {{distance}}²) ≈ {{h_pythagoras}} m",
+          "Antwortsatz mit Einheit"
+        ],
+        "extra": "Kontrolliere die Höhe mit dem Satz des Pythagoras.",
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      }
+    },
+    "parameters": {
+      "ladder": { "min": 4, "max": 4, "step": 1, "unit": "m" },
+      "distance": { "min": 1.2, "max": 1.2, "step": 0.1, "unit": "m" }
+    },
+    "solution_fn": "L6-A2",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F4", "F5", "F7", "F8", "F11", "F13"],
+    "hints": [
+      "Welche Seite ist die Hypotenuse?",
+      "Der Abstand zur Wand liegt am Winkel α an.",
+      "Für den Winkel brauchst du die Umkehrfunktion: SHIFT + cos."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L6-A3",
+    "lesson": 6,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "M": {
+        "text": "Eine Straße hat {{p}} % Steigung. Welchem Steigungswinkel α entspricht das?",
+        "sought": ["alpha"],
+        "steps": [
+          "Skizze: {{p}} m Höhenunterschied auf 100 m waagerechter Strecke.",
+          "tan α = {{p}}/100 = {{tan_alpha}}",
+          "α = tan⁻¹({{tan_alpha}}) ≈ {{alpha}}°",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "E": {
+        "text": "Eine Straße hat {{p}} % Steigung. Welchem Steigungswinkel α entspricht das?",
+        "sought": ["alpha"],
+        "steps": [
+          "Skizze: {{p}} m Höhenunterschied auf 100 m waagerechter Strecke.",
+          "tan α = {{p}}/100 = {{tan_alpha}}",
+          "α = tan⁻¹({{tan_alpha}}) ≈ {{alpha}}°",
+          "Antwortsatz mit Einheit"
+        ],
+        "extra": "Erkläre, warum 100 % Steigung einem Winkel von 45° entspricht."
+      }
+    },
+    "parameters": {
+      "p": { "min": 12, "max": 12, "step": 1, "unit": "%" }
+    },
+    "solution_fn": "L6-A3",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F4", "F7", "F11", "F12", "F13"],
+    "hints": [
+      "Was bedeutet {{p}} % Steigung? Wie viele Meter geht es auf 100 m waagerecht nach oben?",
+      "Höhenunterschied und waagerechte Strecke sind die beiden Katheten.",
+      "Für den Winkel brauchst du tan⁻¹ (SHIFT + tan)."
+    ],
+    "interleaving_of": null
+  }
+]

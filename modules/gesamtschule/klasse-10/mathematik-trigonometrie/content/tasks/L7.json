@@ -1,0 +1,32 @@
+[
+  {
+    "id": "L7-A1",
+    "lesson": 7,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(2)", "BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"],
+    "levels": {
+      "E": {
+        "text": "Leite die Beziehung sin²α + cos²α = 1 aus dem Satz des Pythagoras her. Gehe von einem rechtwinkligen Dreieck ABC mit γ = 90° aus.",
+        "sought": [],
+        "steps": [
+          "Satz des Pythagoras: a² + b² = c²",
+          "Beide Seiten durch c² teilen: a²/c² + b²/c² = 1",
+          "Als Quadrate von Seitenverhältnissen schreiben: (a/c)² + (b/c)² = 1",
+          "Definitionen einsetzen: sin α = a/c und cos α = b/c, also sin²α + cos²α = 1"
+        ]
+      }
+    },
+    "parameters": {},
+    "solution_fn": "L7-A1",
+    "requires_sketch": true,
+    "requires_answer_sentence": false,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F11"],
+    "hints": [
+      "Beginne mit dem Satz des Pythagoras für das Dreieck ABC.",
+      "Teile beide Seiten der Gleichung durch c².",
+      "Welche Seitenverhältnisse sind sin α und cos α?"
+    ],
+    "interleaving_of": null
+  }
+]

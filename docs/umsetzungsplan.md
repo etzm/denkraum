@@ -1,6 +1,6 @@
 # Umsetzungsplan: Plattform und erste Module
 
-Stand: 5. Oktober 2026. Status: Fragen aus Abschnitt 8 beantwortet; P0 umgesetzt, A0 und B0 in Arbeit (Abschnitt 9).
+Stand: 5. Oktober 2026. Status: Fragen aus Abschnitt 8 beantwortet; P0 und A0 umgesetzt, B0 in Arbeit (Abschnitt 9).
 
 Grundlage:
 
@@ -314,7 +314,11 @@ Umgesetzt am 5. Oktober 2026:
   - `generateStructured` mit Prompt-Versionen, Schemaprüfung, Identitätsprüfung, Protokoll ohne Inhalte; Bedrock nur in der EU, direkte API nur in der Entwicklung
   - Entfernen von Bild-Metadaten (EXIF, GPS)
   - CI mit Tests, Typecheck, Build und einer Prüfung auf lange Gedankenstriche
-- **A0 (in Arbeit):** Fachlogik Trigonometrie in `modules/gesamtschule/klasse-10/mathematik-trigonometrie/domain/`, siehe Modul-README.
+- **A0:** Fachlogik Trigonometrie in `modules/gesamtschule/klasse-10/mathematik-trigonometrie/domain/` (122 Tests), siehe Modul-README und Modul-DECISIONS. Offene Punkte für Spec A:
+  - Spec 6.3 zeigt F1 mit `partially_correct`, die Regel "falscher Wert ergibt `incorrect`" widerspricht dem. Umgesetzt ist `incorrect`.
+  - Der Fehlerkatalog überschneidet sich (F2 und F3, F3 und F8, F2 und F6). Einige Hinweistexte passen nur zu einer Aufgabe und haben jetzt Platzhalter.
+  - F9 (rechter Winkel falsch angenommen) ist nicht erkennbar, weil die Transkription dafür keine Angaben liefert.
+  - Der Startbestand aus Spec 4.2 erfüllt die Mindestzahl je Lektion (Spec 14 Nr. 3) noch nicht; das folgt in A2.
 - **B0 (in Arbeit):** Fachlogik Schreibwerkstatt in `modules/gesamtschule/klasse-07/deutsch-schreibwerkstatt/domain/`, siehe Modul-README.
 
 Als Nächstes:
