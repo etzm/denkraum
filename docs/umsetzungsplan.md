@@ -333,3 +333,170 @@ Als Nächstes:
 2. **A1:** Lektion 4 als Durchstich auf der Plattform, mit Arbeitsblatt am iPad (D-012).
 3. **B1:** Mission m-04-01 mit getipptem Text.
 4. **P2:** Ansicht für Lehrkraft und Eltern (Lesecode), PWA-Manifest und Offline, Container für die App.
+
+---
+
+## 10. Marktvergleich: Kiddom
+
+Stand: 5. Oktober 2026. Grundlage sind die Website kiddom.co und Pressemitteilungen des Anbieters (Quellen in 10.7). Das Produkt wurde nicht selbst getestet.
+
+### 10.1 Kurzprofil
+
+- Kiddom ist eine US-Plattform für digitale Lehrwerke vom Kindergarten bis Klasse 12. Schulbezirke lizenzieren darüber Lehrwerke wie Illustrative Mathematics, EL Education oder OpenSciEd. Kiddom legt eine KI-Schicht darüber ("Learning Intelligence Technology").
+- Nutzergruppen: Lehrkräfte, Schülerinnen und Schüler, Familien, Schul- und Bezirksleitung.
+- Leitidee: "Digital forward. Human first." Die KI schlägt vor, die Lehrkraft entscheidet ("it never moves without the teacher", "No grade without you").
+- Alle KI-Funktionen sind nur für Lehrkräfte zugänglich. Schülerdaten gehen nach Angabe des Anbieters anonymisiert an das Modell und werden nicht zum Training verwendet.
+- Als Produkt für die Staudinger Gesamtschule keine Option:
+  - Die Lehrwerke folgen US-Standards (Common Core, NGSS).
+  - Die Oberfläche ist englisch und spanisch.
+  - Die Datenschutzerklärung der Website nennt weder die DSGVO noch einen Speicherort in der EU.
+- Als Vorbild für Abläufe ist Kiddom wertvoll, besonders für "Papier zuerst" und für die Rolle der Lehrkraft.
+
+### 10.2 Funktionen im Überblick
+
+| Funktion | Was sie tut | Bezug zu Denkraum |
+|---|---|---|
+| Atlas | Wertet die kurze Lernkontrolle am Stundenende aus (drei Aufgaben, "Cool-down"). Zeigt Fehlvorstellungen je Klasse und je Schülerin oder Schüler, schlägt Gruppen vor (auf Kurs, wiederholen, fördern, erweitern) und erzeugt Einstiegsaufgaben für die nächste Stunde. Die Lehrkraft verschiebt Gruppen, gibt weitere Versuche frei und korrigiert von Hand. Mathematik, Klassen 3 bis 8, ab Herbst 2026. | Fehlvorstellungen erkennt bei uns schon `verify()` mit dem Fehlerkatalog F1 bis F13, ohne Sprachmodell. Es fehlt die Auswertung je Klasse. |
+| Paper Score | Die Lehrkraft fotografiert oder scannt Papierarbeiten als Stapel. Das System liest die Handschrift, bewertet nur geschlossene Formate (Auswahl, Lücke, Zahl), markiert unsichere Lesungen, statt zu raten, und zeigt das Original neben dem Ergebnis. Nichts wird ohne Freigabe der Lehrkraft übernommen; offene Antworten bewertet die Lehrkraft. | Entspricht der Foto-Pipeline (P1), aber den Upload macht die Lehrkraft, nicht die Lernenden. |
+| Spotlight | Die Lehrkraft fotografiert während der Stunde eine Lösung auf Papier und zeigt sie ohne Namen am Beamer zur Besprechung. | neu |
+| Kiddom Assistant | Nur für Lehrkräfte, direkt in der Lektion. Feste Aktionen: Aktivität erzeugen, in Teilschritte zerlegen, übersetzen, Lektion kürzen. Antworten nur aus dem lizenzierten Lehrwerk, ohne Internet. Ergebnisse landen als Entwurf und erreichen Lernende erst nach Vorschau und Zuweisung. | Muster für spätere Werkzeuge für Lehrkräfte |
+| KI-Bewertung, KI-Feedback, Übungsgenerator | Die KI bewertet offene Antworten, schlägt Punkte und Rückmeldungen vor und erzeugt differenzierte Übungen. | Bewertung durch KI widerspricht D-006. Unser Generator arbeitet deterministisch. |
+| KODA | Datenfragen der Bezirksleitung in natürlicher Sprache ("Welche 4. Klassen haben Probleme mit Brüchen?") | ohne Bedeutung für den Pilot |
+| Cadence | Passt den Stoffverteilungsplan an Ferien und Ausfälle an. | Lektionen schaltet bei uns die Lehrkraft frei (D-017). |
+| Bilingual View und Barrierefreiheit | Aufgaben englisch und spanisch nebeneinander; Vorlesen, auch von Formeln; Screenreader und Tastatur (WCAG 2.1 AA); Werkzeuge wie Taschenrechner und Geodreieck. | teilweise übernehmen |
+| Ansicht für Lernende und Familien | Listen "Zu erledigen" und "Abgegeben", Kommentare an der einzelnen Aufgabe, Fortschritt an Lernzielen. Abgabe getippt, gezeichnet, als Audio, Video oder auf Papier. Familien sehen Aufgaben, Noten und Fortschritt. | weitgehend geplant (P2), aber ohne Noten |
+
+### 10.3 Was Denkraum übernehmen kann
+
+Alle Punkte sind Vorschläge. Was angenommen wird, kommt als Entscheidung in `DECISIONS.md`.
+
+**K1. Fehlerbild der Klasse** (nach Atlas)
+- Die Ansicht für Lehrkräfte zeigt je Lektion und Aufgabe, wie oft welcher Fehlertyp (F1 bis F13) vorkam und bei welchen Pseudonymen.
+- Die Daten entstehen schon heute in `verify()`. Kein Sprachmodell nötig.
+- Phase P2 (Ansicht für Lehrkräfte). Aufwand klein.
+
+**K2. Kurze Lernkontrolle am Ende jeder Lektion** (nach Atlas, "Cool-down")
+- Zwei oder drei Aufgaben als festes Element jeder Lektion. Sie liefern die Daten für K1, K3 und K4.
+- Mit der Fachschaft Mathematik abstimmen; die Aufgaben kommen aus der Aufgabenbank.
+- Phase A2. Aufwand klein, vor allem Inhalt.
+
+**K3. Einstiegsaufgabe zum häufigsten Fehler** (nach Atlas)
+- Für die nächste Stunde wählt der Code aus der Aufgabenbank eine Aufgabe, deren `expected_misconceptions` den häufigsten Fehlertyp der Klasse enthält, mit neuen Zahlen aus dem Generator. Die Lehrkraft entscheidet, ob sie sie einsetzt.
+- Kein Sprachmodell nötig; die Mehrdeutigkeitsprüfung des Generators gilt weiter.
+- Voraussetzung: Aufgabenbank (A2). Phase A3. Aufwand mittel.
+
+**K4. Gruppenvorschlag mit Freigabe durch die Lehrkraft** (nach Atlas)
+- Der Code ordnet nach festen Regeln zu, zum Beispiel "weiter", "üben: F2" oder "Erweiterung (E)". Die Lehrkraft verschiebt Lernende und bestätigt.
+- KI-Verordnung: Gruppen, die den Lernprozess steuern, fallen unter Anhang III Nr. 3 lit. b. Deshalb nur ein Vorschlag per Code; die Entscheidung trifft die Lehrkraft, und die Einschätzung nach Art. 6 Abs. 3 wird dokumentiert. Die offene Frage zum Profiling (Abschnitt 5.3) betrifft diesen Punkt direkt.
+- Erweitert die Aktionen des Lehrkraft-Codes (D-017). Phase A3. Aufwand mittel.
+
+**K5. Korrektur durch die Lehrkraft** (nach Atlas)
+- Die Lehrkraft kann das Ergebnis von `verify()` überstimmen und einen weiteren Versuch freigeben. Jede Korrektur wird mit kurzer Begründung protokolliert.
+- Das stärkt die menschliche Aufsicht (Art. 14 KI-Verordnung) und D-006. Gehäufte Korrekturen zeigen Lücken im Fehlerkatalog, zum Beispiel bei F9.
+- Erweitert die Aktionen des Lehrkraft-Codes (D-017). Phase P2. Aufwand klein bis mittel.
+
+**K6. Unsichere Stellen markieren, Original daneben** (nach Paper Score)
+- Die Transkription markiert unsichere Lesungen (`[?]` wie in Spec B), statt zu raten. Im Bestätigungsschritt steht das Foto neben dem Transkript, die markierten Stellen sind hervorgehoben.
+- Gehört in die gemeinsame Bestätigungskomponente beider Module.
+- Phase P1. Aufwand klein.
+
+**K7. Stapel-Upload durch die Lehrkraft** (nach Paper Score)
+- Klasse 7 hat keine Schulgeräte (Abschnitt 7, Punkt 1). Die Lehrkraft fotografiert die Blätter der Klasse mit einem Gerät; die Zuordnung läuft über den Blatt-Code auf dem Papier (D-024). Das Transkript bestätigen die Lernenden später zu Hause oder die Lehrkraft.
+- Auch ein Rückfallweg für Klasse 10, wenn iPads fehlen.
+- Erst relevant, wenn die Schreibwerkstatt über den Pilot zu Hause hinausgeht (D-011). Dann ist zu klären, wie der Blatt-Code ohne Namen auf dem Papier eindeutig auf ein Pseudonym verweist; heute hängt die Zuordnung am Blatt, das in der App geöffnet ist (D-012).
+- Phase nach B7. Aufwand mittel bis groß.
+
+**K8. Lösungswege besprechen** (nach Spotlight)
+- Die Lehrkraft wählt zwei oder drei Lösungen mit unterschiedlichen Fehlertypen und zeigt sie am Beamer, zum Beispiel einen richtigen Weg neben "Gegenkathete und Ankathete vertauscht".
+- Anders als bei Kiddom wird das bestätigte Transkript gezeigt, nicht das Foto: Mitschülerinnen und Mitschüler erkennen Handschrift auch ohne Namen.
+- Gezeigt werden nur Lösungen, die die Schülerin oder der Schüler zum Teilen freigegeben hat (Leitplanken, Abschnitt 4).
+- Phase A3. Aufwand mittel.
+
+**K9. Vorlesen** (nach der Barrierefreiheit bei Kiddom)
+- Aufgabentexte, Hinweise und Rückmeldungen liest die Sprachausgabe des Geräts vor (Web Speech API).
+- Nur Stimmen, die auf dem Gerät laufen (`localService`). Manche Stimmen in Chrome schicken den Text an Server von Google; das widerspräche den Leitplanken, Abschnitt 5.
+- Formeln brauchen eine sprechbare Fassung ("Sinus von Alpha").
+- Hilft schwächeren Leserinnen und Lesern, besonders in Klasse 7. Ziel für die ganze App: BITV 2.0 und WCAG 2.1 AA.
+- Phase P2. Aufwand klein bis mittel.
+
+**K10. Zweisprachige Aufgabentexte** (nach Bilingual View)
+- Mathematik-Aufgaben zusätzlich in den häufigsten Herkunftssprachen der Klasse, neben dem deutschen Text.
+- Übersetzt wird vorab und von Menschen geprüft, nicht live durch die KI.
+- Nicht für die Schreibwerkstatt, deren Ziel das Schreiben auf Deutsch ist; dort höchstens für Hilfskarten.
+- Mit der Schule klären, welche Sprachen gebraucht werden. Phase später. Aufwand mittel.
+
+**K11. Kompetenzansicht nach Bildungsplan** (nach "Fortschritt an Lernzielen")
+- Die Aufgaben der Trigonometrie tragen schon die Codes der Teilkompetenzen (A0). Lernende sehen je Teilkompetenz, was sie schon gezeigt haben, als Ich-kann-Sätze.
+- Formativ, ohne Stufen oder Prozente, damit es nicht wie eine Note wirkt (Abschnitt 5.3). Für die Schreibwerkstatt gilt D-020: kein Sternverlauf.
+- Teil der Fortschrittskarte in `packages/game`. Phase A3. Aufwand klein bis mittel.
+
+**K12. Sachaufgaben entwerfen, für Lehrkräfte** (nach Kiddom Assistant)
+- Feste Aktionen statt Chat, zum Beispiel "neue Sachaufgabe zu Lektion 6 entwerfen".
+- Die KI entwirft nur den Sachkontext für ein vorhandenes Aufgaben-Template. Werte und Musterlösung berechnet der Code, einschließlich Mehrdeutigkeitsprüfung. Die Lehrkraft gibt frei.
+- Im Prompt stehen nur Lektion, Template und Beispiele, keine Schülerdaten.
+- Phase nach A2. Aufwand mittel.
+
+**K13. "Wartet auf Sie"** (nach den Kiddom-Daten zur Rückmeldezeit)
+- Die Ansicht für Erwachsene zeigt offene Aufgaben mit ihrem Alter: Freigabe von Niveau E, angefragte Korrekturen und weitere Versuche.
+- Kiddom berichtet bessere Ergebnisse, wenn Lehrkräfte innerhalb von drei Tagen zurückmelden. Das sind Herstellerangaben ohne veröffentlichte Methodik. Die Richtung passt aber zu unserem Ablauf, in dem Menschen freigeben.
+- Phase P2. Aufwand klein.
+
+**K14. Freigabe von KI-Rückmeldungen vor der Anzeige** (Option, nach Kiddom Assistant)
+- Kiddom zeigt Lernenden keine KI-Ausgaben. Denkraum tut das, aber nur geprüft und gekennzeichnet.
+- Für den Einsatz der Schreibwerkstatt in der Klasse könnte eine Gruppe einstellen, dass KI-Rückmeldungen erst nach Durchsicht durch die Lehrkraft erscheinen.
+- Das kostet Zeit der Lehrkraft und verzögert die Rückmeldung. Im Pilot zu Hause aus; für die Klasse mit der Deutschlehrkraft und im Schutzkonzept klären.
+- Phase später. Aufwand mittel.
+
+### 10.4 Was Denkraum nicht übernimmt
+
+- **KI-Bewertung offener Antworten** (KI-Punkte, KI-Notenvorschläge): widerspricht D-006 und der Vorgabe des Kultusministeriums (Abschnitt 5.3).
+- **Notenbuch und Noten für Familien:** keine Noten (Grundsatz 3 im README).
+- **KODA, freie Datenfragen in natürlicher Sprache:** ein offener Chat über personenbezogene Daten. Widerspricht der Datenminimierung und "kein offener Chat"; für einen Pilot ohne Nutzen.
+- **Abgaben als Audio oder Video:** Stimme und Bild der Kinder sind zusätzliche personenbezogene Daten. Vorerst nicht.
+- **Taschenrechner in der App für die Trigonometrie:** Er würde F1 (Rechner nicht auf DEG) verdecken. Der Umgang mit dem eigenen Rechner gehört zum Lernziel (Lektion 3).
+- **Cadence:** Lektionen schaltet die Lehrkraft frei (D-017). Eine automatische Stoffverteilung bringt im Pilot keinen Nutzen.
+- **Werbe-Cookies und Dienste wie Meta oder HubSpot**, die die Datenschutzerklärung der Kiddom-Website nennt: ausgeschlossen durch die Leitplanken, Abschnitt 5.
+
+### 10.5 Was Denkraum schon anders löst
+
+- **KI für Lernende:** Kiddom hält alle KI-Funktionen von Lernenden fern. Denkraum zeigt KI-formulierte Rückmeldungen, aber schemageprüft, gekennzeichnet, ohne Chat und ohne Entscheidung (Leitplanken, Abschnitt 3).
+- **Fehlvorstellungen:** Kiddom erkennt sie mit KI. Denkraum erkennt sie deterministisch über Musterlösungen mit Fehlwegen; das ist nachprüfbar und getestet.
+- **Individuelle Zahlen:** Der Generator erzeugt für jede Schülerin und jeden Schüler eigene Werte und verwirft mehrdeutige.
+- **Inhalte:** eigene Inhalte nach dem Bildungsplan Baden-Württemberg, offen unter Apache 2.0, statt lizenzierter Lehrwerke.
+- **Hosting:** in Deutschland (D-016), Modellaufrufe nur in der EU (D-013).
+
+### 10.6 Einordnung in die Phasen
+
+| Phase | Vorschläge |
+|---|---|
+| P1 | K6 |
+| P2 | K1, K5, K9, K13 |
+| A2 | K2 |
+| A3 | K3, K4, K8, K11 |
+| später | K7, K10, K12, K14 |
+
+Vor dem Bau zu entscheiden:
+- K2: mit der Fachschaft Mathematik
+- K4: Einschätzung nach KI-Verordnung, Frage zum Profiling
+- K7: Einsatz der Schreibwerkstatt in der Klasse
+- K10: welche Sprachen
+- K14: mit der Deutschlehrkraft und im Schutzkonzept
+
+### 10.7 Quellen
+
+Abgerufen am 5. Oktober 2026:
+
+- Startseite: https://www.kiddom.co/
+- Atlas: https://www.kiddom.co/atlas
+- Paper Score: https://www.kiddom.co/paper-score
+- Spotlight: https://www.kiddom.co/spotlight
+- Kiddom Assistant: https://www.kiddom.co/kiddom-assistant
+- KODA: https://www.kiddom.co/koda
+- Ansicht für Lernende: https://www.kiddom.co/student-experience
+- Ansicht für Lehrkräfte: https://www.kiddom.co/teachers
+- KI-Grundsätze: https://www.kiddom.co/kiddomai
+- Datenschutzerklärung der Website: https://www.kiddom.co/privacy
+- Neuerungen zum Schuljahr 2026/27: https://www.kiddom.co/insights/back-to-school-2026
+- Pressemitteilung zu Atlas, 20. Februar 2026: https://www.businesswire.com/news/home/20260220676382/en/Kiddom-Launches-Atlas-the-First-AI-Powered-Instructional-Technology-Layered-on-High-Quality-Instructional-Materials
+
+Wirkungsangaben des Anbieters, zum Beispiel "bis zu 18 % Zuwachs" mit Atlas, haben keine veröffentlichte Methodik und dienen hier nicht als Beleg.
