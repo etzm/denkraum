@@ -1,6 +1,6 @@
 # Umsetzungsplan: Plattform und erste Module
 
-Stand: 5. Oktober 2026. Status: Fragen aus Abschnitt 8 beantwortet; P0 und A0 umgesetzt, B0 in Arbeit (Abschnitt 9).
+Stand: 5. Oktober 2026. Status: Fragen aus Abschnitt 8 beantwortet; P0, A0 und B0 umgesetzt (Abschnitt 9).
 
 Grundlage:
 
@@ -319,7 +319,13 @@ Umgesetzt am 5. Oktober 2026:
   - Der Fehlerkatalog überschneidet sich (F2 und F3, F3 und F8, F2 und F6). Einige Hinweistexte passen nur zu einer Aufgabe und haben jetzt Platzhalter.
   - F9 (rechter Winkel falsch angenommen) ist nicht erkennbar, weil die Transkription dafür keine Angaben liefert.
   - Der Startbestand aus Spec 4.2 erfüllt die Mindestzahl je Lektion (Spec 14 Nr. 3) noch nicht; das folgt in A2.
-- **B0 (in Arbeit):** Fachlogik Schreibwerkstatt in `modules/gesamtschule/klasse-07/deutsch-schreibwerkstatt/domain/`, siehe Modul-README.
+- **B0:** Fachlogik Schreibwerkstatt in `modules/gesamtschule/klasse-07/deutsch-schreibwerkstatt/` (134 Tests), siehe Modul-README und Modul-DECISIONS. Sterne steuern nichts; die Planfreigabe prüft Code nach Spec 7.2. Offene Punkte für Spec B:
+  - Für Stufe 1 und 2 gibt es keine passende Rubrik; Rubrik 7.1 und die 80-Wörter-Regel passen dort nicht.
+  - Planungsbogen-Kriterien (7.2) und Prompts P1/P2 passen nicht zur Absatz-Schablone auf Stufe 2.
+  - Die Ansicht für Erwachsene braucht genau eine Schreibaktion: den E-Pfad freischalten (D-006 gegen "nur Lesezugang" in Spec B).
+  - Der verdeckte Themenpool der Boss-Mission passt nicht in ein öffentliches Repo; die fünf Themen sind Platzhalter.
+  - Für "keine Wiederholung in 10 Ziehungen" braucht jede Station mindestens 14 freigegebene Übungen; vorhanden sind 14 insgesamt.
+  - Alle Inhalte sind `approved: false`, bis sie freigegeben sind.
 
 Als Nächstes:
 

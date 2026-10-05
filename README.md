@@ -56,7 +56,7 @@ Ohne `DATABASE_URL` läuft die Datenbank lokal als PGlite in `.data/`. Für Post
 
 ## Status
 
-Das Plattform-Gerüst (P0) und die Fachlogik Trigonometrie (A0) stehen. Die Fachlogik Schreibwerkstatt (B0) ist in Arbeit. Nächste Schritte: [Umsetzungsplan, Abschnitt 9](docs/umsetzungsplan.md#9-stand-und-nächste-schritte).
+Plattform-Gerüst (P0) und die Fachlogik beider Module (A0, B0) stehen. Nächste Schritte: [Umsetzungsplan, Abschnitt 9](docs/umsetzungsplan.md#9-stand-und-nächste-schritte).
 
 ## Lizenz
 
