@@ -1,0 +1,36 @@
+# Dependencies and build output
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.turbo/
+*.tsbuildinfo
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Local services
+.minio/
+*.sqlite
+*.sqlite3
+
+# Privacy: this repository is public. Never commit learner data.
+# See docs/datenschutz/README.md, section 7.
+**/private/
+eval/golden/
+**/eval/golden/
+eval/reports/
+**/eval/reports/
+uploads/
+exports/
+*.heic
+*.HEIC
+
+# OS and editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
