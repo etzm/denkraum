@@ -1,0 +1,17 @@
+{
+  "name": "@denkraum/llm",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/bedrock-sdk": "^0.34.2",
+    "@anthropic-ai/sdk": "^0.131.0",
+    "@denkraum/core": "workspace:*",
+    "@denkraum/privacy": "workspace:*",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.5"
+  }
+}

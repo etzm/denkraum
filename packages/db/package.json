@@ -1,0 +1,22 @@
+{
+  "name": "@denkraum/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@denkraum/core": "workspace:*",
+    "@denkraum/privacy": "workspace:*",
+    "@electric-sql/pglite": "^0.5.8",
+    "drizzle-orm": "^0.45.3",
+    "postgres": "^3.4.9"
+  },
+  "scripts": {
+    "generate": "drizzle-kit generate"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.11"
+  }
+}

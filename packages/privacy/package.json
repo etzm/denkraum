@@ -1,0 +1,12 @@
+{
+  "name": "@denkraum/privacy",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@denkraum/core": "workspace:*"
+  }
+}

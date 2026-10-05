@@ -34,3 +34,9 @@ exports/
 Thumbs.db
 .idea/
 .vscode/
+
+# Local PGlite database
+.data/
+next-env.d.ts
+test-results/
+playwright-report/

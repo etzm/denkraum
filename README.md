@@ -9,25 +9,43 @@ Pilotschule: Staudinger Gesamtschule Freiburg. Start mit den Klassen 7, 10 und 1
 Eine gemeinsame Plattform (Web-App/PWA) und fachliche Module. Module sind nach Schulart und Klasse gegliedert:
 
 ```
+apps/web/                           Next.js-App: Login per Code, Modul-Übersicht, Datenschutz, Impressum
+packages/
+  core/                             gemeinsame Typen, Modul-Manifest
+  privacy/                          Pseudonyme, Codes, Fristen, Bild-Metadaten, Identitätsprüfung für Prompts
+  llm/                              Modellzugriff: versionierte Prompts, Schemaprüfung, EU-Regeln, Mock
+  db/                               Datenbank-Schema, Migrations, Löschjob, Export und Löschung je Pseudonym
 modules/
   gesamtschule/
-    klasse-07/
-      deutsch-schreibwerkstatt/     Workstream B: argumentierendes Schreiben
-    klasse-10/
-      mathematik-trigonometrie/     Workstream A: Trigonometrie-Einstieg
-    klasse-11/                      noch kein Modul
+    klasse-07/deutsch-schreibwerkstatt/   Workstream B: argumentierendes Schreiben
+    klasse-10/mathematik-trigonometrie/   Workstream A: Trigonometrie-Einstieg
+  gymnasium/
+    klasse-11/                            noch kein Modul
+infra/                              Docker Compose (Postgres)
 docs/
-  umsetzungsplan.md                 Empfehlung zur Umsetzung beider Workstreams
+  umsetzungsplan.md                 Plan für beide Workstreams, Stand und nächste Schritte
   datenschutz/README.md             verbindliche Datenschutz-Leitplanken
 DECISIONS.md                        plattformweite Entscheidungen
 ```
 
-Die Plattform (`apps/`, `packages/`) entsteht in Phase P0, siehe [Umsetzungsplan](docs/umsetzungsplan.md).
+## Schnellstart
+
+Voraussetzungen: Node 22.12 oder neuer, pnpm 10.
+
+```bash
+pnpm install
+cp .env.example .env
+pnpm seed        # legt zwei Demo-Gruppen an und zeigt ihre Codes
+pnpm dev         # http://localhost:3000, Code eingeben
+pnpm test        # alle Tests, ohne Datenbank-Server und ohne API-Schlüssel
+```
+
+Ohne `DATABASE_URL` läuft die Datenbank lokal als PGlite in `.data/`. Für Postgres: `docker compose -f infra/docker-compose.yml up -d` und `DATABASE_URL` in `.env` umstellen. KI-Aufrufe laufen standardmäßig gegen einen Mock (`LLM_PROVIDER=mock`).
 
 ## Geräte
 
 - Ab Klasse 8 haben die Schülerinnen und Schüler iPads. Die App ist deshalb eine Web-App (PWA), optimiert für iPad und Smartphone.
-- Klasse 7 hat keine Schulgeräte. Module für Klasse 7 arbeiten Papier zuerst; Uploads laufen über ein Gerät zu Hause oder das Gerät der Lehrkraft.
+- Klasse 7 hat keine Schulgeräte. Module für Klasse 7 arbeiten Papier zuerst; Uploads laufen über ein Gerät zu Hause.
 
 ## Grundsätze
 
@@ -38,7 +56,7 @@ Die Plattform (`apps/`, `packages/`) entsteht in Phase P0, siehe [Umsetzungsplan
 
 ## Status
 
-Struktur und Planung. Noch kein lauffähiger Code. Nächste Schritte: offene Fragen in [docs/umsetzungsplan.md](docs/umsetzungsplan.md#8-offene-fragen), dann Phase P0.
+Das Plattform-Gerüst (P0) steht. Die Fachlogik beider Module (A0, B0) ist in Arbeit. Nächste Schritte: [Umsetzungsplan, Abschnitt 9](docs/umsetzungsplan.md#9-stand-und-nächste-schritte).
 
 ## Lizenz
 

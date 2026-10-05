@@ -1,6 +1,6 @@
 # Umsetzungsplan: Plattform und erste Module
 
-Stand: 5. Oktober 2026. Status: Vorschlag, wartet auf die Antworten zu Abschnitt 8.
+Stand: 5. Oktober 2026. Status: Fragen aus Abschnitt 8 beantwortet; P0 umgesetzt, A0 und B0 in Arbeit (Abschnitt 9).
 
 Grundlage:
 
@@ -20,7 +20,7 @@ Abschnittsverweise wie "A 6.4" oder "B 3.2" beziehen sich auf die beiden Specs.
 4. **Vor dem Bau klären:**
    - KI-Verordnung: In Spec B vergibt die KI Sterne, und die Sterne steuern Freischaltungen und den E-Pfad. Das fällt in den Hochrisiko-Bereich (Abschnitt 5.3).
    - Löschfristen: Die beiden Specs widersprechen sich, und Transkripte haben in keiner der beiden eine Frist (Abschnitt 5.2).
-   - Drucklogistik für individuelle Arbeitsblätter in Klasse 10 (Abschnitt 6).
+   - Drucklogistik für individuelle Arbeitsblätter in Klasse 10 (Abschnitt 6, entschieden in D-012).
 
 ---
 
@@ -31,17 +31,19 @@ denkraum/
   apps/
     web/                       Next.js-PWA: Shell, Login, Modul-Routing, Ansicht für Lehrkraft und Eltern
   packages/
-    db/                        Drizzle-Schema der Plattform, Migrations (Postgres)
+    core/                      gemeinsame Typen: Schulart, Niveau, Modul-Manifest
+    db/                        Drizzle-Schema der Plattform, Migrations (Postgres, lokal PGlite), Löschjob
     llm/                       Gateway-Client, Tier-Routing, Prompt-Loader, Schema- und Zitatprüfung, Mock
     capture/                   Foto-Pipeline: EXIF und GPS entfernen, skalieren, mehrseitig, Upload
     print/                     A4-Druckvorlagen: Blatt-ID, QR-Code, kein Namensfeld
     game/                      generische Bausteine: XP, Abzeichen, Streak, Fortschrittskarte (reine Funktionen)
-    privacy/                   Aufbewahrung, Löschjobs, Export und Löschung je Pseudonym
+    privacy/                   Pseudonyme, Codes, Fristen, Bild-Metadaten entfernen, Identitätsprüfung für Prompts
     ui/                        gemeinsame Komponenten, Design-Tokens, Texte (i18n/de)
   modules/
     gesamtschule/
       klasse-07/deutsch-schreibwerkstatt/     Workstream B
       klasse-10/mathematik-trigonometrie/     Workstream A
+    gymnasium/
       klasse-11/                              noch leer
   infra/                       Docker Compose (app, postgres, minio), Deployment
   docs/
@@ -72,7 +74,7 @@ Geräte nach Klasse:
 |---|---|---|---|
 | 7 | `gesamtschule/klasse-07` | keine | Papier zuerst; Upload über ein Gerät zu Hause oder das Gerät der Lehrkraft |
 | 10 | `gesamtschule/klasse-10` | iPads | PWA auf dem iPad, Foto-Upload mit der iPad-Kamera |
-| 11 | `gesamtschule/klasse-11` | iPads | noch kein Modul |
+| 11 | `gymnasium/klasse-11` | iPads | noch kein Modul |
 
 ---
 
@@ -86,7 +88,7 @@ Geräte nach Klasse:
 | LLM-Zugriff | Provider-Interface mit Anthropic SDK, OpenAI-kompatibel, Mock (A 6.7) | LiteLLM-Gateway, Vercel AI SDK `generateObject`, Tiers `vision`, `hard`, `light` (B 7.5) | Ein Paket `llm` mit einer Funktion `generateStructured({ tier, prompt, schema, images })`. Standard-Adapter ist ein OpenAI-kompatibles Gateway (LiteLLM), dazu ein direkter Anthropic-Adapter und ein Mock. Module wählen nur das Tier, nie das Modell. |
 | Prompts | im Spec-Text (A 6.5, 6.6) | versionierte Dateien, Version wird am Feedback gespeichert (B 7.3) | Variante B für beide Module |
 | Offline | Lektionen offline, Serwist (A 8) | kein Offline in v1 | Serwist in der Plattform; Offline je Modul per Manifest-Flag |
-| Druck | A4-Druckansicht und `/print`-Route | `@react-pdf/renderer`, serverseitig | Ein Paket `print` mit serverseitigem PDF. Formeln auf Arbeitsblättern als Unicode (sin α, α², sin⁻¹, √); KaTeX nur am Bildschirm. Neu: Klassensatz drucken (Abschnitt 6). |
+| Druck | A4-Druckansicht und `/print`-Route | `@react-pdf/renderer`, serverseitig | Ein Paket `print` mit serverseitigem PDF. Formeln auf Arbeitsblättern als Unicode (sin α, α², sin⁻¹, √); KaTeX nur am Bildschirm. In Klasse 10 wird das Blatt am iPad gezeigt und auf Papier gelöst (D-012); PDF bleibt optional, für Spec B (Druck zu Hause) Pflicht. |
 | Login | Klassencode und selbst gewähltes Pseudonym; Lehrkraft per Magic-Link | Zugangscode und Spitzname; Lesecode für Erwachsene | Ein Modell: Gruppe (Klasse oder Einzelpilot) mit Code; Lernende mit systemgenerierten Pseudonymen; Betrachtende (Lehrkraft, Eltern) mit Lesecode; Magic-Link nur für Lehrkräfte. LTI 1.3 und VIDIS später. |
 | Foto-Aufbewahrung | 14 Tage | 180 Tage | Plattformweit 14 Tage; Abweichung nur begründet im Modul-Manifest (Abschnitt 5.2) |
 | Foto-Auflösung | 1600 px, unter 500 KB | 2000 px | Plattform-Standard 1600 px; B darf für mehrseitige Fließtexte auf 2000 px erhöhen |
@@ -192,7 +194,7 @@ Die verbindlichen technischen Leitplanken stehen in [datenschutz/README.md](date
    - Spec A braucht denselben Mechanismus nicht.
 9. **Rollen und Rechtsgrundlage.** Die Antwort hängt davon ab, wer die App einsetzt:
    - Setzt die Schule die App im Unterricht ein, ist sie Verantwortliche, der Betreiber ist Auftragsverarbeiter, und ein Auftragsverarbeitungsvertrag ist nötig.
-   - Ein freiwilliger Pilot zu Hause (Spec B v1: ein Schüler, ein Erwachsener) braucht eine Einwilligung der Eltern.
+   - Spec B v1 läuft nur als Pilot zu Hause (D-011). Dafür ist nach Entscheidung des Projekts keine Einwilligung nötig; das gilt nur, solange es um die eigene Familie geht.
    - Eine Datenschutz-Folgenabschätzung ist wegen KI-Auswertung von Daten Minderjähriger sehr wahrscheinlich erforderlich.
    - Beide Specs verweisen auf vorhandene Unterlagen (Elternschreiben, AVV, DSFA) im Projektbericht. Diese gehören zum Modul, aber nicht in dieses öffentliche Repo, sofern sie Kontaktdaten enthalten.
 
@@ -259,7 +261,7 @@ Quellen:
    - Die Lehrkraft druckt vor der Stunde einen Klassensatz: ein PDF mit allen Blättern, sortiert nach Pseudonym.
    - Das Blatt wird am iPad angezeigt, gelöst wird auf Blanko-Papier mit Blatt-Code.
 
-   Siehe Frage 3 in Abschnitt 8.
+   Entschieden: Anzeige am iPad, Lösung auf Blanko-Papier (D-012).
 4. **iPads der Schule.** Spec A nennt das Smartphone für den Upload. In Klasse 10 ist das iPad das Hauptgerät; `capture="environment"` funktioniert dort. Mit der Schul-IT klären: Werden die iPads per MDM verwaltet, sind Domain und Kamera freigegeben, wird die App als Web-Clip verteilt?
 5. **Bildungsplan-Codes sind korrekt.** Alle Codes aus A 1 wurden auf bildungsplaene-bw.de geprüft. Einschränkung: Teilkompetenz 7-8-9_03 (17), die Ähnlichkeitssätze, hat kein G-Niveau. Auf G wird L1 daher nur mit (16) und (18) getaggt; die Begründung über einen Ähnlichkeitssatz bleibt M und E vorbehalten (wie im E-Zusatz von L1-A2).
 6. **Schulart.** Spec A spricht von einer Gemeinschaftsschule, Pilot ist die Staudinger Gesamtschule. Die Niveaus G, M und E mit der Fachschaft Mathematik abgleichen.
@@ -281,19 +283,43 @@ Quellen:
 
 ## 8. Offene Fragen
 
-Die Antworten verändern den Bau:
+Beantwortet am 5. Oktober 2026, festgehalten in `DECISIONS.md`:
 
-1. **Klasse 11:** Bleibt sie unter `gesamtschule/klasse-11` (gymnasiale Oberstufe der Staudinger)? Oder soll es einen eigenen Baum `gymnasium/` geben, damit Material an anderen Gymnasien wiederverwendet werden kann? Standard bis zur Antwort: `gesamtschule/klasse-11`.
-2. **Einsatzrahmen Schreibwerkstatt v1:** Pilot zu Hause (ein Kind, Einwilligung der Eltern) oder im Unterricht (Schule ist Verantwortliche)? Davon hängen Rechtsgrundlage, Geräte und Erwachsenen-Ansicht ab.
-3. **Arbeitsblätter Trigonometrie im Unterricht:** Druckt die Lehrkraft einen Klassensatz, oder wird am iPad angezeigt und auf Blanko-Papier gelöst?
-4. **Modellbetrieb zum Start:** Claude über eine EU-Region eines Cloud-Anbieters (bestes Ergebnis bei Handschrift) oder direkt selbst gehostete offene Modelle (passt zu "lokal", aber Qualität erst messen)?
-5. **Specs im Repo:** Das Repository ist öffentlich. Sollen die beiden Specs als `SPEC.md` in die Modulverzeichnisse (öffentlich sichtbar), oder wird das Repo privat, oder bleiben die Specs außerhalb?
+| Frage | Antwort | Entscheidung |
+|---|---|---|
+| 1. Klasse 11 | eigener Baum `gymnasium/` | D-010 |
+| 2. Einsatzrahmen Schreibwerkstatt v1 | nur zu Hause, keine Einwilligung nötig | D-011 |
+| 3. Arbeitsblätter Trigonometrie | am iPad anzeigen, auf Papier lösen | D-012 |
+| 4. Modellbetrieb | zuerst Claude über eine EU-Region | D-013 |
+| 5. Specs im Repo | Repo bleibt öffentlich, Specs bleiben außerhalb | D-008 |
+
+Folgen der Antworten:
+
+- **Zu 2:** Die Haushaltsausnahme (Art. 2 Abs. 2 lit. c DSGVO) trägt nur, solange es um die eigene Familie geht. Die technischen Leitplanken gelten trotzdem, damit der spätere Einsatz in der Klasse ohne Umbau möglich ist.
+- **Zu 3:** Für Spec A fallen QR-Code und Pflicht-Druck weg. Das Blatt bleibt in der App geöffnet, der Upload hängt direkt daran. Auf dem Papier stehen nur der kurze Blatt-Code und die Aufgabennummern, damit die Transkription die Lösungen zuordnen kann. Der Hinweis "Skizze, Rechenweg, Antwortsatz mit Einheit, Aufgabennummer an jede Lösung" wird am Bildschirm gezeigt.
+- **Zu 4:** Die Konfiguration erzwingt das (Abschnitt 9).
 
 ---
 
-## 9. Nächste Schritte
+## 9. Stand und nächste Schritte
 
-1. Fragen aus Abschnitt 8 beantworten und die Vorschläge in `DECISIONS.md` freigeben oder ändern.
-2. P0 Plattform-Gerüst in einer Sitzung.
-3. Parallel dazu A0 und B0 in zwei Sitzungen, jeweils im Modulverzeichnis.
-4. Danach A1 (Lektion 4 als Durchstich) und B1 (Mission m-04-01 getippt). Bei B1 sind die Freischaltregeln schon nach Abschnitt 5.3 angepasst.
+Umgesetzt am 5. Oktober 2026:
+
+- **P0 Plattform-Gerüst:**
+  - pnpm-Monorepo mit `packages/core`, `privacy`, `llm`, `db` und `apps/web` (Next.js 16)
+  - Login per Code mit generiertem Pseudonym und persönlichem Code; Sitzungen speichern nur einen Hash des Tokens
+  - Seiten für Datenschutz (Entwurf mit Platzhaltern) und Impressum
+  - Sicherheits-Header mit Content-Security-Policy ohne Drittanbieter
+  - Löschjob mit Fristen, Export und Löschung je Pseudonym
+  - `generateStructured` mit Prompt-Versionen, Schemaprüfung, Identitätsprüfung, Protokoll ohne Inhalte; Bedrock nur in der EU, direkte API nur in der Entwicklung
+  - Entfernen von Bild-Metadaten (EXIF, GPS)
+  - CI mit Tests, Typecheck, Build und einer Prüfung auf lange Gedankenstriche
+- **A0 (in Arbeit):** Fachlogik Trigonometrie in `modules/gesamtschule/klasse-10/mathematik-trigonometrie/domain/`, siehe Modul-README.
+- **B0 (in Arbeit):** Fachlogik Schreibwerkstatt in `modules/gesamtschule/klasse-07/deutsch-schreibwerkstatt/domain/`, siehe Modul-README.
+
+Als Nächstes:
+
+1. **P1:** Foto-Pipeline im Browser (Neukodierung, Skalierung, mehrseitig), S3-Speicher in der EU, Upload-Route mit Metadaten-Prüfung, Transkriptions-Bestätigung als gemeinsame Komponente.
+2. **A1:** Lektion 4 als Durchstich auf der Plattform, mit Arbeitsblatt am iPad (D-012).
+3. **B1:** Mission m-04-01 mit getipptem Text.
+4. **P2:** Ansicht für Lehrkraft und Eltern (Lesecode), PWA-Manifest und Offline, Container für die App.

@@ -1,0 +1,33 @@
+{
+  "name": "@denkraum/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "NEXT_TELEMETRY_DISABLED=1 next dev",
+    "build": "NEXT_TELEMETRY_DISABLED=1 next build",
+    "start": "NEXT_TELEMETRY_DISABLED=1 next start",
+    "seed": "node scripts/seed.ts",
+    "retention": "node scripts/retention.ts",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@denkraum/core": "workspace:*",
+    "@denkraum/db": "workspace:*",
+    "@denkraum/llm": "workspace:*",
+    "@denkraum/mod-deutsch-schreibwerkstatt": "workspace:*",
+    "@denkraum/mod-mathematik-trigonometrie": "workspace:*",
+    "@denkraum/privacy": "workspace:*",
+    "next": "^16.3.8",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.3.3"
+  }
+}

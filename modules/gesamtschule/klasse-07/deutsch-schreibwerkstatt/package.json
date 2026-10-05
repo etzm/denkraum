@@ -1,0 +1,14 @@
+{
+  "name": "@denkraum/mod-deutsch-schreibwerkstatt",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./module.ts",
+    "./domain": "./domain/index.ts"
+  },
+  "dependencies": {
+    "@denkraum/core": "workspace:*",
+    "zod": "^4.6.5"
+  }
+}
