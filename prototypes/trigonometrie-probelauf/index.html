@@ -1,0 +1,960 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Trigonometrie Probelauf</title>
+<style>
+/* Layout: one reading column on squared exercise paper, six steps top to bottom, task cards only where work happens. */
+:root {
+  --paper: #fbfcfe;
+  --grid: #e3e9f2;
+  --ink: #1b2740;
+  --muted: #56627a;
+  --pen: #2348a8;
+  --pen-soft: #e6ecfa;
+  --card: #ffffff;
+  --line: #cfd8e6;
+  --hyp: #c23b22;
+  --gk: #2457d6;
+  --ak: #19804a;
+  --ok: #17763f;
+  --ok-soft: #e3f4ea;
+  --warn: #9a5b00;
+  --warn-soft: #fbf0dc;
+  --bad: #b3261e;
+  --bad-soft: #fbe7e5;
+  --lcd: #dfe8d0;
+  --lcd-ink: #22301a;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --step: 20px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #121823; --grid: #1c2534; --ink: #e6ebf5; --muted: #a2adc2; --pen: #8fb0ff; --pen-soft: #1f2b46;
+    --card: #171f2d; --line: #2c374b; --hyp: #ff8a70; --gk: #86a8ff; --ak: #5fd08f;
+    --ok: #6fdc9b; --ok-soft: #173326; --warn: #f2c06b; --warn-soft: #33290f; --bad: #ff8f86; --bad-soft: #3a1a18;
+    --lcd: #26301e; --lcd-ink: #d8e9c0; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #121823; --grid: #1c2534; --ink: #e6ebf5; --muted: #a2adc2; --pen: #8fb0ff; --pen-soft: #1f2b46;
+  --card: #171f2d; --line: #2c374b; --hyp: #ff8a70; --gk: #86a8ff; --ak: #5fd08f;
+  --ok: #6fdc9b; --ok-soft: #173326; --warn: #f2c06b; --warn-soft: #33290f; --bad: #ff8f86; --bad-soft: #3a1a18;
+  --lcd: #26301e; --lcd-ink: #d8e9c0; color-scheme: dark;
+}
+body {
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: var(--step) var(--step);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding-inline: 16px; padding-block: 24px 64px; display: grid; gap: 28px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: 2rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.4rem; display: flex; align-items: baseline; gap: 10px; }
+h3 { font-size: 1.1rem; }
+p { margin: 0; max-width: 65ch; }
+.num { font-family: var(--font-mono); font-size: 0.85rem; color: var(--pen); border: 1.5px solid var(--pen); border-radius: 50%; width: 1.9em; height: 1.9em; display: inline-grid; place-items: center; flex: none; }
+.muted { color: var(--muted); }
+.small { font-size: 0.9rem; }
+section { display: grid; gap: 14px; }
+section > *, .wrap > * { min-width: 0; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: grid; gap: 12px; min-width: 0; }
+.top { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; border: 1.5px solid var(--pen); border-radius: 10px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--pen); font: 600 1rem var(--font-display); min-width: 52px; min-height: 44px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--pen); color: var(--card); }
+.points { font-family: var(--font-mono); font-variant-numeric: tabular-nums; background: var(--pen-soft); color: var(--pen); padding: 6px 12px; border-radius: 999px; }
+button.btn { font: 600 1rem var(--font-body); min-height: 44px; padding: 0 18px; border-radius: 10px; border: 1.5px solid var(--pen); background: var(--pen); color: var(--card); cursor: pointer; }
+button.btn.ghost { background: transparent; color: var(--pen); }
+button.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--pen); outline-offset: 2px; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+input[type="text"] { font: 1.05rem var(--font-mono); font-variant-numeric: tabular-nums; min-height: 44px; width: 8.5em; padding: 0 10px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); }
+select { font: 1rem var(--font-body); min-height: 44px; padding: 0 8px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); max-width: 100%; }
+label.check { display: flex; gap: 10px; align-items: center; min-height: 44px; }
+label.check input { width: 22px; height: 22px; accent-color: var(--pen); }
+.lcd { font-family: var(--font-mono); background: var(--lcd); color: var(--lcd-ink); border-radius: 8px; padding: 6px 12px; letter-spacing: 0.04em; }
+.msg { border-radius: 10px; padding: 10px 14px; }
+.msg.ok { background: var(--ok-soft); color: var(--ok); }
+.msg.warn { background: var(--warn-soft); color: var(--warn); }
+.msg.bad { background: var(--bad-soft); color: var(--bad); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.95rem; }
+.legend span::before { content: ""; display: inline-block; width: 18px; height: 4px; border-radius: 2px; margin-right: 6px; vertical-align: middle; background: currentColor; }
+.c-hyp { color: var(--hyp); } .c-gk { color: var(--gk); } .c-ak { color: var(--ak); }
+svg.tri { width: 100%; max-width: 520px; height: auto; display: block; }
+svg.tri text { font-family: var(--font-display); }
+.ratios { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.ratios td, .ratios th { padding: 6px 8px; border-bottom: 1px solid var(--line); text-align: left; }
+.ratios td:last-child { font-family: var(--font-mono); text-align: right; }
+.scroll { overflow-x: auto; }
+input[type="range"] { width: 100%; accent-color: var(--pen); min-height: 32px; }
+.formula { font-family: var(--font-mono); background: var(--pen-soft); color: var(--pen); padding: 2px 8px; border-radius: 6px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+ol.steps { margin: 0; padding-left: 1.4em; display: grid; gap: 6px; }
+.task-head { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline; justify-content: space-between; }
+.chip { font: 600 0.85rem var(--font-body); padding: 3px 10px; border-radius: 999px; border: 1.5px solid currentColor; }
+.chip.ok { color: var(--ok); } .chip.warn { color: var(--warn); } .chip.bad { color: var(--bad); } .chip.open { color: var(--muted); }
+.answer { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; }
+.answer .lbl { font-family: var(--font-mono); min-width: 5.5em; }
+.fb { font-size: 0.95rem; }
+.sheet-note { border-left: 4px solid var(--pen); background: var(--pen-soft); padding: 12px 14px; border-radius: 0 10px 10px 0; }
+.code { font-family: var(--font-mono); font-size: 1.3rem; letter-spacing: 0.15em; color: var(--pen); }
+.locked { opacity: 0.5; pointer-events: none; }
+.done { border: 2px solid var(--ok); }
+[hidden] { display: none !important; }
+footer { border-top: 1px solid var(--line); padding-top: 18px; display: grid; gap: 10px; }
+@media (prefers-reduced-motion: no-preference) { .card { transition: border-color 0.2s; } }
+</style>
+<div class="wrap">
+  <header class="top">
+    <div style="display:grid;gap:4px;min-width:0">
+      <h1>Seiten berechnen mit sin, cos und tan</h1>
+      <p class="muted">Trigonometrie im rechtwinkligen Dreieck, Klasse 10. Probelauf.</p>
+    </div>
+    <div class="row">
+      <div class="seg" role="group" aria-label="Niveau">
+        <button type="button" data-level="G" aria-pressed="false">G</button>
+        <button type="button" data-level="M" aria-pressed="true">M</button>
+        <button type="button" data-level="E" aria-pressed="false">E</button>
+      </div>
+      <span class="points" id="points" aria-live="polite">0 Punkte</span>
+    </div>
+  </header>
+  <p class="muted small" id="level-note"></p>
+
+  <section id="s1" aria-labelledby="h1-deg">
+    <h2 id="h1-deg"><span class="num">1</span>Taschenrechner-Check</h2>
+    <div class="card">
+      <p>Tippe <span class="formula">sin 30</span> in deinen Taschenrechner. Was zeigt er an?</p>
+      <form class="row" id="deg-form">
+        <label for="deg-input" class="muted">Anzeige:</label>
+        <input type="text" id="deg-input" inputmode="decimal" autocomplete="off" placeholder="z. B. 0,5">
+        <button class="btn" type="submit">Prüfen</button>
+      </form>
+      <div id="deg-msg" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section id="s2" aria-labelledby="h2-names">
+    <h2 id="h2-names"><span class="num">2</span>Die Seiten haben Namen</h2>
+    <p>Die <strong class="c-hyp">Hypotenuse</strong> liegt dem rechten Winkel gegenüber und ist die längste Seite. Die beiden anderen Seiten heißen Katheten. Ob eine Kathete <strong class="c-gk">Gegenkathete</strong> oder <strong class="c-ak">Ankathete</strong> ist, hängt davon ab, welchen Winkel du gerade betrachtest.</p>
+    <div class="card">
+      <div class="row">
+        <span class="muted">Winkel betrachten:</span>
+        <div class="seg" role="group" aria-label="Winkel">
+          <button type="button" data-focus="alpha" aria-pressed="true">α</button>
+          <button type="button" data-focus="beta" aria-pressed="false">β</button>
+        </div>
+      </div>
+      <svg class="tri" id="tri-names" viewBox="0 0 400 250" role="img" aria-label="Rechtwinkliges Dreieck ABC mit rechtem Winkel bei C"></svg>
+      <div class="legend" id="legend-names"></div>
+      <div class="sheet-note" style="display:grid;gap:8px">
+        <p id="quiz-q"><strong>Kurzes Quiz:</strong> Tippe auf die richtige Seite im Dreieck.</p>
+        <div id="quiz-msg" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="s3" aria-labelledby="h3-ratios">
+    <h2 id="h3-ratios"><span class="num">3</span>Sinus, Kosinus, Tangens</h2>
+    <p>Vergrößere das Dreieck. Alle Seiten werden länger, aber die Verhältnisse bleiben gleich. Sie hängen nur vom Winkel α ab. Genau diese Verhältnisse heißen Sinus, Kosinus und Tangens.</p>
+    <div class="card">
+      <div style="display:grid;gap:4px">
+        <label for="r-alpha">Winkel α: <strong id="r-alpha-val">35°</strong></label>
+        <input type="range" id="r-alpha" min="20" max="70" step="1" value="35">
+      </div>
+      <div style="display:grid;gap:4px">
+        <label for="r-k">Vergrößern: Hypotenuse c = <strong id="r-k-val">6,0 cm</strong></label>
+        <input type="range" id="r-k" min="4" max="12" step="0.5" value="6">
+      </div>
+      <svg class="tri" id="tri-ratios" viewBox="0 0 400 250" role="img" aria-label="Rechtwinkliges Dreieck mit veränderbarem Winkel und veränderbarer Größe"></svg>
+      <div class="scroll">
+        <table class="ratios" id="ratio-table"></table>
+      </div>
+    </div>
+    <div class="card" id="defs"></div>
+  </section>
+
+  <section id="s4" aria-labelledby="h4-example">
+    <h2 id="h4-example"><span class="num">4</span>Musterbeispiel</h2>
+    <div class="card">
+      <p id="ex-text"></p>
+      <svg class="tri" id="tri-example" viewBox="0 0 400 250" role="img" aria-label="Skizze zum Musterbeispiel"></svg>
+      <ol class="steps" id="ex-steps"></ol>
+      <div class="row"><button class="btn ghost" type="button" id="ex-next">Nächster Schritt</button></div>
+    </div>
+  </section>
+
+  <section id="s5" aria-labelledby="h5-faded">
+    <h2 id="h5-faded"><span class="num">5</span>Lückenaufgaben</h2>
+    <p>Ergänze die fehlenden Schritte. Danach öffnet sich dein Arbeitsblatt.</p>
+    <div id="faded"></div>
+  </section>
+
+  <section id="s6" aria-labelledby="h6-sheet">
+    <h2 id="h6-sheet"><span class="num">6</span>Arbeitsblatt</h2>
+    <div id="sheet-lock" class="msg warn">Löse zuerst die beiden Lückenaufgaben. Dann geht es hier weiter.</div>
+    <div id="sheet" class="locked" style="display:grid;gap:14px">
+      <div class="sheet-note" style="display:grid;gap:8px">
+        <p>Blatt-Code: <span class="code" id="sheet-code"></span></p>
+        <p>Arbeite auf Papier. Schreib den Blatt-Code oben auf dein Blatt und die Aufgabennummer an jede Lösung. Zu jeder Aufgabe gehören eine <strong>Skizze</strong>, der <strong>Rechenweg</strong> und ein <strong>Antwortsatz mit Einheit</strong>. Runde erst am Ende auf zwei Nachkommastellen. Trag danach hier nur deine Ergebnisse ein.</p>
+      </div>
+      <div id="tasks" style="display:grid;gap:14px"></div>
+      <div id="sheet-result" aria-live="polite"></div>
+      <div class="row"><button class="btn ghost" type="button" id="new-sheet">Neues Blatt mit neuen Zahlen</button></div>
+    </div>
+  </section>
+
+  <footer class="small muted">
+    <p><strong>Für Eltern:</strong> Diese Seite speichert nichts auf einem Server. Eingaben und Punkte bleiben nur in diesem Browser auf diesem Gerät. Es gibt keine Anmeldung, keine KI und keine Fotos. Die Ergebnisse prüft festgelegter Code mit 1 % Toleranz; die Seite verrät nie das Endergebnis, erst nach dem zweiten Fehlversuch kann der Lösungsweg angesehen werden.</p>
+    <div class="row"><button class="btn ghost" type="button" id="reset">Alles zurücksetzen</button><span id="reset-msg" aria-live="polite"></span></div>
+  </footer>
+</div>
+<script>
+(function () {
+  "use strict";
+  var RAD = Math.PI / 180;
+  var GON = Math.PI / 200;
+  var sin = function (d) { return Math.sin(d * RAD); };
+  var cos = function (d) { return Math.cos(d * RAD); };
+  var tan = function (d) { return Math.tan(d * RAD); };
+
+  // Seeded random numbers (mulberry32), so a worksheet can be rebuilt from its seed.
+  function rng(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a = (a + 0x6d2b79f5) >>> 0;
+      var t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function pick(r, min, max, step) {
+    var n = Math.round((max - min) / step);
+    return Math.round((min + step * Math.floor(r() * (n + 1))) * 1000) / 1000;
+  }
+
+  function fmt(x, digits) {
+    var d = digits === undefined ? 2 : digits;
+    return x.toLocaleString("de-DE", { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+  function fmtIn(x) {
+    return x.toLocaleString("de-DE", { maximumFractionDigits: 2 });
+  }
+
+  /** Accepts "4,59", "4.59", " 4,6 cm". Returns null if no number. */
+  function parseNumber(text) {
+    if (typeof text !== "string") return null;
+    var m = text.replace(/\s/g, "").replace(",", ".").match(/^[-+]?\d*\.?\d+/);
+    if (!m) return null;
+    var v = Number(m[0]);
+    return Number.isFinite(v) ? v : null;
+  }
+
+  var HINTS = {
+    F1: "Steht dein Taschenrechner auf DEG? Prüfe mit sin 30°: Es muss 0,5 herauskommen.",
+    F1neg: "Eine Länge kann nicht negativ sein. Stell deinen Rechner auf DEG und prüfe mit sin 30° = 0,5.",
+    F2: "Welche Seite liegt dem Winkel gegenüber? Markiere Gegenkathete und Ankathete in deiner Skizze farbig.",
+    F3: "Welche zwei Seiten kennst du, welche suchst du? Wähle das Verhältnis, das genau diese beiden Seiten enthält.",
+    F6mul: "Prüfe deine Umstellung: Die gesuchte Seite steht im Zähler. Dann multiplizierst du beide Seiten der Gleichung.",
+    F6div: "Prüfe deine Umstellung: Die gesuchte Seite steht im Nenner. Dann teilst du die bekannte Seite durch den Wert von sin, cos oder tan.",
+    F13: "Dein Ergebnis passt zu keinem typischen Fehler. Rechne Schritt für Schritt nach und runde erst am Ende."
+  };
+
+  // Each sought value: exact solution, unit, solution steps, and typical wrong paths with their hint.
+  function q(key, label, unit, value, steps, wrong) {
+    return { key: key, label: label, unit: unit, value: value, steps: steps, wrong: wrong };
+  }
+  function trigWrong(kind, x, ang, f) {
+    // Wrong paths for "unknown = x * f(ang)" (kind "mul") or "unknown = x / f(ang)" (kind "div").
+    var others = { sin: [cos, tan], cos: [sin, tan], tan: [sin, cos] };
+    var fns = { sin: sin, cos: cos, tan: tan };
+    var rad = { sin: Math.sin, cos: Math.cos, tan: Math.tan };
+    var w = [];
+    var apply = kind === "mul" ? function (g) { return x * g; } : function (g) { return x / g; };
+    w.push({ value: apply(rad[f](ang)), code: "F1" }); // calculator in RAD mode
+    w.push({ value: apply(rad[f](ang * GON)), code: "F1" }); // calculator in GRAD (gon) mode
+    var swap = f === "sin" ? "cos" : f === "cos" ? "sin" : null;
+    others[f].forEach(function (g) {
+      var name = g === sin ? "sin" : g === cos ? "cos" : "tan";
+      w.push({ value: apply(g(ang)), code: name === swap ? "F2" : "F3" });
+    });
+    if (f === "tan") w.push({ value: kind === "mul" ? x / tan(ang) : x * tan(ang), code: "F2" });
+    w.push({ value: kind === "mul" ? fns[f](ang) / x : x * fns[f](ang), code: kind === "mul" ? "F6mul" : "F6div" });
+    w.push({ value: kind === "mul" ? x / fns[f](ang) : fns[f](ang) / x, code: kind === "mul" ? "F6mul" : "F6div" });
+    return w;
+  }
+
+  var TEMPLATES = [
+    {
+      id: "A1",
+      title: "Seiten aus Hypotenuse und Winkel",
+      params: function (r) { return { c: pick(r, 6, 12, 0.5), al: pick(r, 25, 65, 1) }; },
+      text: function (p, lvl) {
+        var s = "Im Dreieck ABC ist γ = 90°, c = " + fmtIn(p.c) + " cm und α = " + p.al + "°. ";
+        if (lvl === "G") return s + "Berechne a.";
+        if (lvl === "M") return s + "Berechne a und b.";
+        return s + "Berechne a und b. Kontrolliere dein Ergebnis mit dem Satz des Pythagoras.";
+      },
+      sought: function (p, lvl) {
+        var a = p.c * sin(p.al), b = p.c * cos(p.al);
+        var out = [q("a", "a", "cm", a,
+          ["a ist die Gegenkathete von α, c ist die Hypotenuse.", "sin α = a : c", "a = c · sin α = " + fmtIn(p.c) + " cm · sin " + p.al + "° ≈ " + fmt(a) + " cm"],
+          trigWrong("mul", p.c, p.al, "sin"))];
+        if (lvl !== "G") out.push(q("b", "b", "cm", b,
+          ["b ist die Ankathete von α.", "cos α = b : c", "b = c · cos α = " + fmtIn(p.c) + " cm · cos " + p.al + "° ≈ " + fmt(b) + " cm"],
+          trigWrong("mul", p.c, p.al, "cos")));
+        return out;
+      }
+    },
+    {
+      id: "A2",
+      title: "Gegenkathete aus Ankathete und Winkel",
+      params: function (r) { return { b: pick(r, 3, 9, 0.5), al: pick(r, 25, 65, 1) }; },
+      text: function (p) {
+        return "Im Dreieck ABC ist γ = 90°, b = " + fmtIn(p.b) + " cm und α = " + p.al + "°. Berechne a.";
+      },
+      sought: function (p) {
+        var a = p.b * tan(p.al);
+        return [q("a", "a", "cm", a,
+          ["a ist die Gegenkathete von α, b ist die Ankathete von α.", "tan α = a : b", "a = b · tan α = " + fmtIn(p.b) + " cm · tan " + p.al + "° ≈ " + fmt(a) + " cm"],
+          trigWrong("mul", p.b, p.al, "tan"))];
+      }
+    },
+    {
+      id: "A3",
+      title: "Hypotenuse aus Gegenkathete und Winkel",
+      params: function (r) { return { a: pick(r, 3, 9, 0.5), al: pick(r, 25, 65, 1) }; },
+      text: function (p, lvl) {
+        var s = "Im Dreieck ABC ist γ = 90°, a = " + fmtIn(p.a) + " cm und α = " + p.al + "°. ";
+        return lvl === "G" ? s + "Berechne c." : s + "Berechne c und b.";
+      },
+      sought: function (p, lvl) {
+        var c = p.a / sin(p.al), b = p.a / tan(p.al);
+        var out = [q("c", "c", "cm", c,
+          ["a ist die Gegenkathete von α, c ist die Hypotenuse.", "sin α = a : c", "c steht im Nenner: c = a : sin α = " + fmtIn(p.a) + " cm : sin " + p.al + "° ≈ " + fmt(c) + " cm"],
+          trigWrong("div", p.a, p.al, "sin"))];
+        if (lvl !== "G") out.push(q("b", "b", "cm", b,
+          ["b ist die Ankathete von α.", "tan α = a : b", "b steht im Nenner: b = a : tan α = " + fmtIn(p.a) + " cm : tan " + p.al + "° ≈ " + fmt(b) + " cm"],
+          trigWrong("div", p.a, p.al, "tan")));
+        return out;
+      }
+    },
+    {
+      id: "A4",
+      title: "Leiter an der Wand",
+      params: function (r) { return { L: pick(r, 3, 6, 0.5), al: pick(r, 60, 78, 1) }; },
+      text: function (p, lvl) {
+        var s = "Eine " + fmtIn(p.L) + " m lange Leiter lehnt an einer senkrechten Wand. Sie bildet mit dem Boden einen Winkel von " + p.al + "°. Wie hoch reicht die Leiter an der Wand?";
+        return lvl === "G" ? s : s + " Wie weit steht der Fuß der Leiter von der Wand entfernt?";
+      },
+      sought: function (p, lvl) {
+        var h = p.L * sin(p.al), d = p.L * cos(p.al);
+        var out = [q("h", "Höhe h", "m", h,
+          ["Skizze: Wand, Boden und Leiter bilden ein rechtwinkliges Dreieck. Die Leiter ist die Hypotenuse.", "Die Höhe h liegt dem Winkel am Boden gegenüber: sin α = h : Leiter", "h = " + fmtIn(p.L) + " m · sin " + p.al + "° ≈ " + fmt(h) + " m"],
+          trigWrong("mul", p.L, p.al, "sin"))];
+        if (lvl !== "G") out.push(q("d", "Abstand d", "m", d,
+          ["Der Abstand d am Boden ist die Ankathete des Winkels.", "cos α = d : Leiter", "d = " + fmtIn(p.L) + " m · cos " + p.al + "° ≈ " + fmt(d) + " m"],
+          trigWrong("mul", p.L, p.al, "cos")));
+        return out;
+      }
+    }
+  ];
+
+  var REL_TOL = 0.01;
+
+  /** Same rule as the module (DECISIONS T-05): 1 % tolerance, or exactly the correctly rounded value with at least one decimal. */
+  function accepts(received, expected) {
+    if (Math.abs(received - expected) <= REL_TOL * Math.abs(expected)) return true;
+    var s = String(received);
+    var dec = s.indexOf(".") >= 0 ? s.length - s.indexOf(".") - 1 : 0;
+    if (dec < 1) return false;
+    return Math.abs(Number(expected.toFixed(dec)) - received) < 1e-9;
+  }
+
+  /** A worksheet task is ambiguous if a wrong path lands within tolerance (or rounds to the same 2-decimal value). */
+  function isAmbiguous(sought) {
+    return sought.some(function (s) {
+      return s.wrong.some(function (w) {
+        return Math.abs(w.value - s.value) <= 0.03 * Math.abs(s.value) || fmt(w.value) === fmt(s.value);
+      });
+    });
+  }
+
+  function buildTask(tpl, seed, index, lvl) {
+    for (var attempt = 0; attempt < 200; attempt++) {
+      var r = rng((seed ^ (index * 7919 + attempt * 104729)) >>> 0);
+      var p = tpl.params(r);
+      var sought = tpl.sought(p, lvl);
+      var bad = sought.some(function (s) { return !(s.value > 0); });
+      if (!bad && !isAmbiguous(sought)) {
+        return { id: tpl.id, nr: index + 1, title: tpl.title, text: tpl.text(p, lvl), params: p, sought: sought };
+      }
+    }
+    throw new Error("no unambiguous parameters for " + tpl.id);
+  }
+
+  function buildWorksheet(seed, lvl) {
+    return TEMPLATES.map(function (tpl, i) { return buildTask(tpl, seed, i, lvl); });
+  }
+
+  /** Checks one entered value. Never returns the right result, only a verdict and a hint. */
+  function check(sought, text) {
+    var v = parseNumber(text);
+    if (v === null) return { status: "empty", hint: "Trag eine Zahl ein, zum Beispiel 4,59." };
+    if (accepts(v, sought.value)) return { status: "correct" };
+    if (v < 0 && sought.unit !== "°") return { status: "wrong", code: "F1", hint: HINTS.F1neg };
+    for (var i = 0; i < sought.wrong.length; i++) {
+      var w = sought.wrong[i];
+      if (accepts(v, w.value)) return { status: "wrong", code: w.code, hint: HINTS[w.code] };
+    }
+    return { status: "wrong", code: "F13", hint: HINTS.F13 };
+  }
+
+  function sheetCode(seed) {
+    var alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+    var r = rng(seed ^ 0x5bd1e995), s = "";
+    for (var i = 0; i < 4; i++) s += alphabet[Math.floor(r() * alphabet.length)];
+    return s;
+  }
+
+  function degCheck(text) {
+    var v = parseNumber(text);
+    if (v === null) return { status: "empty" };
+    if (Math.abs(v - 0.5) < 0.001) return { status: "deg" };
+    if (Math.abs(v - Math.sin(30)) < 0.002) return { status: "rad" };
+    if (Math.abs(v - Math.sin(30 * GON)) < 0.002) return { status: "grad" };
+    return { status: "other" };
+  }
+
+  var api = { rng: rng, fmt: fmt, parseNumber: parseNumber, accepts: accepts, check: check, buildWorksheet: buildWorksheet, isAmbiguous: isAmbiguous, sheetCode: sheetCode, degCheck: degCheck, HINTS: HINTS, sin: sin, cos: cos, tan: tan, trigWrong: trigWrong };
+  if (typeof globalThis !== "undefined") globalThis.TrialLogic = api;
+})();
+</script>
+<script>
+(function () {
+  "use strict";
+  var T = window.TrialLogic;
+  var KEY = "denkraum-trig-probe-v1";
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---------- state (only in this browser) ----------
+  function newSeed() {
+    try { var a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]; } catch (e) { return Math.floor(Math.random() * 4294967296); }
+  }
+  var state = { level: "M", seed: newSeed(), points: 0, deg: null, faded: {}, tasks: {}, quizScore: 0 };
+  try {
+    var saved = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (saved && typeof saved === "object") state = Object.assign(state, saved);
+  } catch (e) { /* storage unavailable: work without it */ }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } }
+  function addPoints(n) { state.points += n; $("points").textContent = state.points + " Punkte"; save(); }
+
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === "text") node.textContent = attrs[k];
+      else if (k === "html") node.innerHTML = attrs[k];
+      else node.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) { if (c) node.appendChild(c); });
+    return node;
+  }
+  function msg(target, kind, text) {
+    target.innerHTML = "";
+    if (text) target.appendChild(el("div", { class: "msg " + kind, text: text }));
+  }
+
+  // ---------- triangle drawing ----------
+  function svgEl(tag, attrs) {
+    var n = document.createElementNS(SVGNS, tag);
+    Object.keys(attrs).forEach(function (k) { n.setAttribute(k, attrs[k]); });
+    return n;
+  }
+  function roles(focus) {
+    // Side a = BC, b = AC, c = AB (hypotenuse, right angle at C).
+    if (focus === "beta") return { a: "ak", b: "gk", c: "hyp" };
+    if (focus === "alpha") return { a: "gk", b: "ak", c: "hyp" };
+    return { a: "plain", b: "plain", c: "plain" };
+  }
+  var ROLE_COLOR = { hyp: "var(--hyp)", gk: "var(--gk)", ak: "var(--ak)", plain: "var(--ink)" };
+
+  function drawTriangle(svg, o) {
+    var alpha = o.alpha, scale = o.scale || 1;
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    var cpx = 340 * scale, A = { x: 30, y: 225 };
+    var B = { x: A.x + cpx, y: A.y };
+    var bpx = cpx * Math.cos(alpha * Math.PI / 180);
+    var C = { x: A.x + bpx * Math.cos(alpha * Math.PI / 180), y: A.y - bpx * Math.sin(alpha * Math.PI / 180) };
+    var r = roles(o.focus);
+    var sides = { a: [B, C], b: [A, C], c: [A, B] };
+    var labels = o.labels || { a: "a", b: "b", c: "c" };
+    Object.keys(sides).forEach(function (s) {
+      var p = sides[s];
+      var line = svgEl("line", { x1: p[0].x, y1: p[0].y, x2: p[1].x, y2: p[1].y, stroke: ROLE_COLOR[r[s]], "stroke-width": 4, "stroke-linecap": "round" });
+      svg.appendChild(line);
+      if (o.onSide) {
+        var hit = svgEl("line", { x1: p[0].x, y1: p[0].y, x2: p[1].x, y2: p[1].y, stroke: "transparent", "stroke-width": 28, style: "cursor:pointer", "data-side": s, tabindex: "0", role: "button", "aria-label": "Seite " + s });
+        hit.addEventListener("click", function () { o.onSide(s); });
+        hit.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); o.onSide(s); } });
+        svg.appendChild(hit);
+      }
+    });
+    // right angle marker at C
+    var u = function (P, Q) { var dx = Q.x - P.x, dy = Q.y - P.y, l = Math.hypot(dx, dy); return { x: dx / l, y: dy / l }; };
+    var ua = u(C, A), ub = u(C, B), m = 14;
+    svg.appendChild(svgEl("path", { d: "M" + (C.x + ua.x * m) + " " + (C.y + ua.y * m) + " L" + (C.x + (ua.x + ub.x) * m) + " " + (C.y + (ua.y + ub.y) * m) + " L" + (C.x + ub.x * m) + " " + (C.y + ub.y * m), fill: "none", stroke: "var(--muted)", "stroke-width": 1.5 }));
+    svg.appendChild(svgEl("circle", { cx: C.x + (ua.x + ub.x) * m * 0.5, cy: C.y + (ua.y + ub.y) * m * 0.5, r: 1.8, fill: "var(--muted)" }));
+    // angle arcs
+    function arc(P, from, to, label, active) {
+      var R = 30, a1 = Math.atan2(from.y - P.y, from.x - P.x), a2 = Math.atan2(to.y - P.y, to.x - P.x);
+      var p1 = { x: P.x + R * Math.cos(a1), y: P.y + R * Math.sin(a1) }, p2 = { x: P.x + R * Math.cos(a2), y: P.y + R * Math.sin(a2) };
+      var sweep = ((a2 - a1 + 2 * Math.PI) % (2 * Math.PI)) < Math.PI ? 1 : 0;
+      svg.appendChild(svgEl("path", { d: "M" + p1.x + " " + p1.y + " A" + R + " " + R + " 0 0 " + sweep + " " + p2.x + " " + p2.y, fill: active ? "var(--pen-soft)" : "none", stroke: active ? "var(--pen)" : "var(--muted)", "stroke-width": active ? 2.5 : 1.5 }));
+      var mid = (a1 + a2) / 2;
+      if (Math.abs(a2 - a1) > Math.PI) mid += Math.PI;
+      var t = svgEl("text", { x: P.x + 46 * Math.cos(mid), y: P.y + 46 * Math.sin(mid) + 6, "text-anchor": "middle", "font-size": 18, fill: active ? "var(--pen)" : "var(--ink)", "font-weight": active ? 700 : 400 });
+      t.textContent = label;
+      svg.appendChild(t);
+    }
+    arc(A, B, C, o.alphaLabel || "α", o.focus === "alpha");
+    arc(B, C, A, "β", o.focus === "beta");
+    // vertex labels
+    [["A", A, -14, 20], ["B", B, 14, 20], ["C", C, 0, -12]].forEach(function (v) {
+      var t = svgEl("text", { x: v[1].x + v[2], y: v[1].y + v[3], "text-anchor": "middle", "font-size": 17, fill: "var(--muted)" });
+      t.textContent = v[0];
+      svg.appendChild(t);
+    });
+    // side labels, pushed away from the triangle
+    var G = { x: (A.x + B.x + C.x) / 3, y: (A.y + B.y + C.y) / 3 };
+    Object.keys(sides).forEach(function (s) {
+      var p = sides[s], M = { x: (p[0].x + p[1].x) / 2, y: (p[0].y + p[1].y) / 2 };
+      var d = u(G, M), off = s === "c" ? 22 : 18;
+      var t = svgEl("text", { x: M.x + d.x * off, y: M.y + d.y * off + 6, "text-anchor": "middle", "font-size": 17, "font-weight": 700, fill: ROLE_COLOR[r[s]] });
+      t.textContent = labels[s];
+      svg.appendChild(t);
+    });
+  }
+
+  // ---------- level ----------
+  var LEVEL_NOTE = {
+    G: "Niveau G: Sinus und Tangens. Pro Aufgabe ist meist eine Seite gesucht.",
+    M: "Niveau M: Sinus, Kosinus und Tangens. Pro Aufgabe sind oft zwei Seiten gesucht.",
+    E: "Niveau E: wie M, dazu Kontrolle mit dem Satz des Pythagoras und mehr Schritte selbst aufschreiben."
+  };
+  function setLevel(lvl) {
+    state.level = lvl;
+    document.querySelectorAll("[data-level]").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.level === lvl)); });
+    $("level-note").textContent = LEVEL_NOTE[lvl] + " Du kannst das Niveau jederzeit wechseln.";
+    save();
+    renderDefs(); renderExample(); renderFaded(); renderSheet();
+  }
+
+  // ---------- 1: calculator ----------
+  $("deg-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var r = T.degCheck($("deg-input").value), box = $("deg-msg");
+    if (r.status === "deg") {
+      msg(box, "ok", "Richtig, 0,5. Dein Rechner steht auf DEG (Grad). So soll es sein.");
+      if (!state.deg) { state.deg = "ok"; addPoints(5); }
+    } else if (r.status === "rad") {
+      msg(box, "bad", "Dein Rechner steht auf RAD (Bogenmaß). Stell ihn auf DEG um, meist über SHIFT und MODE oder SETUP. Dann muss sin 30 genau 0,5 ergeben.");
+      if (!state.deg) state.deg = "tried";
+    } else if (r.status === "grad") {
+      msg(box, "bad", "Dein Rechner steht auf GRAD (Neugrad). Stell ihn auf DEG um. Dann muss sin 30 genau 0,5 ergeben.");
+      if (!state.deg) state.deg = "tried";
+    } else if (r.status === "empty") {
+      msg(box, "warn", "Trag ein, was dein Rechner anzeigt.");
+    } else {
+      msg(box, "warn", "Das passt nicht zu sin 30. Prüfe, ob du sin 30 eingetippt hast.");
+    }
+    save();
+  });
+
+  // ---------- 2: names and quiz ----------
+  var namesFocus = "alpha";
+  var QUIZ = [
+    { ask: "Tippe auf die Gegenkathete von α.", focus: "alpha", side: "a" },
+    { ask: "Tippe auf die Ankathete von β.", focus: "beta", side: "a" },
+    { ask: "Tippe auf die Hypotenuse.", focus: "alpha", side: "c" },
+    { ask: "Tippe auf die Gegenkathete von β.", focus: "beta", side: "b" },
+    { ask: "Tippe auf die Ankathete von α.", focus: "alpha", side: "b" }
+  ];
+  var quizIndex = 0;
+  function renderNames() {
+    drawTriangle($("tri-names"), { alpha: 36, focus: namesFocus, onSide: answerQuiz });
+    var r = roles(namesFocus), name = namesFocus === "alpha" ? "α" : "β";
+    var leg = $("legend-names");
+    leg.innerHTML = "";
+    leg.appendChild(el("span", { class: "c-hyp", text: "Hypotenuse: c" }));
+    leg.appendChild(el("span", { class: "c-gk", text: "Gegenkathete von " + name + ": " + (r.a === "gk" ? "a" : "b") }));
+    leg.appendChild(el("span", { class: "c-ak", text: "Ankathete von " + name + ": " + (r.a === "ak" ? "a" : "b") }));
+    var q = QUIZ[quizIndex % QUIZ.length];
+    $("quiz-q").innerHTML = "<strong>Quiz " + (quizIndex % QUIZ.length + 1) + " von " + QUIZ.length + ":</strong> " + q.ask;
+  }
+  function answerQuiz(side) {
+    var q = QUIZ[quizIndex % QUIZ.length];
+    if (side === q.side) {
+      msg($("quiz-msg"), "ok", "Richtig! Seite " + side + ".");
+      quizIndex++;
+      if (quizIndex === QUIZ.length) msg($("quiz-msg"), "ok", "Alle fünf richtig. Du kannst die Seiten benennen.");
+      setTimeout(renderNames, 600);
+    } else {
+      msg($("quiz-msg"), "warn", "Noch nicht. Schau, wo der Winkel liegt: Die Gegenkathete berührt ihn nicht, die Ankathete liegt an ihm an. Die Hypotenuse liegt dem rechten Winkel gegenüber.");
+    }
+  }
+  document.querySelectorAll("[data-focus]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      namesFocus = b.dataset.focus;
+      document.querySelectorAll("[data-focus]").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+      renderNames();
+    });
+  });
+
+  // ---------- 3: ratios ----------
+  function renderRatios() {
+    var al = Number($("r-alpha").value), c = Number($("r-k").value);
+    var a = c * T.sin(al), b = c * T.cos(al);
+    $("r-alpha-val").textContent = al + "°";
+    $("r-k-val").textContent = T.fmt(c, 1) + " cm";
+    drawTriangle($("tri-ratios"), { alpha: al, focus: "alpha", scale: 0.35 + 0.65 * (c - 4) / 8 });
+    var rows = [
+      ["Gegenkathete a", T.fmt(a) + " cm"], ["Ankathete b", T.fmt(b) + " cm"], ["Hypotenuse c", T.fmt(c) + " cm"],
+      ["a : c (Gegenkathete : Hypotenuse)", T.fmt(a / c, 3)],
+      ["b : c (Ankathete : Hypotenuse)", T.fmt(b / c, 3)],
+      ["a : b (Gegenkathete : Ankathete)", T.fmt(a / b, 3)]
+    ];
+    var tbl = $("ratio-table");
+    tbl.innerHTML = "";
+    rows.forEach(function (row, i) {
+      var tr = el("tr", null, [el("td", { text: row[0] }), el("td", { text: row[1] })]);
+      if (i === 3) tr.style.borderTop = "2px solid var(--line)";
+      tbl.appendChild(tr);
+    });
+  }
+  $("r-alpha").addEventListener("input", renderRatios);
+  $("r-k").addEventListener("input", renderRatios);
+
+  function renderDefs() {
+    var g = state.level === "G";
+    var box = $("defs");
+    box.innerHTML = "";
+    box.appendChild(el("h3", { text: "Das merkst du dir" }));
+    var list = el("div", { style: "display:grid;gap:8px" });
+    list.appendChild(el("p", { html: "<span class=\"formula\">sin α = Gegenkathete : Hypotenuse</span>" }));
+    if (!g) list.appendChild(el("p", { html: "<span class=\"formula\">cos α = Ankathete : Hypotenuse</span>" }));
+    list.appendChild(el("p", { html: "<span class=\"formula\">tan α = Gegenkathete : Ankathete</span>" }));
+    box.appendChild(list);
+    box.appendChild(el("p", { class: "muted small", text: g
+      ? "Auf Niveau G brauchst du Sinus und Tangens. Den Kosinus (Ankathete : Hypotenuse) lernst du auf M und E."
+      : "Merkhilfe GAGA HühnerHof AG: sin = G : H, cos = A : H, tan = G : A." }));
+  }
+
+  // ---------- 4: worked example ----------
+  var exStep = 0;
+  function exampleSteps() {
+    var s = [
+      "Skizze zeichnen und beschriften: rechter Winkel bei C, c = 8 cm, α = 35°.",
+      "Seiten benennen: a liegt α gegenüber, also ist a die Gegenkathete. c ist die Hypotenuse.",
+      "Verhältnis wählen: Gegenkathete und Hypotenuse, das ist der Sinus. sin α = a : c",
+      "Umstellen: beide Seiten mal c. a = c · sin α",
+      "Rechnen: a = 8 cm · sin 35° ≈ 8 · 0,5736 ≈ 4,5886 cm",
+      "Erst am Ende runden: a ≈ 4,59 cm. Antwortsatz: Die Seite a ist etwa 4,59 cm lang."
+    ];
+    if (state.level !== "G") s.push("Genauso für b: b ist die Ankathete von α. b = c · cos α = 8 cm · cos 35° ≈ 6,55 cm.");
+    if (state.level === "E") s.push("Kontrolle mit Pythagoras: a² + b² = 4,59² + 6,55² ≈ 21,07 + 42,90 = 63,97 ≈ 64 = 8² = c². Passt.");
+    return s;
+  }
+  function renderExample() {
+    var steps = exampleSteps();
+    if (exStep > steps.length) exStep = steps.length;
+    $("ex-text").textContent = "Im Dreieck ABC ist γ = 90°, c = 8 cm und α = 35°. Berechne " + (state.level === "G" ? "a." : "a und b.");
+    drawTriangle($("tri-example"), { alpha: 35, focus: "alpha", labels: { a: "a = ?", b: state.level === "G" ? "b" : "b = ?", c: "c = 8 cm" }, alphaLabel: "35°" });
+    var ol = $("ex-steps");
+    ol.innerHTML = "";
+    steps.slice(0, exStep).forEach(function (t) { ol.appendChild(el("li", { text: t })); });
+    var btn = $("ex-next");
+    btn.disabled = exStep >= steps.length;
+    btn.textContent = exStep === 0 ? "Ersten Schritt zeigen" : exStep >= steps.length ? "Fertig" : "Nächster Schritt";
+  }
+  $("ex-next").addEventListener("click", function () { exStep++; renderExample(); });
+
+  // ---------- 5: faded tasks ----------
+  var FADED = [
+    {
+      id: "L1", text: "Im Dreieck ABC ist γ = 90°, c = 10 cm und β = 50°. Gesucht ist b, die Gegenkathete von β.",
+      steps: [
+        { key: "ansatz", label: "Ansatz", options: ["sin β = b : c", "cos β = b : c", "tan β = b : c"], correct: 0, hint: "b liegt β gegenüber, c ist die Hypotenuse. Welches Verhältnis ist Gegenkathete : Hypotenuse?" },
+        { key: "um", label: "Umstellung", options: ["b = c · sin β", "b = sin β : c", "b = c : sin β"], correct: 0, hint: "b steht im Zähler. Multipliziere beide Seiten mit c." },
+        { key: "erg", label: "Ergebnis b", unit: "cm", sought: { value: 10 * T.sin(50), unit: "cm", wrong: T.trigWrong("mul", 10, 50, "sin") } }
+      ]
+    },
+    {
+      id: "L2", text: "Im Dreieck ABC ist γ = 90°, b = 6 cm und α = 40°. Gesucht ist a, die Gegenkathete von α.",
+      steps: [
+        { key: "ansatz", label: "Ansatz", options: ["sin α = a : b", "tan α = a : b", "cos α = a : b"], correct: 1, hint: "a liegt α gegenüber, b liegt an α an. Welches Verhältnis ist Gegenkathete : Ankathete?" },
+        { key: "um", label: "Umstellung", options: ["a = tan α : b", "a = b : tan α", "a = b · tan α"], correct: 2, hint: "a steht im Zähler. Multipliziere beide Seiten mit b." },
+        { key: "erg", label: "Ergebnis a", unit: "cm", sought: { value: 6 * T.tan(40), unit: "cm", wrong: T.trigWrong("mul", 6, 40, "tan") } }
+      ]
+    }
+  ];
+  // How many steps the student fills in: G only the result, M also the rearrangement, E everything.
+  var HIDDEN_FROM = { G: 2, M: 1, E: 0 };
+  function fadedState(id) { state.faded[id] = state.faded[id] || { solved: false, wrong: 0 }; return state.faded[id]; }
+  function totalFadedWrong() { return FADED.reduce(function (n, f) { return n + fadedState(f.id).wrong; }, 0); }
+  function sheetUnlocked() { return FADED.every(function (f) { return fadedState(f.id).solved; }) || totalFadedWrong() >= 3; }
+
+  function renderFaded() {
+    var host = $("faded");
+    host.innerHTML = "";
+    FADED.forEach(function (f) {
+      var st = fadedState(f.id);
+      var card = el("form", { class: "card" + (st.solved ? " done" : "") });
+      card.appendChild(el("p", { text: f.text }));
+      var from = HIDDEN_FROM[state.level];
+      var fields = [];
+      f.steps.forEach(function (s, i) {
+        var line = el("div", { class: "answer" });
+        line.appendChild(el("span", { class: "lbl", text: s.label + ":" }));
+        if (i < from) {
+          line.appendChild(el("span", { class: "formula", text: s.options[s.correct] }));
+        } else if (s.options) {
+          var sel = el("select", { id: "f-" + f.id + "-" + s.key, "aria-label": s.label });
+          sel.appendChild(el("option", { value: "", text: "Bitte wählen" }));
+          s.options.forEach(function (o, j) { sel.appendChild(el("option", { value: String(j), text: o })); });
+          line.appendChild(sel);
+          fields.push({ step: s, input: sel });
+        } else {
+          var inp = el("input", { type: "text", id: "f-" + f.id + "-" + s.key, inputmode: "decimal", autocomplete: "off", "aria-label": s.label });
+          line.appendChild(inp);
+          line.appendChild(el("span", { text: s.unit }));
+          fields.push({ step: s, input: inp });
+        }
+        card.appendChild(line);
+      });
+      var fb = el("div", { class: "fb", "aria-live": "polite" });
+      var btn = el("button", { class: "btn", type: "submit", text: st.solved ? "Gelöst" : "Prüfen" });
+      if (st.solved) btn.disabled = true;
+      card.appendChild(el("div", { class: "row" }, [btn]));
+      card.appendChild(fb);
+      if (st.solved) msg(fb, "ok", "Richtig gelöst.");
+      card.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (st.solved) return;
+        for (var k = 0; k < fields.length; k++) {
+          var fld = fields[k], s = fld.step;
+          if (s.options) {
+            if (fld.input.value === "") { msg(fb, "warn", "Wähle bei „" + s.label + "“ eine Möglichkeit aus."); return; }
+            if (Number(fld.input.value) !== s.correct) { st.wrong++; save(); msg(fb, "bad", s.label + ": " + s.hint); updateLock(); return; }
+          } else {
+            var r = T.check(s.sought, fld.input.value);
+            if (r.status === "empty") { msg(fb, "warn", r.hint); return; }
+            if (r.status !== "correct") { st.wrong++; save(); msg(fb, "bad", r.hint); updateLock(); return; }
+          }
+        }
+        st.solved = true;
+        addPoints(5);
+        save();
+        renderFaded();
+        updateLock();
+      });
+      host.appendChild(card);
+    });
+  }
+  function updateLock() {
+    var open = sheetUnlocked();
+    $("sheet").classList.toggle("locked", !open);
+    $("sheet").setAttribute("aria-disabled", String(!open));
+    var lock = $("sheet-lock");
+    if (open) {
+      var withHelp = !FADED.every(function (f) { return fadedState(f.id).solved; });
+      lock.className = withHelp ? "msg warn" : "msg ok";
+      lock.textContent = withHelp ? "Dein Arbeitsblatt ist offen. Die Lückenaufgaben kannst du später noch einmal versuchen." : "Beide Lückenaufgaben gelöst. Dein Arbeitsblatt ist offen.";
+    } else {
+      lock.className = "msg warn";
+      lock.textContent = "Löse zuerst die beiden Lückenaufgaben. Dann geht es hier weiter.";
+    }
+  }
+
+  // ---------- 6: worksheet ----------
+  function taskKey(t) { return state.level + "-" + state.seed + "-" + t.id; }
+  function taskState(t) {
+    var k = taskKey(t);
+    state.tasks[k] = state.tasks[k] || { attempts: 0, solved: false, solvedAt: 0, solution: false, sketch: false, sentence: false };
+    return state.tasks[k];
+  }
+  function renderSheet() {
+    var ws = T.buildWorksheet(state.seed, state.level);
+    $("sheet-code").textContent = T.sheetCode(state.seed);
+    var host = $("tasks");
+    host.innerHTML = "";
+    ws.forEach(function (t) { host.appendChild(renderTask(t)); });
+    renderSheetResult(ws);
+  }
+  function chipFor(st) {
+    if (st.solved && (!st.sketch || !st.sentence)) return { cls: "warn", text: "fast" };
+    if (st.solved) return { cls: "ok", text: "richtig" };
+    if (st.solution) return { cls: "bad", text: "mit Lösungsweg" };
+    if (st.attempts > 0) return { cls: "bad", text: "nochmal" };
+    return { cls: "open", text: "offen" };
+  }
+  function renderTask(t) {
+    var st = taskState(t);
+    var card = el("form", { class: "card" + (st.solved ? " done" : "") });
+    var chip = chipFor(st);
+    card.appendChild(el("div", { class: "task-head" }, [
+      el("h3", { text: "Aufgabe " + t.nr + ": " + t.title }),
+      el("span", { class: "chip " + chip.cls, text: chip.text })
+    ]));
+    card.appendChild(el("p", { text: t.text }));
+    var inputs = t.sought.map(function (s) {
+      var id = "t-" + t.id + "-" + s.key;
+      var inp = el("input", { type: "text", id: id, inputmode: "decimal", autocomplete: "off" });
+      if (st.values && st.values[s.key]) inp.value = st.values[s.key];
+      var line = el("div", { class: "answer" }, [el("label", { class: "lbl", for: id, text: s.label + " =" }), inp, el("span", { text: s.unit })]);
+      var fb = el("div", { class: "fb", "aria-live": "polite" });
+      card.appendChild(line);
+      card.appendChild(fb);
+      return { s: s, input: inp, fb: fb };
+    });
+    var sk = el("input", { type: "checkbox", id: "sk-" + t.id });
+    sk.checked = !!st.sketch;
+    var se = el("input", { type: "checkbox", id: "se-" + t.id });
+    se.checked = !!st.sentence;
+    card.appendChild(el("label", { class: "check", for: "sk-" + t.id }, [sk, document.createTextNode("Ich habe eine Skizze gezeichnet und beschriftet.")]));
+    card.appendChild(el("label", { class: "check", for: "se-" + t.id }, [se, document.createTextNode("Ich habe einen Antwortsatz mit Einheit geschrieben.")]));
+    var status = el("div", { "aria-live": "polite" });
+    var check = el("button", { class: "btn", type: "submit", text: "Prüfen" });
+    var row = el("div", { class: "row" }, [check]);
+    card.appendChild(row);
+    card.appendChild(status);
+    var solBox = el("div", { class: "sheet-note", style: "display:grid;gap:6px" });
+    solBox.hidden = true;
+    card.appendChild(solBox);
+
+    function showSolution() {
+      solBox.hidden = false;
+      solBox.innerHTML = "";
+      solBox.appendChild(el("strong", { text: "Lösungsweg" }));
+      t.sought.forEach(function (s) {
+        var ol = el("ol", { class: "steps" });
+        s.steps.forEach(function (x) { ol.appendChild(el("li", { text: x })); });
+        solBox.appendChild(ol);
+      });
+      if (state.level === "E" && t.id === "A1") {
+        var a = t.sought[0].value, b = t.sought[1].value;
+        solBox.appendChild(el("p", { text: "Kontrolle: a² + b² ≈ " + T.fmt(a * a + b * b) + " und c² = " + T.fmt(t.params.c * t.params.c) + ". Passt." }));
+      }
+    }
+    function addSolutionButton() {
+      if (st.solved || st.solution || st.attempts < 2 || row.querySelector(".sol")) return;
+      var b = el("button", { class: "btn ghost sol", type: "button", text: "Lösungsweg ansehen" });
+      b.addEventListener("click", function () { st.solution = true; save(); showSolution(); b.remove(); refreshChip(); });
+      row.appendChild(b);
+    }
+    function refreshChip() {
+      var c = chipFor(st), node = card.querySelector(".chip");
+      node.className = "chip " + c.cls;
+      node.textContent = c.text;
+      card.classList.toggle("done", st.solved);
+      renderSheetResult(T.buildWorksheet(state.seed, state.level));
+    }
+    sk.addEventListener("change", function () { st.sketch = sk.checked; save(); refreshChip(); });
+    se.addEventListener("change", function () { st.sentence = se.checked; save(); refreshChip(); });
+
+    if (st.solved) {
+      check.disabled = true; check.textContent = "Gelöst";
+      msg(status, "ok", "Richtig gelöst.");
+      var cmp = el("button", { class: "btn ghost", type: "button", text: "Lösungsweg zum Vergleichen" });
+      cmp.addEventListener("click", showSolution);
+      row.appendChild(cmp);
+    } else if (st.solution) {
+      showSolution();
+    }
+    addSolutionButton();
+
+    card.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (st.solved) return;
+      st.values = {};
+      var allRight = true, anyEmpty = false;
+      inputs.forEach(function (x) {
+        st.values[x.s.key] = x.input.value;
+        var r = T.check(x.s, x.input.value);
+        if (r.status === "empty") { anyEmpty = true; msg(x.fb, "warn", r.hint); return; }
+        if (r.status === "correct") msg(x.fb, "ok", x.s.label + " stimmt.");
+        else { allRight = false; msg(x.fb, "bad", x.s.label + ": " + r.hint); }
+      });
+      if (anyEmpty) { save(); return; }
+      st.attempts++;
+      if (allRight) {
+        st.solved = true; st.solvedAt = st.attempts;
+        var pts = st.solution ? 0 : st.attempts === 1 ? 20 : st.attempts === 2 ? 10 : 5;
+        if (st.sketch) pts += 3;
+        addPoints(pts);
+        var extra = [];
+        if (!st.sketch) extra.push("eine beschriftete Skizze");
+        if (!st.sentence) extra.push("einen Antwortsatz mit Einheit");
+        if (extra.length) msg(status, "warn", "Die Werte stimmen. Ergänze auf deinem Blatt noch " + extra.join(" und ") + ", dann ist die Aufgabe vollständig.");
+        else msg(status, "ok", "Richtig und vollständig. " + (pts ? "+" + pts + " Punkte." : ""));
+        check.disabled = true; check.textContent = "Gelöst";
+        var cmp2 = el("button", { class: "btn ghost", type: "button", text: "Lösungsweg zum Vergleichen" });
+        cmp2.addEventListener("click", showSolution);
+        row.appendChild(cmp2);
+        var solBtn = row.querySelector(".sol");
+        if (solBtn) solBtn.remove();
+      } else {
+        msg(status, "bad", st.attempts >= 2 ? "Noch nicht richtig. Du kannst es noch einmal versuchen oder dir den Lösungsweg ansehen." : "Noch nicht richtig. Lies den Hinweis und versuch es noch einmal.");
+        addSolutionButton();
+      }
+      save();
+      refreshChip();
+    });
+    return card;
+  }
+  function renderSheetResult(ws) {
+    var good = ws.filter(function (t) { var st = taskState(t); return st.solved && !st.solution && st.solvedAt <= 2; }).length;
+    var box = $("sheet-result");
+    if (good >= 3) msg(box, "ok", "Geschafft: " + good + " von 4 Aufgaben im ersten oder zweiten Versuch richtig. Damit hast du Lektion 4 bestanden. Mit neuen Zahlen kannst du weiter üben.");
+    else msg(box, "", "");
+  }
+  $("new-sheet").addEventListener("click", function () { state.seed = newSeed(); save(); renderSheet(); $("s6").scrollIntoView({ behavior: "smooth", block: "start" }); });
+
+  // ---------- reset ----------
+  var resetArmed = false;
+  $("reset").addEventListener("click", function () {
+    if (!resetArmed) {
+      resetArmed = true;
+      $("reset").textContent = "Wirklich alles löschen?";
+      $("reset-msg").textContent = "Noch einmal tippen zum Bestätigen.";
+      return;
+    }
+    try { localStorage.removeItem(KEY); } catch (e) { /* ignore */ }
+    state = { level: state.level, seed: newSeed(), points: 0, deg: null, faded: {}, tasks: {}, quizScore: 0 };
+    save();
+    resetArmed = false;
+    $("reset").textContent = "Alles zurücksetzen";
+    $("reset-msg").textContent = "Gelöscht.";
+    $("points").textContent = "0 Punkte";
+    $("deg-msg").innerHTML = "";
+    exStep = 0; quizIndex = 0;
+    setLevel(state.level);
+    renderNames();
+    updateLock();
+  });
+
+  // ---------- start ----------
+  document.querySelectorAll("[data-level]").forEach(function (b) { b.addEventListener("click", function () { setLevel(b.dataset.level); updateLock(); }); });
+  $("points").textContent = state.points + " Punkte";
+  renderNames();
+  renderRatios();
+  setLevel(state.level);
+  updateLock();
+})();
+</script>
+
+</body></html>
