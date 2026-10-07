@@ -8,7 +8,7 @@
  */
 import { parseArgs } from "node:util";
 import { connectDb, schema } from "@denkraum/db";
-import { generateAccessCode } from "@denkraum/privacy";
+import { addTeacherCode, unusedAccessCode } from "../src/lib/teacher-codes.ts";
 
 const { values } = parseArgs({
   options: {
@@ -31,16 +31,13 @@ const schulart = values.schulart ?? (klasse === 11 ? "gymnasium" : "gesamtschule
 const db = await connectDb(process.env.DATABASE_URL ?? "pglite:./.data/pglite");
 const [group] = await db
   .insert(schema.groups)
-  .values({ kind: values.kind, label: values.label, schulart, klasse, joinCode: generateAccessCode(), endsAt })
+  .values({ kind: values.kind, label: values.label, schulart, klasse, joinCode: await unusedAccessCode(db), endsAt })
   .returning();
 console.log(`Gruppe "${group!.label}" (${schulart}, Klasse ${klasse}) bis ${values.ende}`);
 console.log(`Code für die Schülerinnen und Schüler: ${group!.joinCode}`);
 if (group!.kind === "class") {
-  const [teacher] = await db
-    .insert(schema.viewers)
-    .values({ groupId: group!.id, role: "teacher", readCode: generateAccessCode() })
-    .returning();
-  console.log(`Code für die Lehrkraft: ${teacher!.readCode} (nur an die Lehrkraft geben)`);
+  const teacher = await addTeacherCode(db, group!.joinCode);
+  if (teacher.ok) console.log(`Code für die Lehrkraft: ${teacher.code} (nur an die Lehrkraft geben)`);
 }
 console.log(`Einstieg: https://denkraum.martinetzrodt.com/klasse${klasse}`);
 process.exit(0);

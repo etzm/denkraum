@@ -52,7 +52,23 @@ docker compose -f infra/docker-compose.prod.yml --profile tools run --rm tools \
   node apps/web/scripts/create-group.ts --klasse 10 --label "Pilot Mathe" --ende 2027-07-31
 ```
 
-Das Skript zeigt den Code für die Kinder und den Einstieg (`/klasse10`). Die Bezeichnung (`--label`) darf keinen Namen eines Kindes enthalten. Für den Pilot zu Hause: `--klasse 7 --kind individual`.
+Das Skript zeigt den Code für die Kinder, den Code für die Lehrkraft und den Einstieg (`/klasse10`). Die Bezeichnung (`--label`) darf keinen Namen eines Kindes enthalten. Für den Pilot zu Hause: `--klasse 7 --kind individual`; dort gibt es keinen Lehrkraft-Code.
+
+## Lehrkraft-Codes
+
+Die Lehrkraft meldet sich mit ihrem Code im selben Feld an wie die Kinder und sieht ihre Gruppe (D-017, D-030). Gruppen, die vor dem Lehrkraft-Code angelegt wurden, oder eine zweite Lehrkraft bekommen einen Code so:
+
+```bash
+docker compose -f infra/docker-compose.prod.yml --profile tools run --rm tools \
+  node apps/web/scripts/teacher-code.ts neu --gruppe K7QM-X2PA
+```
+
+`--gruppe` ist der Code der Klasse. Ist ein Lehrkraft-Code in falsche Hände geraten oder verlässt die Lehrkraft die Klasse, wird er entzogen; offene Sitzungen enden sofort, Korrekturen im Protokoll bleiben erhalten:
+
+```bash
+docker compose -f infra/docker-compose.prod.yml --profile tools run --rm tools \
+  node apps/web/scripts/teacher-code.ts entziehen --code TCHR-XXXX --ja
+```
 
 ## Löschjob (täglich)
 
