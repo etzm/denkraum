@@ -37,7 +37,7 @@ const config: NextConfig = {
     "@denkraum/mod-deutsch-schreibwerkstatt",
     "@denkraum/mod-mathematik-trigonometrie",
   ],
-  serverExternalPackages: ["@electric-sql/pglite", "postgres"],
+  serverExternalPackages: ["@electric-sql/pglite", "postgres", "@anthropic-ai/sdk", "@anthropic-ai/bedrock-sdk"],
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

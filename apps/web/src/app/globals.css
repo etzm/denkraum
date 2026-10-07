@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Module components live outside the app directory. */
+@source "../../../../modules/*/*/*/ui/**/*.{ts,tsx}";
+
 /* System fonts only: no external font requests (docs/datenschutz/README.md section 5). */
 @theme {
   --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
