@@ -21,6 +21,7 @@ const PARAGRAPH_MAX = 4000;
 const PARAGRAPHS_MAX = 30;
 const ANSWER_MAX = 500;
 const REVISION_MAX = 2000;
+const MARK_MAX = 2000;
 
 const field = (form: FormData, name: string, max: number): string => {
   const value = form.get(name);
@@ -62,7 +63,8 @@ export function paragraphsFromForm(form: FormData): string[] {
 
 /** Ticked checklist items and the optional marks, rebuilt from sentence numbers so every mark is an exact quote. */
 export function selfCheckFromForm(form: FormData, paragraphs: readonly string[], allowedItemIds: readonly string[]): SelfCheck {
-  const sentences = splitSentences(paragraphs);
+  // Marks longer than the schema allows are skipped; marking is optional.
+  const sentences = splitSentences(paragraphs).map((s) => (s.length <= MARK_MAX ? s : undefined));
   const pick = (value: FormDataEntryValue) => sentences[Number(value)];
   const marks: SelfCheck["marks"] = [];
   const these = form.get("these");

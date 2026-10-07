@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { formativeStars, isMissionCompleted, isMissionShown, isRevisionDone, missionXp } from "../domain/rules.ts";
 import type { MissionEvent, MissionRun } from "../domain/state.ts";
 import { completionFacts, createRun, pendingSystemAction, replay, transition } from "../domain/state.ts";
+import { paragraphsFromForm, planFromForm, selfCheckFromForm } from "../mission/actions.ts";
 import { B1_MISSION_IDS, checklistFor, findMission, rubricFor, RUBRICS, showUnapprovedContent } from "../mission/content.ts";
 import { RUBRIC_DIMENSIONS } from "../schemas/content.ts";
 import { FULFILLED, makePlan, makePlanReview, makeTextReview, TEXT } from "./fixtures.ts";
@@ -159,5 +160,53 @@ describe("rubric for P4 (spec 7.1)", () => {
     expect(rubric.dimensions.map((d) => d.id)).toEqual([...RUBRIC_DIMENSIONS]);
     expect(rubric.dimensions.every((d) => d.levels.length === 4)).toBe(true);
     expect(rubric.approved).toBe(false);
+  });
+});
+
+describe("form parsing", () => {
+  const data = (entries: [string, string][]) => {
+    const f = new FormData();
+    for (const [k, v] of entries) f.append(k, v);
+    return f;
+  };
+
+  it("makes every line a paragraph", () => {
+    expect(paragraphsFromForm(data([["text", "Erster Absatz.\r\n\r\nZweiter Absatz.\nDritter.  \n\n"]]))).toEqual([
+      "Erster Absatz.",
+      "Zweiter Absatz.",
+      "Dritter.",
+    ]);
+  });
+
+  it("builds the self check from known items and sentence numbers only", () => {
+    const long = `${"Wort ".repeat(450)}Ende.`;
+    const paragraphs = ["Ich bin dafür. Ein Beispiel ist die Mensa.", long];
+    const check = selfCheckFromForm(
+      data([
+        ["punkt", "einleitung"],
+        ["punkt", "erfunden"],
+        ["these", "0"],
+        ["beispiel", "1"],
+        ["beispiel", "2"],
+        ["beispiel", "9"],
+      ]),
+      paragraphs,
+      ["einleitung", "bbb"],
+    );
+    expect(check).toEqual({
+      checkedItemIds: ["einleitung"],
+      marks: [
+        { part: "these", quote: "Ich bin dafür." },
+        { part: "beispiel", quote: "Ein Beispiel ist die Mensa." },
+      ],
+    });
+  });
+
+  it("reads the plan boxes", () => {
+    const plan = planFromForm(data([["standpunkt", "  Ich bin dafür. "], ["a2_beispiel", "Mensa"]]));
+    expect(plan.standpunkt).toBe("Ich bin dafür.");
+    expect(plan.argumente[1]!.beispiel).toBe("Mensa");
+    expect(plan.argumente).toHaveLength(3);
+    expect(plan.legibility).toBe(1);
   });
 });
