@@ -1,3 +1,4 @@
+import { exportLearner } from "./export.ts";
 import { defineModuleDefinition, type ModuleContext } from "@denkraum/sdk";
 import { mockFeedback, mockTranscription, parseRequestInput, type FeedbackInput, type TranscribeInput } from "./domain/ai.ts";
 import { OPEN_LESSONS } from "./domain/lesson.ts";
@@ -23,6 +24,7 @@ import { StartPage } from "./ui/StartPage.tsx";
  */
 export const definition = defineModuleDefinition({
   manifest,
+  exportLearner,
   prompts: PROMPTS,
   uploadKinds: { worksheet: { maxPages: 6 } },
   mockFixtures: {

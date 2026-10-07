@@ -72,6 +72,21 @@ Drei Dinge, getrennt aufbewahren:
 
 Sicherungen unterliegen denselben Fristen: Fotos höchstens 14 Tage, alles andere bis zum Ende der Gruppe. Ältere Sicherungen werden gelöscht.
 
+## Auskunft und Löschung
+
+Anfragen kommen über die Schule oder die Eltern, mit dem persönlichen Code des Kindes:
+
+```bash
+# Auskunft und Datenübertragbarkeit (Art. 15, 20 DSGVO): alle Daten als JSON
+docker compose -f infra/docker-compose.prod.yml --profile tools run --rm tools \
+  node apps/web/scripts/learner-data.ts export --code K7QM-X2PA > auskunft.json
+# Löschung (Art. 17 DSGVO): Kind mit allen Daten und Fotos
+docker compose -f infra/docker-compose.prod.yml --profile tools run --rm tools \
+  node apps/web/scripts/learner-data.ts delete --code K7QM-X2PA --ja
+```
+
+Fotos kann das Kind auf der Seite "Meine Fotos" auch selbst sofort löschen.
+
 ## Aktualisieren
 
 ```bash

@@ -334,8 +334,10 @@ Umgesetzt am 7. Oktober 2026:
 
 - **B1:** Mission m-04-01 mit getipptem Plan und Text, KI-Rückmeldungen P2, P4, P5 mit Kennzeichnung, Planfreigabe und Abschluss per Code, Textlupe mit geprüften Zitaten, formative Sterne ohne Rechtschreibung, Pfad `held_for_adult` (Modul-DECISIONS SW-29 bis SW-38).
 
-Offene Plattform-Punkte aus B1 (für P2):
-- Export je Pseudonym enthält noch keine Modul-Tabellen (zum Beispiel `sw_mission_runs`); Module brauchen einen Export-Haken. Die Löschung ist über die Fremdschlüssel bereits vollständig.
+- **A1:** Lektion 4 vollständig: Niveau, Erklärung mit interaktivem Dreieck, Taschenrechner-Check, Musterbeispiel, Lückenaufgaben, Arbeitsblatt am iPad mit Blatt-Code, Foto, KI-Transkription mit Bestätigung, Prüfung per Code, KI-Rückmeldung mit Kennzeichnung, Lösungsweg nach zwei Fehlversuchen (Modul-DECISIONS T-28 bis T-41). Noch nicht mit einem echten Modell getestet.
+
+Offene Plattform-Punkte aus B1 und A1 (für P2):
+- (erledigt, D-029) Export je Pseudonym mit Modul-Tabellen über Export-Haken.
 - Hilfsfunktion für getippte Abgaben im SDK (heute schreibt das Modul `uploads`, `transcripts`, `feedback` selbst).
 - Der Mock-Provider kann noch keine Ablehnung (`refusal`) simulieren.
 - Eine angehaltene Mission (`held_for_adult`) kann erst mit der Erwachsenen-Ansicht freigegeben werden.

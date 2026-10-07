@@ -6,7 +6,9 @@
   "exports": {
     ".": "./module.ts",
     "./domain": "./domain/index.ts",
-    "./app": "./app.tsx"
+    "./app": "./app.tsx",
+    "./export": "./export.ts",
+    "./db": "./db.ts"
   },
   "dependencies": {
     "@denkraum/capture": "workspace:*",

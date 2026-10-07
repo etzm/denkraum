@@ -77,7 +77,14 @@ export const blaetter = pgTable("trig_worksheets", {
 - Module importieren Tabellen-Bausteine, Plattform-Tabellen und Abfrage-Operatoren aus `@denkraum/sdk/db`; sie brauchen keine eigene Abhängigkeit auf `drizzle-orm` oder `@denkraum/db`.
 - Tabellennamen mit Modul-Präfix (`trig_`, `sw_`).
 - Immer per Fremdschlüssel mit `onDelete: "cascade"` an `learners` hängen, damit Löschjob und Löschung je Pseudonym auch Modul-Daten entfernen.
-- Die Datei in `packages/db/drizzle.config.ts` unter `schema` eintragen und `pnpm db:generate` ausführen.
+- `db.ts` direkt im Modulverzeichnis wird automatisch erfasst. Migration erzeugen: `pnpm --filter @denkraum/db generate --name <modul>` (ohne `--` vor `--name`).
+- Export-Haken: `export.ts` im Modul mit `exportLearner(db, learnerId)`, das alle Zeilen des Moduls zu dieser Person liefert; in der Definition als `exportLearner` eintragen und in `apps/web/src/lib/learner-data.ts` registrieren. Ein Test prüft, dass jedes Modul einen Haken hat.
+
+## Hinweise
+
+- Eine Weiterleitung aus einer Server-Action, die nur den `#anker` ändert, lädt die Seite nicht neu. Für "gleiche Seite, neuer Stand" einen wechselnden Query-Parameter anhängen (z. B. `?versuch=2`).
+- Module haben `react`, aber kein `react-dom`. Wartezustände beim Absenden (zum Beispiel "Ich lese deine Lösung …") über eigenen Client-Zustand statt `useFormStatus`.
+- Mit `LLM_PROVIDER=mock` antwortet jedes Modul aus seinen eigenen `mockFixtures`; gleiche Promptnamen in verschiedenen Modulen stören sich nicht.
 
 ## Tests
 

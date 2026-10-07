@@ -1,3 +1,4 @@
+import { exportLearner } from "./export.ts";
 import { defineModuleDefinition } from "@denkraum/sdk";
 import { isMissionShown } from "./domain/rules.ts";
 import { ACTIONS } from "./mission/actions.ts";
@@ -16,6 +17,7 @@ import { StartPage, type MissionEntry } from "./ui/StartPage.tsx";
  */
 export const definition = defineModuleDefinition({
   manifest,
+  exportLearner,
   prompts: PROMPTS,
   uploadKinds: { plan: { maxPages: 2 }, text: { maxPages: 4 }, revision: { maxPages: 2 } },
   mockFixtures: MOCK_FIXTURES,

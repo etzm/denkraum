@@ -48,6 +48,11 @@ export interface ModuleDefinition {
   prompts?: Record<string, string>;
   /** Deterministic AI answers for tests and local development without a model. */
   mockFixtures?: Record<string, MockFixture>;
+  /**
+   * Everything the module stores about one learner, for access and portability requests
+   * (Art. 15 and 20 GDPR). Keep it in a plain .ts file so admin scripts can import it.
+   */
+  exportLearner?: (db: Db, learnerId: string) => Promise<Record<string, unknown[]>>;
   /** Upload kinds this module accepts, with limits. Uploads of other kinds are refused. */
   uploadKinds?: Record<string, { maxPages: number }>;
 }

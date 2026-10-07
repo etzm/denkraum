@@ -1,7 +1,8 @@
 import { resolve } from "node:path";
 import { defineConfig, devices } from "@playwright/test";
 
-const port = 3100;
+// E2E_PORT lets parallel checkouts run their tests at the same time.
+const port = Number(process.env.E2E_PORT ?? 3100);
 // Absolute, because the standalone server changes its working directory.
 const dataDir = `pglite:${resolve(".data", `e2e-${Date.now()}`)}`;
 

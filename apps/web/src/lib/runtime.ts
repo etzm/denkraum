@@ -1,9 +1,8 @@
-import { createProviderFromConfig, loadLlmConfig, type LlmConfig, type LlmProvider, type MockFixture } from "@denkraum/llm";
+import { createMockProvider, createProviderFromConfig, loadLlmConfig, type LlmConfig, type LlmProvider } from "@denkraum/llm";
 import { createModuleAi, createModuleUploads, type ModuleContext, type ModuleDefinition } from "@denkraum/sdk";
 import { runModuleAction } from "@/app/module-actions.ts";
 import { slugForKlasse } from "./classes.ts";
 import { getBlobStore, getDb } from "./db.ts";
-import { DEFINITIONS } from "./modules.ts";
 import type { currentLearner } from "./session.ts";
 
 type Session = NonNullable<Awaited<ReturnType<typeof currentLearner>>>;
@@ -14,8 +13,7 @@ const globalForLlm = globalThis as unknown as { denkraumLlm?: { config: LlmConfi
 export function getLlm(): { config: LlmConfig; provider: LlmProvider } {
   if (!globalForLlm.denkraumLlm) {
     const config = loadLlmConfig();
-    const fixtures: Record<string, MockFixture> = Object.assign({}, ...DEFINITIONS.map((d) => d.mockFixtures ?? {}));
-    globalForLlm.denkraumLlm = { config, provider: createProviderFromConfig(config, fixtures) };
+    globalForLlm.denkraumLlm = { config, provider: createProviderFromConfig(config) };
   }
   return globalForLlm.denkraumLlm;
 }
@@ -25,6 +23,8 @@ export async function buildModuleContext(definition: ModuleDefinition, session: 
   const { learner, group } = session;
   const klasse = slugForKlasse(group.klasse);
   const llm = getLlm();
+  // With the mock provider every module answers from its own fixtures, so prompt names cannot collide.
+  const provider = llm.config.provider === "mock" ? createMockProvider(definition.mockFixtures ?? {}) : llm.provider;
   return {
     manifest: definition.manifest,
     learner: { id: learner.id, niveau: learner.niveau, niveauEEnabled: learner.niveauEEnabled },
@@ -34,7 +34,7 @@ export async function buildModuleContext(definition: ModuleDefinition, session: 
     ai: createModuleAi({
       moduleId: definition.manifest.id,
       prompts: definition.prompts ?? {},
-      provider: llm.provider,
+      provider,
       config: llm.config,
       identity: { pseudonym: learner.pseudonym, accessCodes: [learner.personalCode, group.joinCode], ids: [learner.id, group.id] },
       db,
