@@ -6,10 +6,27 @@
   "exports": {
     ".": "./module.ts",
     "./domain": "./domain/index.ts",
-    "./schemas": "./schemas/index.ts"
+    "./schemas": "./schemas/index.ts",
+    "./db": "./db.ts",
+    "./server": "./server/index.ts",
+    "./fixtures": "./server/fixtures.ts",
+    "./ui": "./ui/index.ts"
   },
   "dependencies": {
     "@denkraum/core": "workspace:*",
+    "@denkraum/db": "workspace:*",
+    "@denkraum/llm": "workspace:*",
+    "@denkraum/privacy": "workspace:*",
     "zod": "^4.6.5"
+  },
+  "peerDependencies": {
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }

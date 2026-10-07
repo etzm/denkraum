@@ -8,6 +8,13 @@
       "when": 1791180113999,
       "tag": "0000_init",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791414154732,
+      "tag": "0001_schreibwerkstatt",
+      "breakpoints": true
     }
   ]
 }

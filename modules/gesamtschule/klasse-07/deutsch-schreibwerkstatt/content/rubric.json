@@ -1,0 +1,69 @@
+{
+  "variants": {
+    "satz_absatz": {
+      "title": "Rubrik Stufe 1 und 2: Sätze und ein Absatz (Vorschlag, noch nicht freigegeben)",
+      "dimensions": {
+        "aufbau": {
+          "0": "keine Behauptung erkennbar",
+          "1": "Behauptung erkennbar, aber mit Begründung und Beispiel vermischt",
+          "2": "Behauptung steht vorn, die Begründung folgt",
+          "3": "wie 2; auf Stufe 2 ein zusammenhängender Absatz in der Reihenfolge Behauptung, Begründung, Beispiel"
+        },
+        "argumentation": {
+          "0": "nur Meinung, keine Begründung",
+          "1": "Begründung vorhanden, passt aber nicht ganz zur Behauptung",
+          "2": "jede Behauptung hat eine passende Begründung",
+          "3": "wie 2; auf Stufe 2 zusätzlich ein passendes Beispiel oder ein Beleg"
+        },
+        "sprache": {
+          "0": "unvollständige Sätze, überwiegend Umgangssprache",
+          "1": "vollständige Sätze, aber viel Umgangssprache",
+          "2": "vollständige, verständliche Sätze mit Verknüpfungswörtern wie weil oder deshalb",
+          "3": "sachlich, passende Verknüpfungswörter, verschiedene Satzanfänge"
+        },
+        "richtigkeit": {
+          "0": "mehr als 8 Fehler je 100 Wörter, Verständnis gestört",
+          "1": "5 bis 8 Fehler je 100 Wörter",
+          "2": "2 bis 4 Fehler je 100 Wörter",
+          "3": "0 bis 1 Fehler je 100 Wörter"
+        }
+      }
+    },
+    "text": {
+      "title": "Rubrik Stellungnahme, Klasse 7, Niveau M (Spec 7.1)",
+      "dimensions": {
+        "aufbau": {
+          "0": "keine erkennbare Gliederung",
+          "1": "Teile vorhanden, aber vermischt oder ohne Absätze",
+          "2": "Einleitung, Hauptteil, Schluss erkennbar, Absätze gesetzt",
+          "3": "wie 2, Einleitung nennt Thema und Standpunkt, Schluss zieht Fazit ohne neues Argument"
+        },
+        "argumentation": {
+          "0": "nur Meinung, keine Begründung",
+          "1": "Behauptungen mit Begründung, aber ohne oder mit unpassenden Beispielen",
+          "2": "mindestens 2 vollständige Argumente mit Behauptung, Begründung und Beispiel",
+          "3": "3 vollständige Argumente, Reihenfolge erkennbar begründet (stärkstes zuletzt), alle passen zum Standpunkt"
+        },
+        "sprache": {
+          "0": "Sätze unverbunden, überwiegend Umgangssprache",
+          "1": "einige Verknüpfungswörter, viele Wiederholungen oder gleiche Satzanfänge",
+          "2": "Argumente mit Textprozeduren eingeleitet, verschiedene Satzanfänge, überwiegend sachlich",
+          "3": "flüssig, sachlich, Überleitungen zwischen Absätzen, Adressat angesprochen"
+        },
+        "richtigkeit": {
+          "0": "mehr als 8 Fehler je 100 Wörter, Verständnis gestört",
+          "1": "5 bis 8 Fehler je 100 Wörter",
+          "2": "2 bis 4 Fehler je 100 Wörter",
+          "3": "0 bis 1 Fehler je 100 Wörter"
+        }
+      }
+    }
+  },
+  "eBonus": [
+    "Gegenargument genannt (1 Stern)",
+    "Gegenargument entkräftet (1 Stern)",
+    "Schlussregel für das stärkste Argument erkennbar (1 Stern)"
+  ],
+  "minWordsNote": "Ganze Texte unter 80 Wörtern werden nicht bewertet.",
+  "approved": false
+}

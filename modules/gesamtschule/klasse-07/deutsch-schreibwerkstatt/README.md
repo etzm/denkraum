@@ -50,6 +50,15 @@ Die Fortschrittskarte ist ein Garten mit Gartenhaus, entworfen nach dem Octalysi
 - `content/garden.json`: Schwellen, Ferien 2026/27 (KMK), Sorten, Farben und die Texte für das Kind.
 - `tests/garden.test.ts`: 29 Tests, darunter "nichts geht verloren" und "gleicher Garten bei 0 und 12 Sternen".
 
+## B1: Mission mit getipptem Text
+
+Eine Mission läuft vollständig in der App, mit getipptem Plan und Text. Entscheidungen SW-37 bis SW-44.
+
+- `db.ts`: Tabellen mit Präfix `sw_` (Läufe, Ereignislog, Stationsrunden, Hilfskarten, Konto für XP und Schlüssel, Fortschritt, Freigaben je Gruppe). Migration `packages/db/drizzle/0001_schreibwerkstatt.sql`.
+- `server/`: Start und Fortsetzen von Missionen, Ereignisse des Kindes, Systemschritte (Eingangsfilter, P2, P4 mit Zitatprüfung, P5), Belohnungen, Ansichten für die Seiten, synthetische Mock-Antworten (`fixtures.ts`) und Hilfen für die Demo-Daten.
+- `ui/`: Bausteine der Seiten (Textlupe, Sterne, Ampel, Planungsbogen zum Tippen, Selbstkontrolle). Die Seiten liegen in `apps/web/src/app/m/deutsch-schreibwerkstatt/`.
+- Demo: `pnpm seed` legt ein neues Kind, ein Kind mit Stufe 1 bis 3 und einen Elterncode an.
+
 Prüfen im Repo-Wurzelverzeichnis:
 
 ```

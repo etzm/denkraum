@@ -1,0 +1,10 @@
+{
+  "note": "Erste Liste für den Pilot zu Hause. Vor dem Einsatz in der Klasse mit der Beratungslehrkraft abstimmen (Schutzkonzept, Umsetzungsplan 5.2). Ein Treffer hält den Lauf für einen Erwachsenen an; das Kind sieht keine Begründung.",
+  "categories": {
+    "selbstverletzung": ["ritzen", "ritze mich", "umbringen", "bring mich um", "selbstmord", "suizid", "nicht mehr leben", "mich töten"],
+    "gewalt": ["abstechen", "erstechen", "erschießen", "ich bring dich um", "schlagen mich", "verprügeln mich", "verprügelt mich", "bedrohen mich", "bedroht mich"],
+    "mobbing": ["mobben mich", "werde gemobbt", "werde ich gemobbt", "alle hassen mich"],
+    "beleidigung": ["hurensohn", "hure", "fotze", "wichser", "missgeburt", "spast*", "schwuchtel"]
+  },
+  "approved": false
+}

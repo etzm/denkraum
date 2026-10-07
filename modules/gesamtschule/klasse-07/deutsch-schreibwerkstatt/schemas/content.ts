@@ -95,3 +95,29 @@ export const missionFileSchema = z.array(missionSchema);
 export const helpCardFileSchema = z.array(helpCardSchema);
 export const checklistFileSchema = z.array(checklistSchema);
 export const stationFileSchema = z.array(stationSchema);
+
+const levels = z.object({ "0": text(240), "1": text(240), "2": text(240), "3": text(240) });
+
+/** Rubric for P4 (spec 7.1). `satz_absatz` is the reduced variant for stages 1 and 2, which the spec leaves open. */
+const rubricVariantSchema = z.object({
+  title: text(80),
+  dimensions: z.object({ aufbau: levels, argumentation: levels, sprache: levels, richtigkeit: levels }),
+});
+
+export const rubricSchema = z.object({
+  variants: z.object({ satz_absatz: rubricVariantSchema, text: rubricVariantSchema }),
+  eBonus: z.array(text(200)).length(3),
+  minWordsNote: text(200),
+  approved: z.boolean(),
+});
+
+export type Rubric = z.infer<typeof rubricSchema>;
+
+/** Word list of the input filter (domain/filter.ts). Terms ending in "*" match any word ending. */
+export const filterConfigSchema = z.object({
+  note: text(400),
+  categories: z.record(z.string().regex(/^[a-z_]+$/), z.array(text(60)).min(1)),
+  approved: z.boolean(),
+});
+
+export type FilterConfig = z.infer<typeof filterConfigSchema>;

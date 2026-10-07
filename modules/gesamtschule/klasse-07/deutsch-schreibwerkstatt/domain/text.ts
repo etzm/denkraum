@@ -60,3 +60,13 @@ export function planToText(plan: PlanTranscript): string {
   if (plan.gegenargument) parts.push(plan.gegenargument.einwand, plan.gegenargument.entkraeftung);
   return parts.join("\n");
 }
+
+const SENTENCE = /[^.!?]*[^\s.!?][^.!?]*(?:[.!?]+["“”»«)]*|$)/gu;
+
+/**
+ * Splits a paragraph into sentences. Every sentence is an exact substring of the
+ * paragraph (trimmed), so it can be used as a quote for the self check and the Textlupe.
+ */
+export function splitSentences(paragraph: string): string[] {
+  return (paragraph.match(SENTENCE) ?? []).map((s) => s.trim()).filter((s) => s !== "");
+}

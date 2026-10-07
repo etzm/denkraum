@@ -330,6 +330,7 @@ Umgesetzt am 5. Oktober 2026:
 Umgesetzt am 7. Oktober 2026:
 
 - **Schreibwerkstatt, Spielschicht:** Die Fortschrittskarte ist ein Garten mit Gartenhaus, bewertet nach dem Octalysis-Modell. Der Garten welkt ohne Übung, stirbt aber nie, ruht in Ferien und an Wochenenden und liest keine KI-Ausgabe. Siehe `modules/gesamtschule/klasse-07/deutsch-schreibwerkstatt/docs/spielschicht.md` und Modul-DECISIONS SW-29 bis SW-36. Die Schreibwerkstatt wird ab jetzt auf einem eigenen Branch bis B7 gebaut; Änderungen an der Plattform kommen dort als eigene Commits mit dem Präfix `platform:`.
+- **Schreibwerkstatt, B1:** Mission mit getipptem Text von Auftrag bis Abschluss, mit Eingangsfilter, P2, P4, P5 (Mock in Tests), Belohnungen und Fortsetzen nach Neuladen; Modul-DECISIONS SW-37 bis SW-44.
 
 Als Nächstes:
 
