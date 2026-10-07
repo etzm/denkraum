@@ -1,0 +1,25 @@
+{
+  "name": "@denkraum/mod-mathematik-trigonometrie",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./module.ts",
+    "./domain": "./domain/index.ts",
+    "./app": "./app.tsx",
+    "./export": "./export.ts",
+    "./db": "./db.ts"
+  },
+  "dependencies": {
+    "@denkraum/capture": "workspace:*",
+    "@denkraum/core": "workspace:*",
+    "@denkraum/sdk": "workspace:*",
+    "zod": "^4.6.5"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0"
+  }
+}

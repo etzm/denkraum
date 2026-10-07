@@ -1,0 +1,267 @@
+[
+  {
+    "id": "ex-0001",
+    "type": "sort_paragraphs",
+    "stufe": 4,
+    "niveau": "M",
+    "prompt": "Bring die Absätze in die richtige Reihenfolge.",
+    "payload": {
+      "paragraphs": [
+        "Vor allem aber lernen wir im Garten etwas, das im Buch schwer zu verstehen ist. Wenn wir selbst Bohnen säen, sehen wir jeden Tag, wie eine Pflanze wächst. Das hilft uns im Biologieunterricht.",
+        "An unserer Schule wird gerade darüber gesprochen, ob wir einen Schulgarten anlegen sollen. Ich bin der Meinung, dass ein Schulgarten eine gute Idee ist.",
+        "Aus diesen Gründen bin ich für einen Schulgarten. Ich bitte die Schulleitung, das Projekt zu unterstützen.",
+        "Zunächst macht die Arbeit im Garten vielen Spaß. Man ist draußen und bewegt sich. In der Mittagspause könnten wir zum Beispiel die Beete gießen."
+      ],
+      "correct_order": [1, 3, 0, 2]
+    },
+    "explanation": "Die Einleitung nennt das Thema und den Standpunkt. \"Zunächst\" leitet das erste Argument ein, \"Vor allem aber\" das stärkste. Der Schluss beginnt mit \"Aus diesen Gründen\".",
+    "tags": ["aufbau", "reihenfolge"],
+    "approved": false
+  },
+  {
+    "id": "ex-0002",
+    "type": "sort_paragraphs",
+    "stufe": 3,
+    "niveau": "M",
+    "prompt": "Bring die Absätze in die richtige Reihenfolge.",
+    "payload": {
+      "paragraphs": [
+        "Deshalb sollten Hausaufgaben aus meiner Sicht Pflicht bleiben.",
+        "Zunächst helfen Hausaufgaben beim Üben. Was man im Unterricht gelernt hat, vergisst man sonst schnell. Ein Beispiel dafür sind Vokabeln in Englisch.",
+        "Viele in unserer Klasse fragen sich, ob Hausaufgaben freiwillig sein sollten. Ich finde, dass Hausaufgaben Pflicht bleiben sollten.",
+        "Vor allem aber merkt man bei den Hausaufgaben, was man noch nicht verstanden hat. Dann kann man in der nächsten Stunde nachfragen. So war es bei mir mit der Bruchrechnung."
+      ],
+      "correct_order": [2, 1, 3, 0]
+    },
+    "explanation": "Zuerst kommt die Einleitung mit dem Standpunkt, dann das Argument mit \"Zunächst\", dann das stärkste mit \"Vor allem aber\". Der Schluss mit \"Deshalb\" steht am Ende.",
+    "tags": ["aufbau", "reihenfolge"],
+    "approved": false
+  },
+  {
+    "id": "ex-0003",
+    "type": "pick_thesis",
+    "stufe": 3,
+    "niveau": "M",
+    "prompt": "Welche These passt zu diesen drei Argumenten?",
+    "payload": {
+      "arguments": [
+        "In der Pause erholen wir uns besser, wenn wir uns bewegen, statt auf einen Bildschirm zu schauen.",
+        "Ohne Handy reden wir in der Pause mehr miteinander.",
+        "Ohne Handys kann niemand heimlich Fotos von anderen machen."
+      ],
+      "options": [
+        "Handys sollten in der Pause verboten bleiben.",
+        "Handys sollten in der Pause erlaubt sein.",
+        "Handys sind für Kinder zu teuer."
+      ],
+      "correct": 0
+    },
+    "explanation": "Alle drei Argumente sprechen gegen Handys in der Pause. Dazu passt nur die These, dass das Verbot bleiben sollte.",
+    "tags": ["these"],
+    "approved": false
+  },
+  {
+    "id": "ex-0004",
+    "type": "pick_thesis",
+    "stufe": 4,
+    "niveau": "M",
+    "prompt": "Welche These passt zu diesen drei Argumenten?",
+    "payload": {
+      "arguments": [
+        "In den Bergen kann man wandern und klettern.",
+        "Die Luft in den Bergen ist frisch und sauber.",
+        "Eine Hütte in den Bergen ist oft günstiger als ein Hotel am Meer."
+      ],
+      "options": [
+        "Unsere Klassenfahrt sollte ans Meer gehen.",
+        "Unsere Klassenfahrt sollte in die Berge gehen.",
+        "Klassenfahrten sollten abgeschafft werden.",
+        "Wandern ist anstrengend."
+      ],
+      "correct": 1
+    },
+    "explanation": "Alle drei Argumente sprechen für die Berge. Die These muss den Standpunkt nennen, den die Argumente stützen.",
+    "tags": ["these"],
+    "approved": false
+  },
+  {
+    "id": "ex-0005",
+    "type": "fill_connector",
+    "stufe": 2,
+    "niveau": "M",
+    "prompt": "Setze das passende Verknüpfungswort ein.",
+    "payload": {
+      "text": "Handys lenken im Unterricht ab. ___ sollten sie in der Pause erlaubt sein, weil man dort nicht lernen muss.",
+      "gaps": [
+        { "options": ["Trotzdem", "Deshalb", "Zum Beispiel"], "correct": 0 }
+      ]
+    },
+    "explanation": "\"Trotzdem\" zeigt einen Gegensatz zwischen beiden Sätzen.",
+    "tags": ["verknuepfung", "gegensatz"],
+    "approved": false
+  },
+  {
+    "id": "ex-0006",
+    "type": "fill_connector",
+    "stufe": 6,
+    "niveau": "E",
+    "prompt": "Setze die passenden Verknüpfungswörter ein.",
+    "payload": {
+      "text": "___ sagen manche, dass Social Media beim Kontakthalten hilft, ___ verbringen viele dadurch zu viel Zeit am Handy.",
+      "gaps": [
+        { "options": ["Zwar", "Deshalb", "Zum Beispiel"], "correct": 0 },
+        { "options": ["doch", "außerdem", "weil"], "correct": 0 }
+      ]
+    },
+    "explanation": "Mit \"zwar ... doch\" nennst du zuerst die andere Seite und hältst dann dagegen.",
+    "tags": ["verknuepfung", "gegenargument"],
+    "approved": false
+  },
+  {
+    "id": "ex-0007",
+    "type": "rank_arguments",
+    "stufe": 3,
+    "niveau": "M",
+    "prompt": "Ordne die Argumente vom schwächsten zum stärksten.",
+    "payload": {
+      "thesis": "Unsere Schule sollte eine längere Mittagspause einführen.",
+      "arguments": [
+        "In einer längeren Pause können alle in Ruhe essen. Danach können sie sich im Nachmittagsunterricht besser konzentrieren.",
+        "Man hat mehr Zeit, mit Freunden zu reden.",
+        "Dann ist die Schlange in der Mensa nicht so lang."
+      ],
+      "correct_order": [2, 1, 0]
+    },
+    "explanation": "Das stärkste Argument hat eine Begründung und betrifft das Lernen aller. Es steht am Schluss. Die Schlange in der Mensa ist nur ein kleiner Vorteil.",
+    "tags": ["reihenfolge", "gewichten"],
+    "approved": false
+  },
+  {
+    "id": "ex-0008",
+    "type": "rank_arguments",
+    "stufe": 6,
+    "niveau": "E",
+    "prompt": "Ordne die Argumente vom schwächsten zum stärksten.",
+    "payload": {
+      "thesis": "In Klasse 7 sollten Noten durch schriftliche Rückmeldungen ersetzt werden.",
+      "arguments": [
+        "Ohne Noten gibt es weniger Druck vor Klassenarbeiten.",
+        "Eine schriftliche Rückmeldung zeigt genau, was man schon kann und was man noch üben muss. Eine Note sagt das nicht.",
+        "Mein Bruder findet Noten auch doof."
+      ],
+      "correct_order": [2, 0, 1]
+    },
+    "explanation": "Die Meinung des Bruders ist keine Begründung. Weniger Druck ist ein Vorteil. Am stärksten ist das Argument, das zeigt, wie man besser lernt.",
+    "tags": ["reihenfolge", "gewichten"],
+    "approved": false
+  },
+  {
+    "id": "ex-0009",
+    "type": "complete_bbb",
+    "stufe": 1,
+    "niveau": "M",
+    "prompt": "Was fehlt in diesem Argument?",
+    "payload": {
+      "argument": "Am Wochenende sollte es keine Hausaufgaben geben. Letzten Sonntag musste ich zum Beispiel drei Arbeitsblätter ausfüllen.",
+      "correct": "begruendung"
+    },
+    "explanation": "Es fehlt die Begründung. Die Frage \"Warum stimmt das?\" wird nicht beantwortet. Das Beispiel allein erklärt den Grund nicht.",
+    "tags": ["bbb", "begruendung"],
+    "approved": false
+  },
+  {
+    "id": "ex-0010",
+    "type": "complete_bbb",
+    "stufe": 2,
+    "niveau": "M",
+    "prompt": "Was fehlt in diesem Argument?",
+    "payload": {
+      "argument": "Das liegt daran, dass Bewegung den Kopf frei macht. In unserer Klasse arbeiten zum Beispiel nach dem Sportunterricht viele ruhiger.",
+      "correct": "behauptung"
+    },
+    "explanation": "Es fehlt die Behauptung. Man erfährt nicht, was der Schreiber eigentlich fordert.",
+    "tags": ["bbb", "behauptung"],
+    "approved": false
+  },
+  {
+    "id": "ex-0011",
+    "type": "sentence_upgrade",
+    "stufe": 5,
+    "niveau": "M",
+    "prompt": "Wähle die sachliche Variante.",
+    "payload": {
+      "sentence": "Längere Pausen sind voll gut.",
+      "options": [
+        "Längere Pausen sind sehr sinnvoll.",
+        "Längere Pausen sind echt mega.",
+        "Längere Pausen sind halt gut."
+      ],
+      "correct": 0
+    },
+    "explanation": "\"voll gut\", \"echt mega\" und \"halt\" sind Umgangssprache. \"sehr sinnvoll\" ist sachlich.",
+    "tags": ["sachlich"],
+    "approved": false
+  },
+  {
+    "id": "ex-0012",
+    "type": "sentence_upgrade",
+    "stufe": 5,
+    "niveau": "M",
+    "prompt": "Wähle die sachliche Variante.",
+    "payload": {
+      "sentence": "Krass viele Schüler finden die Schuluniform doof.",
+      "options": [
+        "Viele Schüler finden die Schuluniform halt doof.",
+        "Sehr viele Schülerinnen und Schüler lehnen die Schuluniform ab.",
+        "Krass viele Schüler mögen die Schuluniform nicht."
+      ],
+      "correct": 1
+    },
+    "explanation": "\"krass viele\", \"doof\" und \"halt\" sind Umgangssprache. \"sehr viele\" und \"lehnen ab\" sind sachlich.",
+    "tags": ["sachlich"],
+    "approved": false
+  },
+  {
+    "id": "ex-0013",
+    "type": "mark_parts",
+    "stufe": 1,
+    "niveau": "M",
+    "prompt": "Markiere die Behauptung.",
+    "payload": {
+      "segments": [
+        "Ich bin der Meinung, dass es am Wochenende keine Hausaufgaben geben sollte.",
+        "Ein wichtiger Grund dafür ist, dass Kinder am Wochenende Erholung brauchen.",
+        "Wer sich ausruht, kann sich in der neuen Woche besser konzentrieren.",
+        "Ich bin zum Beispiel nach einem freien Sonntag am Montag viel wacher."
+      ],
+      "target": "behauptung",
+      "correct": [1]
+    },
+    "explanation": "Der erste Satz ist die These. Die Behauptung nennt einen Grund für die These: Kinder brauchen Erholung. Danach folgen Begründung und Beispiel.",
+    "tags": ["vormachen", "behauptung"],
+    "approved": false
+  },
+  {
+    "id": "ex-0014",
+    "type": "mark_parts",
+    "stufe": 2,
+    "niveau": "M",
+    "prompt": "Markiere alle Begründungen.",
+    "payload": {
+      "segments": [
+        "Unsere Klasse sollte ein Haustier bekommen.",
+        "Ein Haustier bringt uns bei, Verantwortung zu übernehmen.",
+        "Jeden Tag muss jemand füttern und sauber machen, und das klappt nur, wenn sich alle darauf verlassen können.",
+        "In der Klasse meiner Schwester kümmern sich zum Beispiel jede Woche zwei Kinder um die Fische.",
+        "Außerdem beruhigt ein Tier viele Kinder.",
+        "Wer einem Tier zuschaut, wird oft ruhiger, weil er sich auf etwas anderes konzentriert.",
+        "In der Pause sitzen zum Beispiel oft Kinder vor dem Aquarium und unterhalten sich leise."
+      ],
+      "target": "begruendung",
+      "correct": [2, 5]
+    },
+    "explanation": "Eine Begründung erklärt, warum die Behauptung stimmt. Hier gibt es zwei: Sie stehen jeweils direkt nach der Behauptung.",
+    "tags": ["vormachen", "begruendung"],
+    "approved": false
+  }
+]

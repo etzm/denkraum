@@ -1,0 +1,68 @@
+[
+  {
+    "id": "L3-A1",
+    "lesson": 3,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Gib ohne Taschenrechner an: sin 30° und tan 45°.",
+        "sought": ["sin30", "tan45"],
+        "steps": ["sin 30° = {{sin30}}", "tan 45° = {{tan45}}"]
+      },
+      "M": {
+        "text": "Gib ohne Taschenrechner an: sin 30°, tan 45°, cos 60° und sin 45°.",
+        "sought": ["sin30", "tan45", "cos60", "sin45"],
+        "steps": ["sin 30° = {{sin30}}", "tan 45° = {{tan45}}", "cos 60° = {{cos60}}", "sin 45° = ½ · √2 ≈ {{sin45}}"]
+      },
+      "E": {
+        "text": "Gib ohne Taschenrechner an: sin 30°, tan 45°, cos 60° und sin 45°.",
+        "sought": ["sin30", "tan45", "cos60", "sin45"],
+        "steps": ["sin 30° = {{sin30}}", "tan 45° = {{tan45}}", "cos 60° = {{cos60}}", "sin 45° = ½ · √2 ≈ {{sin45}}"],
+        "extra": "Begründe sin 30° mit einem gleichseitigen Dreieck und sin 45° mit einem Quadrat."
+      }
+    },
+    "parameters": {},
+    "solution_fn": "L3-A1",
+    "requires_sketch": false,
+    "requires_answer_sentence": false,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1"],
+    "hints": [
+      "Denk an die Werte-Tabelle für 30°, 45° und 60°.",
+      "Ein Quadrat wird von seiner Diagonale in zwei rechtwinklige Dreiecke mit gleich langen Katheten geteilt."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L3-A2",
+    "lesson": 3,
+    "type": "quick_check",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Steht dein Taschenrechner auf DEG? Berechne sin 30° mit deinem Taschenrechner und gib das Ergebnis ein.",
+        "sought": ["sin30"],
+        "steps": ["Prüfe, ob im Display DEG oder D steht.", "Tippe sin 30 ein.", "Der Taschenrechner zeigt {{sin30}}."]
+      },
+      "M": {
+        "text": "Steht dein Taschenrechner auf DEG? Berechne sin 30° mit deinem Taschenrechner und gib das Ergebnis ein.",
+        "sought": ["sin30"],
+        "steps": ["Prüfe, ob im Display DEG oder D steht.", "Tippe sin 30 ein.", "Der Taschenrechner zeigt {{sin30}}."]
+      },
+      "E": {
+        "text": "Steht dein Taschenrechner auf DEG? Berechne sin 30° mit deinem Taschenrechner und gib das Ergebnis ein.",
+        "sought": ["sin30"],
+        "steps": ["Prüfe, ob im Display DEG oder D steht.", "Tippe sin 30 ein.", "Der Taschenrechner zeigt {{sin30}}."]
+      }
+    },
+    "parameters": {},
+    "solution_fn": "L3-A2",
+    "requires_sketch": false,
+    "requires_answer_sentence": false,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1"],
+    "hints": ["Zeigt dein Rechner ungefähr -0,988? Dann steht er auf RAD. Stell ihn auf DEG um."],
+    "interleaving_of": null
+  }
+]

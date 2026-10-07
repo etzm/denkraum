@@ -1,0 +1,86 @@
+[
+  {
+    "id": "cl-01",
+    "items": [
+      { "id": "klarer_satz", "text": "Jede Behauptung steht in einem klaren Satz." },
+      { "id": "begruendet", "text": "Ich habe jede Behauptung begründet, zum Beispiel mit \"weil\"." },
+      { "id": "passt_zur_frage", "text": "Meine Sätze passen zur Frage." },
+      { "id": "ganze_saetze", "text": "Ich habe in ganzen Sätzen geschrieben." }
+    ],
+    "approved": false
+  },
+  {
+    "id": "cl-02",
+    "items": [
+      { "id": "behauptung", "text": "Mein Absatz beginnt mit einer klaren Behauptung." },
+      { "id": "begruendung", "text": "Ich habe die Behauptung begründet." },
+      { "id": "beispiel", "text": "Ich habe ein Beispiel genannt, das zur Behauptung passt." },
+      { "id": "verknuepfung", "text": "Ich habe Verknüpfungswörter benutzt, zum Beispiel \"weil\" oder \"deshalb\"." },
+      { "id": "adressat", "text": "Mein Absatz passt zum Adressaten." }
+    ],
+    "approved": false
+  },
+  {
+    "id": "cl-03",
+    "items": [
+      { "id": "einleitung", "text": "Meine Einleitung nennt das Thema und meinen Standpunkt." },
+      { "id": "bbb", "text": "Ich habe drei Argumente mit Behauptung, Begründung und Beispiel." },
+      { "id": "staerkstes_zuletzt", "text": "Mein stärkstes Argument steht am Ende des Hauptteils." },
+      { "id": "absaetze", "text": "Jedes Argument ist ein eigener Absatz." },
+      { "id": "schluss", "text": "Mein Schluss fasst zusammen und bringt kein neues Argument." }
+    ],
+    "approved": false
+  },
+  {
+    "id": "cl-04",
+    "items": [
+      { "id": "einleitung", "text": "Meine Einleitung nennt das Thema und meinen Standpunkt." },
+      { "id": "bbb", "text": "Jedes Argument hat Behauptung, Begründung und Beispiel." },
+      { "id": "staerkstes_zuletzt", "text": "Mein stärkstes Argument steht am Ende des Hauptteils." },
+      { "id": "absaetze", "text": "Jedes Argument ist ein eigener Absatz." },
+      { "id": "verknuepfung", "text": "Ich habe Verknüpfungswörter benutzt." },
+      { "id": "schluss", "text": "Mein Schluss fasst zusammen und bringt kein neues Argument." },
+      { "id": "adressat", "text": "Ich habe den Adressaten angesprochen." }
+    ],
+    "approved": false
+  },
+  {
+    "id": "cl-05",
+    "items": [
+      { "id": "verknuepfung", "text": "Ich habe Sätze mit Verknüpfungswörtern verbunden." },
+      { "id": "satzanfaenge", "text": "Meine Satzanfänge sind verschieden." },
+      { "id": "wiederholungen", "text": "Ich habe Wiederholungen gestrichen oder ersetzt." },
+      { "id": "sachlich", "text": "Ich habe Umgangssprache durch sachliche Wörter ersetzt." },
+      { "id": "sinn", "text": "Der Sinn des Textes ist gleich geblieben." }
+    ],
+    "approved": false
+  },
+  {
+    "id": "cl-06",
+    "items": [
+      { "id": "einleitung", "text": "Meine Einleitung nennt das Thema und meinen Standpunkt." },
+      { "id": "bbb", "text": "Jedes Argument hat Behauptung, Begründung und Beispiel." },
+      { "id": "staerkstes_zuletzt", "text": "Mein stärkstes Argument steht am Ende des Hauptteils." },
+      { "id": "absaetze", "text": "Jedes Argument ist ein eigener Absatz." },
+      { "id": "verknuepfung", "text": "Ich habe Verknüpfungswörter benutzt." },
+      { "id": "schluss", "text": "Mein Schluss fasst zusammen und bringt kein neues Argument." },
+      { "id": "adressat", "text": "Ich habe den Adressaten angesprochen." },
+      { "id": "gegenargument", "text": "Ich habe ein Gegenargument genannt und entkräftet." }
+    ],
+    "approved": false
+  },
+  {
+    "id": "cl-boss",
+    "items": [
+      { "id": "einleitung", "text": "Meine Einleitung nennt das Thema und meinen Standpunkt." },
+      { "id": "bbb", "text": "Jedes Argument hat Behauptung, Begründung und Beispiel." },
+      { "id": "staerkstes_zuletzt", "text": "Mein stärkstes Argument steht am Ende des Hauptteils." },
+      { "id": "absaetze", "text": "Jedes Argument ist ein eigener Absatz." },
+      { "id": "verknuepfung", "text": "Ich habe Verknüpfungswörter benutzt." },
+      { "id": "schluss", "text": "Mein Schluss fasst zusammen und bringt kein neues Argument." },
+      { "id": "adressat", "text": "Ich habe den Adressaten angesprochen." },
+      { "id": "gegenargument", "text": "Ich habe ein Gegenargument genannt und entkräftet.", "niveauE": true }
+    ],
+    "approved": false
+  }
+]

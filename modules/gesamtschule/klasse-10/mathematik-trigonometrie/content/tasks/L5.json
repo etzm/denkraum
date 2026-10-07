@@ -1,0 +1,81 @@
+[
+  {
+    "id": "L5-A1",
+    "lesson": 5,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "M": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° sind die Katheten a = {{a}} cm und b = {{b}} cm lang. Berechne die Winkel α und β. Dabei liegt α der Seite a gegenüber.",
+        "sought": ["alpha", "beta"],
+        "steps": [
+          "Skizze: a liegt α gegenüber, b liegt an α an.",
+          "tan α = a/b = {{a}}/{{b}} = {{tan_alpha}}",
+          "α = tan⁻¹({{tan_alpha}}) ≈ {{alpha}}°",
+          "β = 90° - α ≈ {{beta}}°",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "E": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° sind die Katheten a = {{a}} cm und b = {{b}} cm lang. Berechne die Winkel α und β. Dabei liegt α der Seite a gegenüber.",
+        "sought": ["alpha", "beta"],
+        "steps": [
+          "Skizze: a liegt α gegenüber, b liegt an α an.",
+          "tan α = a/b = {{a}}/{{b}} = {{tan_alpha}}",
+          "α = tan⁻¹({{tan_alpha}}) ≈ {{alpha}}°",
+          "β = 90° - α ≈ {{beta}}°",
+          "Antwortsatz mit Einheit"
+        ],
+        "extra": "Kontrolliere β auf einem zweiten Weg, zum Beispiel mit tan β."
+      }
+    },
+    "parameters": {
+      "a": { "min": 3, "max": 3, "step": 1, "unit": "cm" },
+      "b": { "min": 5, "max": 5, "step": 1, "unit": "cm" }
+    },
+    "solution_fn": "L5-A1",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F4", "F5", "F7", "F11", "F13"],
+    "hints": [
+      "Welche Seite liegt α gegenüber, welche liegt an α an?",
+      "Welches Verhältnis enthält genau die beiden Katheten?",
+      "Für den Winkel brauchst du die Umkehrfunktion: SHIFT + tan."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L5-A2",
+    "lesson": 5,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "In einem rechtwinkligen Dreieck ist die Hypotenuse {{c}} cm lang. Die Gegenkathete des Winkels α ist {{a}} cm lang. Berechne den Winkel α.",
+        "sought": ["alpha"],
+        "steps": [
+          "Skizze: Markiere α, die Gegenkathete und die Hypotenuse.",
+          "sin α = Gegenkathete/Hypotenuse = {{a}}/{{c}} = {{sin_alpha}}",
+          "α = sin⁻¹({{sin_alpha}}) ≈ {{alpha}}°",
+          "Antwortsatz mit Einheit"
+        ]
+      }
+    },
+    "parameters": {
+      "c": { "min": 10, "max": 10, "step": 1, "unit": "cm" },
+      "a": { "min": 6, "max": 6, "step": 1, "unit": "cm" }
+    },
+    "solution_fn": "L5-A2",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F4", "F5", "F7", "F11", "F13"],
+    "hints": [
+      "Welche Seiten kennst du? Die Gegenkathete und die Hypotenuse?",
+      "Welches Verhältnis enthält die Gegenkathete und die Hypotenuse?",
+      "Für den Winkel brauchst du sin⁻¹ (SHIFT + sin)."
+    ],
+    "interleaving_of": null
+  }
+]

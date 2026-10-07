@@ -1,0 +1,26 @@
+{
+  "name": "denkraum",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @denkraum/web dev",
+    "build": "pnpm --filter @denkraum/web build",
+    "seed": "pnpm --filter @denkraum/web seed",
+    "retention": "pnpm --filter @denkraum/web retention",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "pnpm -r --filter=!@denkraum/web --filter=!denkraum exec tsc -p .",
+    "db:generate": "pnpm --filter @denkraum/db generate",
+    "lint:dashes": "node scripts/check-dashes.mjs",
+    "prompts:gen": "node scripts/gen-prompts.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^22.19.0",
+    "typescript": "~5.9.3",
+    "vitest": "^5.0.3"
+  }
+}

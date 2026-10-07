@@ -1,0 +1,10 @@
+# HTTPS with automatic Let's Encrypt certificates. Caddy writes no access log unless one is
+# configured, so visitors' IP addresses are not stored (docs/datenschutz/README.md section 2).
+{$DENKRAUM_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy app:3000
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		-Server
+	}
+}

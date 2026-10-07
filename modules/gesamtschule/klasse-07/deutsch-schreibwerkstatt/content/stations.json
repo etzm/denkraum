@@ -1,0 +1,12 @@
+[
+  { "id": "st-01-01", "stufe": 1, "order": 1, "title": "Vormachen: Teile finden", "demo": true, "exerciseTypes": ["mark_parts"], "size": 4, "passThreshold": 3 },
+  { "id": "st-01-02", "stufe": 1, "order": 2, "title": "Behauptung und Begründung", "demo": false, "exerciseTypes": ["complete_bbb", "fill_connector"], "size": 4, "passThreshold": 3 },
+  { "id": "st-02-01", "stufe": 2, "order": 1, "title": "Vormachen: Ein Absatz unter der Lupe", "demo": true, "exerciseTypes": ["mark_parts"], "size": 4, "passThreshold": 3 },
+  { "id": "st-02-02", "stufe": 2, "order": 2, "title": "B-B-B vervollständigen", "demo": false, "exerciseTypes": ["complete_bbb", "fill_connector"], "size": 4, "passThreshold": 3 },
+  { "id": "st-03-01", "stufe": 3, "order": 1, "title": "These und Argumente", "demo": false, "exerciseTypes": ["pick_thesis", "rank_arguments"], "size": 4, "passThreshold": 3 },
+  { "id": "st-03-02", "stufe": 3, "order": 2, "title": "Die richtige Reihenfolge", "demo": false, "exerciseTypes": ["rank_arguments", "sort_paragraphs"], "size": 4, "passThreshold": 3 },
+  { "id": "st-04-01", "stufe": 4, "order": 1, "title": "Der ganze Text", "demo": false, "exerciseTypes": ["sort_paragraphs", "pick_thesis", "fill_connector"], "size": 4, "passThreshold": 3 },
+  { "id": "st-04-02", "stufe": 4, "order": 2, "title": "Verknüpfen", "demo": false, "exerciseTypes": ["fill_connector", "complete_bbb"], "size": 4, "passThreshold": 3 },
+  { "id": "st-05-01", "stufe": 5, "order": 1, "title": "Sachlich formulieren", "demo": false, "exerciseTypes": ["sentence_upgrade", "fill_connector"], "size": 4, "passThreshold": 3 },
+  { "id": "st-06-01", "stufe": 6, "order": 1, "title": "Die andere Seite", "demo": false, "exerciseTypes": ["fill_connector", "rank_arguments", "complete_bbb"], "size": 4, "passThreshold": 3 }
+]

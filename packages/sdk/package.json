@@ -1,0 +1,24 @@
+{
+  "name": "@denkraum/sdk",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./db": "./src/db.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "dependencies": {
+    "@denkraum/core": "workspace:*",
+    "@denkraum/db": "workspace:*",
+    "@denkraum/llm": "workspace:*",
+    "@denkraum/privacy": "workspace:*",
+    "zod": "^4.6.5"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0"
+  }
+}
