@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./db": "./src/db.ts"
+    "./db": "./src/db.ts",
+    "./testing": "./src/testing.ts"
   },
   "dependencies": {
     "@denkraum/core": "workspace:*",

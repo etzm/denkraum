@@ -81,5 +81,5 @@ export const blaetter = pgTable("trig_worksheets", {
 
 ## Tests
 
-- Fachlogik: Vitest in `tests/` oder neben dem Code.
+- Fachlogik: Vitest in `tests/` oder neben dem Code. Für Datenbank-Tests: `connectDb("pglite:memory")` und `createMemoryBlobStore()` aus `@denkraum/sdk/testing`.
 - Seiten und Abläufe: Playwright in `apps/web/e2e/`, immer mit `LLM_PROVIDER=mock` und den `mockFixtures` des Moduls.

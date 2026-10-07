@@ -5,7 +5,7 @@
 import { createModuleAi, createModuleUploads, type ModuleContext } from "@denkraum/sdk";
 import { learners } from "@denkraum/sdk/db";
 // The SDK has no test helper for a database yet; the platform client is imported by path (test only).
-import { connectDb, createMemoryBlobStore, schema } from "../../../../../packages/db/src/index.ts";
+import { connectDb, createMemoryBlobStore, schema } from "@denkraum/sdk/testing";
 import { MOCK_FIXTURES } from "../mission/mocks.ts";
 import { manifest } from "../module.ts";
 import { PROMPTS } from "../prompts/index.ts";
