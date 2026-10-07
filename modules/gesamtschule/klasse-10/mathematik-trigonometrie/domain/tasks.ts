@@ -57,7 +57,7 @@ export function checkTask(task: Task): string[] {
     }
 
     const known = new Set([...Object.keys(task.parameters), ...valueKeys]);
-    for (const text of [def.text, ...def.steps, def.extra ?? "", ...task.hints]) {
+    for (const text of [def.text, ...def.steps, def.extra ?? "", ...Object.values(def.choices ?? {}).flat(), ...task.hints]) {
       for (const name of placeholders(text)) {
         if (!known.has(name)) problems.push(`${level}: unknown placeholder {{${name}}}`);
       }

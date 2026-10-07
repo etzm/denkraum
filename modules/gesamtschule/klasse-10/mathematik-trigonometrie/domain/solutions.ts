@@ -245,6 +245,88 @@ const SOLUTIONS: Readonly<Record<string, NumericDef | ChecklistDef>> = {
     },
   }),
 
+  // Adjacent side b of alpha given, sought the opposite side a (tangent); M and E also c (Pythagoras).
+  "L4-A5": numeric({
+    params: ["b", "alpha"],
+    units: { tan_alpha: "", a: "cm", c: "cm" },
+    roundable: ["tan_alpha"],
+    compute: ({ b, alpha }, _level, o) => {
+      const tan_alpha = o.tan_alpha ?? trig("tan", alpha);
+      const a = b * tan_alpha;
+      return { tan_alpha, a, c: Math.hypot(a, b) };
+    },
+    wrongPaths: ({ b, alpha }) => {
+      const side = { side: "b" };
+      // A wrong a carries over to c, because c is computed from a with Pythagoras.
+      const withC = (a: number): Values => ({ a, c: Math.hypot(a, b) });
+      const a = b * trig("tan", alpha);
+      return [
+        ...calculatorModePaths((mode) => withC(b * trig("tan", alpha, mode))),
+        // tan alpha = b / a (legs swapped) or a / b = tan alpha rearranged to a = b / tan alpha.
+        { id: "b_divided_by_tan", codes: ["F2", "F6"], values: withC(b / trig("tan", alpha)), hint_vars: side },
+        { id: "tan_divided_by_b", codes: ["F6"], values: withC(trig("tan", alpha) / b), hint_vars: side },
+        { id: "sin_instead_of_tan", codes: ["F3"], values: withC(b * trig("sin", alpha)) },
+        { id: "cos_instead_of_tan", codes: ["F3"], values: withC(b * trig("cos", alpha)) },
+        // E computes c also with the cosine: c = b · cos alpha instead of b : cos alpha.
+        { id: "c_times_cos", codes: ["F6"], values: { c: b * trig("cos", alpha) }, hint_vars: { side: "c" } },
+        // Pythagoras with c as a leg: c² = b² - a² (or a² - b²).
+        { id: "c_as_leg", codes: ["F8"], values: { c: Math.sqrt(Math.abs(b ** 2 - a ** 2)) } },
+      ];
+    },
+  }),
+
+  // Opposite side a of alpha given, sought the hypotenuse c (division); M and E also the adjacent side b.
+  "L4-A6": numeric({
+    params: ["a", "alpha"],
+    units: { sin_alpha: "", tan_alpha: "", c: "cm", b: "cm" },
+    roundable: ["sin_alpha", "tan_alpha"],
+    compute: ({ a, alpha }, _level, o) => {
+      const sin_alpha = o.sin_alpha ?? trig("sin", alpha);
+      const tan_alpha = o.tan_alpha ?? trig("tan", alpha);
+      return { sin_alpha, tan_alpha, c: a / sin_alpha, b: a / tan_alpha };
+    },
+    wrongPaths: ({ a, alpha }) => {
+      const [sin, cos, tan] = [trig("sin", alpha), trig("cos", alpha), trig("tan", alpha)];
+      return [
+        ...calculatorModePaths((mode) => ({ c: a / trig("sin", alpha, mode), b: a / trig("tan", alpha, mode) })),
+        // sin alpha = a / c rearranged to c = a · sin alpha or c = sin alpha / a.
+        { id: "a_times_sin", codes: ["F6"], values: { c: a * sin }, hint_vars: { side: "c" } },
+        { id: "sin_divided_by_a", codes: ["F6"], values: { c: sin / a }, hint_vars: { side: "c" } },
+        { id: "cos_instead_of_sin", codes: ["F2", "F3"], values: { c: a / cos } },
+        { id: "tan_instead_of_sin", codes: ["F3"], values: { c: a / tan } },
+        // tan alpha = b / a (legs swapped) or a / b = tan alpha rearranged to b = a · tan alpha.
+        { id: "a_times_tan", codes: ["F2", "F6"], values: { b: a * tan }, hint_vars: { side: "b" } },
+        { id: "tan_divided_by_a", codes: ["F6"], values: { b: tan / a }, hint_vars: { side: "b" } },
+        { id: "sin_instead_of_tan", codes: ["F3"], values: { b: a / sin } },
+        // Pythagoras with b as the hypotenuse: b² = c² + a².
+        { id: "b_as_hypotenuse", codes: ["F8"], values: { b: Math.hypot(a / sin, a) } },
+      ];
+    },
+  }),
+
+  // Ladder: length l and angle alpha with the ground, sought the height h; M and E also the distance d from the wall.
+  "L4-A7": numeric({
+    params: ["l", "alpha"],
+    units: { sin_alpha: "", cos_alpha: "", h: "m", d: "m" },
+    roundable: ["sin_alpha", "cos_alpha"],
+    compute: ({ l, alpha }, _level, o) => {
+      const sin_alpha = o.sin_alpha ?? trig("sin", alpha);
+      const cos_alpha = o.cos_alpha ?? trig("cos", alpha);
+      return { sin_alpha, cos_alpha, h: l * sin_alpha, d: l * cos_alpha };
+    },
+    wrongPaths: ({ l, alpha }) => {
+      const [sin, cos, tan] = [trig("sin", alpha), trig("cos", alpha), trig("tan", alpha)];
+      const side = { side: "der Leiterlänge" };
+      return [
+        ...calculatorModePaths((mode) => ({ h: l * trig("sin", alpha, mode), d: l * trig("cos", alpha, mode) })),
+        { id: "sin_cos_swapped", codes: ["F2", "F3"], values: { h: l * cos, d: l * sin } },
+        { id: "tan_instead", codes: ["F3"], values: { h: l * tan } },
+        { id: "ratio_divided_by_length", codes: ["F6"], values: { h: sin / l, d: cos / l }, hint_vars: side },
+        { id: "length_divided_by_ratio", codes: ["F6"], values: { h: l / sin, d: l / cos }, hint_vars: side },
+      ];
+    },
+  }),
+
   // Legs a and b given, sought alpha (opposite a) and beta.
   "L5-A1": numeric({
     params: ["a", "b"],
