@@ -104,7 +104,7 @@ describe("L4-A6: hypotenuse from a side (division)", () => {
   it("gives c = 6 : sin 40° ≈ 9.33 cm and b = 6 : tan 40° ≈ 7.15 cm", () => {
     expect(s.values.c).toBeCloseTo(9.3343, 4);
     expect(s.values.b).toBeCloseTo(7.1505, 4);
-    expect(s.values.b ** 2 + 36).toBeCloseTo(s.values.c! ** 2, 8);
+    expect(s.values.b! ** 2 + 36).toBeCloseTo(s.values.c! ** 2, 8);
   });
 
   it("computes the typical wrong paths", () => {
