@@ -177,7 +177,7 @@ describe("German spelling", () => {
   }
 
   it("uses real umlauts in all content texts", () => {
-    for (const file of ["missions", "help_cards", "checklists", "stations", "exercises/seed"]) {
+    for (const file of ["missions", "help_cards", "checklists", "stations", "exercises/seed", "garden"]) {
       for (const s of strings(readJson(`content/${file}.json`))) expect(s).not.toMatch(ascii);
     }
   });

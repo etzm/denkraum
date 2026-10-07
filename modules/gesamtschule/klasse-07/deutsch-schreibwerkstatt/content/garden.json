@@ -1,0 +1,113 @@
+{
+  "vitality": {
+    "thirstyAfter": 2,
+    "wiltedAfter": 4,
+    "dormantAfter": 8,
+    "countWeekends": false
+  },
+  "ferien": [
+    { "name": "Herbstferien", "from": "2026-10-26", "to": "2026-10-31" },
+    { "name": "Weihnachtsferien", "from": "2026-12-23", "to": "2027-01-09" },
+    { "name": "Osterferien", "from": "2027-03-25", "to": "2027-03-25" },
+    { "name": "Osterferien", "from": "2027-03-30", "to": "2027-04-03" },
+    { "name": "Pfingstferien", "from": "2027-05-18", "to": "2027-05-29" },
+    { "name": "Sommerferien", "from": "2027-07-29", "to": "2027-09-11" }
+  ],
+  "ferienSource": "https://www.kmk.org/service/ferienregelung/ferienkalender.html",
+  "varieties": {
+    "1": {
+      "name": "Gänseblümchen",
+      "colors": [
+        { "id": "white", "name": "Weiß", "hex": "#f7f4ea" },
+        { "id": "pink", "name": "Rosa", "hex": "#f2b8c6" },
+        { "id": "cream", "name": "Creme", "hex": "#f3e3b5" }
+      ]
+    },
+    "2": {
+      "name": "Tulpe",
+      "colors": [
+        { "id": "red", "name": "Rot", "hex": "#d1495b" },
+        { "id": "yellow", "name": "Gelb", "hex": "#f2c14e" },
+        { "id": "violet", "name": "Violett", "hex": "#8e6bbf" },
+        { "id": "orange", "name": "Orange", "hex": "#ef8a3c" }
+      ]
+    },
+    "3": {
+      "name": "Mohnblume",
+      "colors": [
+        { "id": "red", "name": "Rot", "hex": "#c8372d" },
+        { "id": "orange", "name": "Orange", "hex": "#e9783b" },
+        { "id": "white", "name": "Weiß", "hex": "#f4efe6" }
+      ]
+    },
+    "4": {
+      "name": "Sonnenblume",
+      "colors": [
+        { "id": "yellow", "name": "Gelb", "hex": "#f4b942" },
+        { "id": "gold", "name": "Gold", "hex": "#d99a1e" },
+        { "id": "red", "name": "Rotbraun", "hex": "#a4452c" }
+      ]
+    },
+    "5": {
+      "name": "Lavendel",
+      "colors": [
+        { "id": "violet", "name": "Violett", "hex": "#8a6fbf" },
+        { "id": "blue", "name": "Blau", "hex": "#6f86c9" },
+        { "id": "white", "name": "Weiß", "hex": "#ece8f2" }
+      ]
+    },
+    "6": {
+      "name": "Rose",
+      "colors": [
+        { "id": "red", "name": "Rot", "hex": "#b8323f" },
+        { "id": "pink", "name": "Rosa", "hex": "#e98aa3" },
+        { "id": "yellow", "name": "Gelb", "hex": "#efc94c" },
+        { "id": "white", "name": "Weiß", "hex": "#f5efe8" }
+      ]
+    },
+    "boss": {
+      "name": "Apfelbaum",
+      "colors": [
+        { "id": "red", "name": "Rote Äpfel", "hex": "#c0392b" },
+        { "id": "green", "name": "Grüne Äpfel", "hex": "#7fb046" },
+        { "id": "yellow", "name": "Gelbe Äpfel", "hex": "#e5c04a" }
+      ]
+    }
+  },
+  "labels": {
+    "plantStages": {
+      "seed": "Samen",
+      "sown": "Gesät",
+      "sprout": "Keimling",
+      "leaves": "Blätter",
+      "bud": "Knospe",
+      "bloom": "Blüte"
+    },
+    "houseParts": {
+      "foundation": "Fundament",
+      "walls": "Wände",
+      "door": "Tür",
+      "windows": "Fenster",
+      "roof": "Dach",
+      "greenhouse": "Gewächshaus",
+      "chimney": "Schornstein",
+      "weather_vane": "Wetterfahne"
+    },
+    "visitors": {
+      "butterfly": "Schmetterling",
+      "bee": "Biene",
+      "squirrel": "Eichhörnchen",
+      "hedgehog": "Igel",
+      "blackbird": "Amsel",
+      "owl": "Eule"
+    }
+  },
+  "messages": {
+    "fresh": "Dein Garten ist frisch und grün.",
+    "thirsty": "Dein Garten hat ein bisschen Durst. Eine Station genügt, dann ist alles wieder frisch.",
+    "wilted": "Deine Pflanzen lassen die Blätter hängen. Eine kurze Station, und sie richten sich wieder auf.",
+    "dormant": "Dein Garten ruht und wartet auf dich. Alles, was du geschafft hast, ist noch da. Eine Station weckt ihn wieder auf.",
+    "ferien": "Ferien! Dein Garten ruht sich auch aus und trocknet nicht aus.",
+    "empty": "Hier wächst bald dein Garten. Dein erster Text wird deine erste Pflanze."
+  }
+}

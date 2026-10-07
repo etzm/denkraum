@@ -9,4 +9,4 @@ Module für diese Klasse planen deshalb:
 
 | Modul | Fach | Status |
 |---|---|---|
-| [deutsch-schreibwerkstatt](deutsch-schreibwerkstatt/) | Deutsch | Planung (Workstream B) |
+| [deutsch-schreibwerkstatt](deutsch-schreibwerkstatt/) | Deutsch | Entwicklung (Workstream B) |

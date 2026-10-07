@@ -327,6 +327,10 @@ Umgesetzt am 5. Oktober 2026:
   - Für "keine Wiederholung in 10 Ziehungen" braucht jede Station mindestens 14 freigegebene Übungen; vorhanden sind 14 insgesamt.
   - Alle Inhalte sind `approved: false`, bis sie freigegeben sind.
 
+Umgesetzt am 7. Oktober 2026:
+
+- **Schreibwerkstatt, Spielschicht:** Die Fortschrittskarte ist ein Garten mit Gartenhaus, bewertet nach dem Octalysis-Modell. Der Garten welkt ohne Übung, stirbt aber nie, ruht in Ferien und an Wochenenden und liest keine KI-Ausgabe. Siehe `modules/gesamtschule/klasse-07/deutsch-schreibwerkstatt/docs/spielschicht.md` und Modul-DECISIONS SW-29 bis SW-36. Die Schreibwerkstatt wird ab jetzt auf einem eigenen Branch bis B7 gebaut; Änderungen an der Plattform kommen dort als eigene Commits mit dem Präfix `platform:`.
+
 Als Nächstes:
 
 1. **P1:** Foto-Pipeline im Browser (Neukodierung, Skalierung, mehrseitig), S3-Speicher in der EU, Upload-Route mit Metadaten-Prüfung, Transkriptions-Bestätigung als gemeinsame Komponente.

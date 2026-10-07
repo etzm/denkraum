@@ -1,6 +1,7 @@
 export * from "./common.ts";
 export * from "./content.ts";
 export * from "./exercise.ts";
+export * from "./garden.ts";
 export * from "./output.ts";
 export * from "./planReview.ts";
 export * from "./planTranscript.ts";

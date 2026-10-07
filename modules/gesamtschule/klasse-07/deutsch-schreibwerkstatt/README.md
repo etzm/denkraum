@@ -1,6 +1,6 @@
 # Deutsch Klasse 7: Schreibwerkstatt
 
-Workstream B. Status: Planung.
+Workstream B. Status: Entwicklung.
 
 ## Inhalt
 
@@ -41,6 +41,14 @@ Umgesetzt: reine Fachlogik ohne Datenbank, ohne UI und ohne KI-Aufrufe, getestet
 - `prompts/`: P1 bis P5 als `<name>.v1.md` mit Frontmatter (`name`, `version`, `model_tier`, `output_schema`).
 - `content/`: Missionen, Hilfskarten, Checklisten, Stationen und 14 Beispielübungen (zwei je Typ). Alles mit `approved: false`, bis die Deutschlehrkraft es freigibt.
 - `tests/`: 134 Tests für Regeln, State Machine, Übungen, Zitate, Schemas, Inhalte und Prompts.
+
+## Spielschicht: der Garten
+
+Die Fortschrittskarte ist ein Garten mit Gartenhaus, entworfen nach dem Octalysis-Modell. Jeder Text lässt eine Pflanze wachsen, jede Stufe füllt ein Beet, das Gartenhaus wächst über das Schuljahr. Ohne Übung welkt der Garten, stirbt aber nie; eine Station macht ihn wieder frisch. Der Garten liest keine KI-Ausgabe. Details in [docs/spielschicht.md](docs/spielschicht.md), Entscheidungen SW-29 bis SW-33.
+
+- `domain/garden.ts`: Pflanzenstufen, Beete, Gartenhaus, Besucher, Vitalität mit Ferien und Wochenenden, Wetter, alles als Ansicht `gardenView`.
+- `content/garden.json`: Schwellen, Ferien 2026/27 (KMK), Sorten, Farben und die Texte für das Kind.
+- `tests/garden.test.ts`: 29 Tests, darunter "nichts geht verloren" und "gleicher Garten bei 0 und 12 Sternen".
 
 Prüfen im Repo-Wurzelverzeichnis:
 

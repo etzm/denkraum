@@ -18,6 +18,6 @@ Vor dem ersten Commit in einem Modul: [Datenschutz-Leitplanken](../docs/datensch
 
 | Modul | Schulart | Klasse | Fach | Status |
 |---|---|---|---|---|
-| [deutsch-schreibwerkstatt](gesamtschule/klasse-07/deutsch-schreibwerkstatt/) | Gesamtschule | 7 | Deutsch | Planung (Workstream B) |
+| [deutsch-schreibwerkstatt](gesamtschule/klasse-07/deutsch-schreibwerkstatt/) | Gesamtschule | 7 | Deutsch | Entwicklung (Workstream B) |
 | [mathematik-trigonometrie](gesamtschule/klasse-10/mathematik-trigonometrie/) | Gesamtschule | 10 | Mathematik | Planung (Workstream A) |
 | [klasse-11](gymnasium/klasse-11/) | Gymnasium | 11 | offen | noch kein Modul |
