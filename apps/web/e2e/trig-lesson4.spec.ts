@@ -128,6 +128,10 @@ test("lesson 4: level, faded tasks, worksheet, photo, confirmation, AI feedback,
   await uploadPhoto(page);
   // The mock read the right values; they are prefilled and editable.
   await expect(page.getByLabel("Aufgabe 1: Wert für a")).toHaveValue(/^\d+,\d+$/);
+  // It marks one value as uncertain (D-032): highlighted next to the photo, with a hint for screen readers.
+  await expect(page.getByTestId("markiert")).toHaveText(/^Eine Stelle habe ich markiert, weil ich unsicher bin/);
+  await expect(page.getByText("Unsicher gelesen: bitte mit dem Foto vergleichen.")).toHaveCount(1);
+  await expect(page.getByLabel("Aufgabe 4: Wert für d")).toHaveAttribute("aria-describedby", "hinweis-L4-A7-d");
   await page.getByRole("button", { name: "Stimmt so, jetzt prüfen" }).click();
 
   await expect(page.getByRole("heading", { name: "Deine Rückmeldung" })).toBeVisible();
@@ -200,4 +204,56 @@ test("lesson 4: a wrong value gets a misconception hint, never the result; the s
   await second.getByRole("button", { name: "Lösungsweg ansehen" }).click();
   await expect(page.getByRole("heading", { name: "Lösungsweg zu Aufgabe 1" })).toBeVisible();
   await expect(page.getByText(/a = .* · sin .*≈/)).toBeVisible();
+});
+
+test("teacher view: error picture of the class and a correction the learner sees (D-030, D-031)", async ({ page, browser }) => {
+  await join(page);
+  await page.goto("/klasse10");
+  const pseudonym = (await page.getByText("Angemeldet als").locator("xpath=following-sibling::p").textContent())!.trim();
+  await chooseLevelM(page);
+  await openLesson(page);
+  await openPractice(page);
+  await answerFaded1(page, "7,66");
+  await answerFaded2(page, "4,2");
+  await page.getByRole("button", { name: "Arbeitsblatt öffnen" }).click();
+  await uploadPhoto(page);
+  await page.getByLabel("Aufgabe 1: Wert für a").fill("-3,43");
+  await page.getByRole("button", { name: "Stimmt so, jetzt prüfen" }).click();
+  await expect(page.getByRole("article", { name: "Aufgabe 1" }).getByText("nochmal", { exact: true })).toBeVisible();
+
+  // The teacher signs in with the teacher code on the same entry page as the children.
+  const teacherContext = await browser.newContext({ viewport: { width: 1080, height: 810 } });
+  const teacher = await teacherContext.newPage();
+  await teacher.goto("/klasse10");
+  await teacher.getByLabel("Dein Code").fill("E2ET-EACH");
+  await teacher.getByRole("button", { name: "Los geht's" }).click();
+  await expect(teacher).toHaveURL(/\/klasse10\/lehrkraft$/);
+  await expect(teacher.getByRole("heading", { name: "Demo Mathe 10" })).toBeVisible();
+  await expect(teacher.getByText(pseudonym)).toBeVisible();
+
+  await teacher.getByRole("link", { name: /Trigonometrie-Einstieg/ }).click();
+  await expect(teacher.getByRole("heading", { name: "Trigonometrie: Fehlerbild der Klasse" })).toBeVisible();
+  const a2 = teacher.getByRole("region", { name: "Aufgabe L4-A2" });
+  await expect(a2.getByText("Taschenrechner nicht auf DEG")).toBeVisible();
+  await expect(a2.getByText(new RegExp(pseudonym))).toBeVisible();
+
+  await teacher.getByRole("link", { name: pseudonym }).click();
+  await expect(teacher.getByRole("heading", { name: pseudonym })).toBeVisible();
+  const result = teacher.getByRole("region", { name: /^L4-A2, Blatt/ });
+  await expect(result.getByText("Erkannt: Taschenrechner nicht auf DEG (F1)")).toBeVisible();
+  await result.getByText("Korrigieren", { exact: true }).click();
+  await result.getByLabel("Ergebnis ist richtig").check();
+  await result.getByLabel(/Begründung/).fill("Auf dem Foto steht der richtige Wert, nur das Vorzeichen war verwischt.");
+  await result.getByRole("button", { name: "Korrektur speichern" }).click();
+  await expect(teacher.getByText("Korrektur gespeichert.")).toBeVisible();
+  await expect(teacher.getByRole("region", { name: /^L4-A2, Blatt/ }).getByText("(Programm: falsch)")).toBeVisible();
+  await teacherContext.close();
+
+  // The learner sees the correction with its reason.
+  await page.reload();
+  const card = page.getByRole("article", { name: "Aufgabe 1" });
+  await expect(card.getByText("richtig", { exact: true })).toBeVisible();
+  await expect(card.getByText("Deine Lehrkraft hat das Ergebnis geändert: vorher „nochmal“, jetzt „richtig“.")).toBeVisible();
+  await expect(card.getByText("Begründung: Auf dem Foto steht der richtige Wert, nur das Vorzeichen war verwischt.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "Nochmal mit neuen Zahlen" })).toHaveCount(0);
 });

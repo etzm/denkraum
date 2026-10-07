@@ -1,15 +1,20 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { acceptUpload, createModuleAi, createModuleUploads, type ModuleContext } from "@denkraum/sdk";
-import { and, eq, feedback, learners, transcripts } from "@denkraum/sdk/db";
+import { acceptUpload, createModuleAi, createModuleUploads, type ModuleContext, type TeacherContext } from "@denkraum/sdk";
+import { and, eq, feedback, learners, transcripts, uploads } from "@denkraum/sdk/db";
 import { connectDb, createMemoryBlobStore, schema } from "@denkraum/sdk/testing";
-import { trigChecks, trigResults, trigWorksheets } from "../db.ts";
+import { trigChecks, trigOverrides, trigResults, trigWorksheets } from "../db.ts";
+import { exportLearner } from "../export.ts";
 import { mockFeedback, mockTranscription, parseRequestInput, type FeedbackInput, type TranscribeInput } from "../domain/ai.ts";
 import { formatInput } from "../domain/format.ts";
+import { solutionAvailable } from "../domain/lesson.ts";
+import { taskOverview } from "../domain/overview.ts";
 import { solve } from "../domain/solutions.ts";
 import { getTask } from "../domain/tasks.ts";
 import { manifest } from "../module.ts";
 import { PROMPTS } from "../prompts/index.ts";
 import { ACTIONS } from "../server/actions.ts";
+import { countedOf } from "../server/store.ts";
+import { overviewAttempts, TEACHER_ACTIONS } from "../server/teacher.ts";
 
 // The lesson 4 flow on an in-memory database with the module's mock answers: what the actions
 // store and decide. Synthetic data only (docs/datenschutz/README.md, section 7).
@@ -187,7 +192,7 @@ describe("lesson 4 actions", () => {
       `/klasse10/m/mathematik-trigonometrie/blatt/${sheet!.id}/pruefen?upload=${uploadId}`,
     );
     const [raw] = await env.db.select().from(transcripts).where(eq(transcripts.uploadId, uploadId));
-    expect(raw!.raw).toMatchObject({ prompt_name: "transcribe", prompt_version: 1, model: "mock" });
+    expect(raw!.raw).toMatchObject({ prompt_name: "transcribe", prompt_version: 2, model: "mock" });
     expect(raw!.legibility).toBeCloseTo(0.95);
     // Reading twice does not call the model twice.
     await run(ctx, "lesen", { blatt: sheet!.id, upload: uploadId });
@@ -316,5 +321,138 @@ describe("when the model fails (D-014)", () => {
     expect(results.find((r) => r.taskId === "L4-A2")).toMatchObject({ feedbackSource: "reveal_guard", feedbackId: null });
     // Where the learner has the value already, repeating it gives nothing away.
     expect(results.filter((r) => r.feedbackSource === "ai")).toHaveLength(3);
+  });
+});
+
+describe("teacher view (D-030, D-031)", () => {
+  let env: Awaited<ReturnType<typeof setup>>;
+  let teacher: TeacherContext;
+  const BASE = "/klasse10/lehrkraft/m/mathematik-trigonometrie";
+
+  beforeEach(async () => {
+    env = await setup();
+    const [group] = await env.db.select().from(schema.groups);
+    const [viewer] = await env.db.insert(schema.viewers).values({ groupId: group!.id, role: "teacher", readCode: "TEST-KTRR" }).returning();
+    teacher = {
+      manifest,
+      viewer: { id: viewer!.id },
+      group: { id: group!.id, label: group!.label, schulart: group!.schulart, klasse: group!.klasse, endsAt: group!.endsAt },
+      learners: [{ id: env.learnerId, pseudonym: PSEUDONYM }],
+      basePath: BASE,
+      db: env.db,
+      action: () => async () => {},
+      now: new Date("2026-10-07T11:00:00Z"),
+    };
+  });
+
+  async function correct(fields: Record<string, string>) {
+    const result = await TEACHER_ACTIONS.korrigieren!(teacher, form(fields));
+    return result?.redirect ?? "";
+  }
+
+  /** One sheet with L4-A2 in RAD mode (F1), the other three tasks right. */
+  async function sheetWithF1(ctx: ModuleContext) {
+    const sheetId = (await run(ctx, "blatt_oeffnen")).split("/").pop()!;
+    const [sheet] = await env.db.select().from(trigWorksheets).where(eq(trigWorksheets.id, sheetId));
+    if (!sheet) throw new Error("no open sheet");
+    const uploadId = await env.upload(sheet.id);
+    await run(ctx, "lesen", { blatt: sheet.id, upload: uploadId });
+    await run(ctx, "bestaetigen", confirmFields(sheet, uploadId, { "v.L4-A2.a": "-3,43" }));
+    const [result] = await env.db.select().from(trigResults).where(and(eq(trigResults.worksheetId, sheet.id), eq(trigResults.taskId, "L4-A2")));
+    return result!;
+  }
+
+  it("shows the error picture of the own group only", async () => {
+    const ctx = env.context("M");
+    await solveFaded(ctx);
+    await sheetWithF1(ctx);
+
+    // A learner of another group with the same error must not show up.
+    const [other] = await env.db
+      .insert(schema.groups)
+      .values({ kind: "class", label: "Andere 10", schulart: "gesamtschule", klasse: 10, joinCode: "TEST-ANDR", endsAt: new Date("2027-07-31") })
+      .returning();
+    const [stranger] = await env.db.insert(learners).values({ groupId: other!.id, pseudonym: "Grüner Igel 11", personalCode: "TEST-GR11" }).returning();
+    const [sheet] = await env.db
+      .insert(trigWorksheets)
+      .values({ learnerId: stranger!.id, lesson: 4, niveau: "M", seed: "s", sheetCode: "ABCD", taskIds: ["L4-A2"], params: {}, attempts: {} })
+      .returning();
+    const [upload] = await env.db
+      .insert(uploads)
+      .values({ learnerId: stranger!.id, moduleId: manifest.id, kind: "worksheet", ref: sheet!.id, imagesDeleteAfter: new Date("2026-10-21") })
+      .returning();
+    await env.db.insert(trigResults).values({
+      learnerId: stranger!.id,
+      worksheetId: sheet!.id,
+      uploadId: upload!.id,
+      taskId: "L4-A2",
+      attemptNo: 1,
+      status: "incorrect",
+      misconceptionCodes: ["F1"],
+      verification: {},
+      feedbackSource: "ai",
+    });
+
+    const [a2] = taskOverview(["L4-A2"], await overviewAttempts(teacher, ["L4-A2"], ["L4-A3"]));
+    expect(a2).toMatchObject({ learners: 1, latest: { incorrect: 1 } });
+    expect(a2!.codes.map((c) => [c.code, c.learnerIds])).toEqual([["F1", [env.learnerId]]]);
+    // Someone else's result cannot be corrected.
+    const [strangerResult] = await env.db.select().from(trigResults).where(eq(trigResults.learnerId, stranger!.id));
+    expect(await correct({ ergebnis: strangerResult!.id, wahl: "status:correct", grund: "Versuch einer fremden Lehrkraft" })).toBe(BASE);
+    expect(await env.db.select().from(trigOverrides)).toHaveLength(0);
+  });
+
+  it("sets a new status with a reason; lesson rules, error picture and export use it", async () => {
+    const ctx = env.context("M");
+    await solveFaded(ctx);
+    const result = await sheetWithF1(ctx);
+
+    expect(await correct({ ergebnis: result.id, wahl: "status:correct", grund: "  Rechner stand auf DEG, Foto falsch gelesen " })).toBe(
+      `${BASE}/lernende/${env.learnerId}?gespeichert=${result.id}#ergebnis-${result.id}`,
+    );
+    const [row] = await env.db.select().from(trigOverrides);
+    expect(row).toMatchObject({ learnerId: env.learnerId, viewerId: teacher.viewer.id, kind: "status", status: "correct", reason: "Rechner stand auf DEG, Foto falsch gelesen" });
+    // The stored result stays as verify() decided it; the correction is a separate log entry.
+    const [stored] = await env.db.select().from(trigResults).where(eq(trigResults.id, result.id));
+    expect(stored!.status).toBe("incorrect");
+
+    const counted = await countedOf(ctx, ["L4-A2"]);
+    expect(counted).toMatchObject([{ status: "correct", originalStatus: "incorrect", codes: [] }]);
+    const [a2] = taskOverview(["L4-A2"], await overviewAttempts(teacher, ["L4-A2"], []));
+    expect(a2).toMatchObject({ latest: { correct: 1, incorrect: 0 }, codes: [] });
+    expect((await exportLearner(env.db, env.learnerId)).trig_overrides).toHaveLength(1);
+  });
+
+  it("an attempt that does not count gives the learner another attempt", async () => {
+    const ctx = env.context("M");
+    await solveFaded(ctx);
+    const first = await sheetWithF1(ctx);
+    await run(ctx, "neu");
+    await sheetWithF1(ctx);
+    expect(solutionAvailable(await countedOf(ctx, ["L4-A2"]), "L4-A2")).toBe(true);
+
+    await correct({ ergebnis: first.id, wahl: "void", grund: "Foto war unscharf, Aufgabe neu rechnen" });
+    const counted = await countedOf(ctx, ["L4-A2"]);
+    expect(counted.map((r) => r.attemptNo)).toEqual([1]);
+    expect(solutionAvailable(counted, "L4-A2")).toBe(false);
+
+    // Taking the correction back restores the count; the log keeps both entries.
+    await correct({ ergebnis: first.id, wahl: "clear", grund: "Doch gewertet, Foto war lesbar" });
+    expect((await countedOf(ctx, ["L4-A2"])).map((r) => r.attemptNo)).toEqual([1, 2]);
+    expect(await env.db.select().from(trigOverrides)).toHaveLength(2);
+  });
+
+  it("refuses a correction without a reason or without a change", async () => {
+    const ctx = env.context("M");
+    await solveFaded(ctx);
+    const result = await sheetWithF1(ctx);
+    const page = `${BASE}/lernende/${env.learnerId}`;
+    expect(await correct({ ergebnis: result.id, wahl: "status:correct", grund: "ok" })).toBe(`${page}?fehler=reason&ergebnis=${result.id}#ergebnis-${result.id}`);
+    expect(await correct({ ergebnis: result.id, wahl: "status:incorrect", grund: "bleibt falsch" })).toBe(
+      `${page}?fehler=unchanged&ergebnis=${result.id}#ergebnis-${result.id}`,
+    );
+    expect(await correct({ ergebnis: result.id, wahl: "clear", grund: "nichts zurückzunehmen" })).toMatch(/fehler=unchanged/);
+    expect(await correct({ ergebnis: result.id, wahl: "loeschen", grund: "unbekannte Wahl" })).toMatch(/fehler=kind/);
+    expect(await env.db.select().from(trigOverrides)).toHaveLength(0);
   });
 });

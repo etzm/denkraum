@@ -1,12 +1,13 @@
 import { PhotoCapture } from "@denkraum/capture";
 import type { ModuleContext, UploadSummary } from "@denkraum/sdk";
-import { needsNewPhoto, transcribedFor } from "../domain/ai.ts";
+import { needsNewPhoto, readingCheck, transcribedFor, type ReadingFlag } from "../domain/ai.ts";
 import { formatGiven, formatInput, renderText, textVariables, unitOf, withUnit } from "../domain/format.ts";
 import { catalogHint, lessonPassed, lessonTasks, PASS_TASKS, solutionAvailable, statusLabel } from "../domain/lesson.ts";
 import { MISCONCEPTIONS, type MisconceptionCode } from "../domain/misconceptions.ts";
 import { getTask } from "../domain/tasks.ts";
 import type { VerificationResult } from "../domain/verify.ts";
-import { asPrior, confirmedOf, feedbackTexts, resultsOf, resultsOfSheet, transcriptOf, type Worksheet } from "../server/store.ts";
+import { countedResults, type EffectiveResult } from "../domain/overrides.ts";
+import { confirmedOf, effectiveResultsOf, feedbackTexts, resultsOf, resultsOfSheet, transcriptOf, type Worksheet } from "../server/store.ts";
 import { AiNotice, buttonPrimary, buttonQuiet, buttonSecondary, Card, Note, StatusBadge, Steps } from "./common.tsx";
 import { WaitingForm } from "./client.tsx";
 
@@ -112,6 +113,11 @@ export async function PhotoPage({ ctx, sheet }: { ctx: ModuleContext; sheet: Wor
 
 const PHOTO_TIPS = "Tageslicht, senkrecht von oben, die ganze Seite im Bild, kein Schatten.";
 
+const FLAG_TEXT: Record<ReadingFlag, string> = {
+  unreadable: "Nicht lesbar: bitte vom Foto eintragen.",
+  uncertain: "Unsicher gelesen: bitte mit dem Foto vergleichen.",
+};
+
 /** Screen 6 (spec A 5.6): "Habe ich dich richtig gelesen?". Reads the photo first if needed. */
 export async function ConfirmPage({ ctx, sheet, upload }: { ctx: ModuleContext; sheet: Worksheet; upload: UploadSummary }) {
   if ((await resultsOfSheet(ctx, sheet.id)).length > 0) {
@@ -146,6 +152,11 @@ export async function ConfirmPage({ ctx, sheet, upload }: { ctx: ModuleContext; 
 
   const transcription = stored.transcription;
   const pages = upload.imagesDeletedAt ? [] : ctx.uploads.pageUrls(upload.id, upload.pages);
+  const checks = new Map(
+    taskTexts(sheet).map((t) => [t.id, readingCheck(transcribedFor(transcription, t.id, t.number), getTask(t.id).levels[sheet.niveau]?.sought ?? [])]),
+  );
+  const flagged = [...checks.values()].reduce((n, c) => n + Object.keys(c.fields).length, 0);
+  const regions = transcription?.unreadable_regions ?? [];
   const retake = (
     <a href={`${ctx.basePath}/blatt/${sheet.id}/foto`} className={buttonSecondary}>
       Neues Foto aufnehmen
@@ -172,6 +183,17 @@ export async function ConfirmPage({ ctx, sheet, upload }: { ctx: ModuleContext; 
           </Note>
         )
       )}
+      {transcription && (flagged > 0 || regions.length > 0) && (
+        <Note tone="warn" role="status">
+          {flagged > 0 && (
+            <p data-testid="markiert">
+              {flagged === 1 ? "Eine Stelle habe ich markiert" : `${flagged} Stellen habe ich markiert`}, weil ich unsicher bin. Vergleiche sie besonders genau
+              mit deinem Foto.
+            </p>
+          )}
+          {regions.length > 0 && <p className="text-sm">Nicht lesen konnte ich: {regions.join("; ")}</p>}
+        </Note>
+      )}
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-2 md:sticky md:top-4 md:self-start">
           {pages.map((url, i) => (
@@ -187,6 +209,7 @@ export async function ConfirmPage({ ctx, sheet, upload }: { ctx: ModuleContext; 
             const params = sheet.params[t.id] ?? {};
             const read = transcribedFor(transcription, t.id, t.number);
             const sought = task.levels[sheet.niveau]?.sought ?? [];
+            const check = checks.get(t.id);
             const yesNo = (name: string, legend: string, value: boolean) => (
               <fieldset className="flex flex-wrap items-center gap-3">
                 <legend className="w-full text-sm font-medium">{legend}</legend>
@@ -203,11 +226,14 @@ export async function ConfirmPage({ ctx, sheet, upload }: { ctx: ModuleContext; 
                 <legend className="px-1 font-semibold">Aufgabe {t.number}</legend>
                 <p className="text-sm text-muted">{t.text}</p>
                 {read && !read.found && <p className="text-sm text-bad">Diese Aufgabe habe ich auf dem Foto nicht gefunden.</p>}
+                {check?.lowConfidence && <p className="text-sm font-medium">Diese Aufgabe konnte ich nur schwer lesen. Prüf alle Werte.</p>}
                 {sought.map((q) => {
                   const answer = read?.final_answers.find((a) => a.quantity === q);
                   const unit = answer?.unit ?? "";
+                  const flag = check?.fields[q];
+                  const hintId = `hinweis-${t.id}-${q}`;
                   return (
-                    <div key={q} className="flex flex-wrap items-center gap-2">
+                    <div key={q} data-flag={flag} className={`flex flex-wrap items-center gap-2 ${flag ? "rounded-lg border-l-4 border-hyp bg-note p-2" : ""}`}>
                       <span className="w-6 font-semibold">{q} =</span>
                       <input
                         name={`v.${t.id}.${q}`}
@@ -215,7 +241,8 @@ export async function ConfirmPage({ ctx, sheet, upload }: { ctx: ModuleContext; 
                         inputMode="decimal"
                         autoComplete="off"
                         aria-label={`Aufgabe ${t.number}: Wert für ${q}`}
-                        className="min-h-12 w-28 rounded-lg border border-line bg-paper px-3 text-lg"
+                        aria-describedby={flag ? hintId : undefined}
+                        className={`min-h-12 w-28 rounded-lg bg-paper px-3 text-lg ${flag ? "border-2 border-hyp" : "border border-line"}`}
                       />
                       <input
                         name={`u.${t.id}.${q}`}
@@ -226,6 +253,11 @@ export async function ConfirmPage({ ctx, sheet, upload }: { ctx: ModuleContext; 
                         aria-label={`Aufgabe ${t.number}: Einheit für ${q}`}
                         className="min-h-12 w-24 rounded-lg border border-line bg-paper px-3"
                       />
+                      {flag && (
+                        <span id={hintId} className="w-full text-sm font-medium">
+                          {FLAG_TEXT[flag]}
+                        </span>
+                      )}
                     </div>
                   );
                 })}
@@ -255,14 +287,19 @@ export async function ResultPage({ ctx, sheet }: { ctx: ModuleContext; sheet: Wo
     );
   }
   const { paper } = lessonTasks(sheet.lesson);
-  const all = asPrior(await resultsOf(ctx, paper.map((t) => t.id)));
+  const effective = await effectiveResultsOf(ctx, await resultsOf(ctx, paper.map((t) => t.id)));
+  const all = countedResults(effective);
   const passed = lessonPassed(paper, all);
+  const effectiveOf = (resultId: string) => effective.find((e) => e.resultId === resultId);
   const texts = await feedbackTexts(ctx, results.flatMap((r) => (r.feedbackId ? [r.feedbackId] : [])));
   const uploadId = results[0]!.uploadId;
   const upload = await ctx.uploads.get(uploadId);
   const stored = await transcriptOf(ctx, uploadId);
   const confirmedRaw = stored ? await confirmedOf(ctx, stored.id) : [];
-  const anyOpen = results.some((r) => r.status !== "correct");
+  const anyOpen = results.some((r) => {
+    const e = effectiveOf(r.id);
+    return !e || !e.counted || e.status !== "correct";
+  });
 
   return (
     <div className="space-y-6">
@@ -289,7 +326,8 @@ export async function ResultPage({ ctx, sheet }: { ctx: ModuleContext; sheet: Wo
           const verification = result.verification as VerificationResult;
           const ai = result.feedbackId ? texts.get(result.feedbackId) : undefined;
           const confirmed = confirmedRaw.find((c) => c.task_id === taskId);
-          const codes = result.misconceptionCodes as MisconceptionCode[];
+          const corrected = effectiveOf(result.id);
+          const codes = corrected?.codes ?? (result.misconceptionCodes as MisconceptionCode[]);
           const mine = (confirmed?.final_answers ?? []).map(
             (a) => `${a.quantity} = ${withUnit(a.value === null ? "?" : formatGiven(a.value), a.unit ?? "")}`,
           );
@@ -298,8 +336,9 @@ export async function ResultPage({ ctx, sheet }: { ctx: ModuleContext; sheet: Wo
               <article aria-label={`Aufgabe ${i + 1}`} data-testid={`ergebnis-${i + 1}`} className="space-y-3 rounded-2xl border border-line bg-card p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h2 className="text-lg font-semibold">Aufgabe {i + 1}</h2>
-                  <StatusBadge status={statusLabel(result.status)} />
+                  <StatusBadge status={statusLabel(corrected?.status ?? result.status)} />
                 </div>
+                {corrected?.override && <TeacherCorrection result={corrected} />}
                 <p className="text-sm text-muted">{renderText(task.levels[sheet.niveau]?.text ?? "", textVariables(task, sheet.niveau, params))}</p>
                 {mine.length > 0 && <p>Dein Ergebnis: {mine.join("; ")}</p>}
                 {codes.length > 0 && (
@@ -307,6 +346,7 @@ export async function ResultPage({ ctx, sheet }: { ctx: ModuleContext; sheet: Wo
                     Erkannt: {codes.map((c) => MISCONCEPTIONS[c].label).join(", ")}
                   </p>
                 )}
+                {corrected?.override && <p className="text-sm text-muted">Die Rückmeldung unten bezieht sich auf das Ergebnis vor der Korrektur.</p>}
                 {ai ? (
                   <div className="space-y-1 rounded-xl border border-dashed border-accent bg-accent-soft p-3">
                     <p className="text-xs font-semibold uppercase tracking-wide text-accent">KI-Rückmeldung</p>
@@ -365,6 +405,24 @@ export async function ResultPage({ ctx, sheet }: { ctx: ModuleContext; sheet: Wo
         )}
       </Card>
     </div>
+  );
+}
+
+/** A correction by the teacher (D-031), always with its reason. */
+function TeacherCorrection({ result }: { result: EffectiveResult }) {
+  const override = result.override;
+  if (!override) return null;
+  return (
+    <Note tone="info" role="status">
+      {override.kind === "void" ? (
+        <p>Deine Lehrkraft hat entschieden: Dieser Versuch zählt nicht. Du hast dafür einen weiteren Versuch.</p>
+      ) : (
+        <p>
+          Deine Lehrkraft hat das Ergebnis geändert: vorher „{statusLabel(result.originalStatus)}“, jetzt „{statusLabel(result.status)}“.
+        </p>
+      )}
+      <p className="text-sm">Begründung: {override.reason}</p>
+    </Note>
   );
 }
 

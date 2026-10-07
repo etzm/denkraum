@@ -84,9 +84,16 @@ PW_CHROMIUM_PATH=... pnpm --filter @denkraum/web test:e2e trig-lesson4
 
 Der E2E-Test `apps/web/e2e/trig-lesson4.spec.ts` läuft mit `LLM_PROVIDER=mock` und einem im Browser gezeichneten Testbild.
 
+## Ansicht für Lehrkräfte und unsichere Stellen (D-030 bis D-032)
+
+- `/klasse10/lehrkraft/m/mathematik-trigonometrie`: Fehlerbild der Klasse für Lektion 4 (T-42), Liste der Pseudonyme.
+- `.../lernende/<id>`: Ergebnisse einer Person mit bestätigten Werten, Korrekturen und Protokoll (T-43).
+- `domain/overview.ts` und `domain/overrides.ts`: reine Fachlogik dazu; `server/teacher.ts`: Abfragen nur innerhalb der Gruppe und die Aktion `korrigieren`.
+- Der Bestätigungsschirm markiert unsichere und nicht lesbare Werte neben dem Foto (T-44, Prompt `transcribe.v2.md`).
+
 Noch offen:
 - Lektionen 1 bis 3 und 5 bis 7 mit vollständiger Aufgabenbank (Spec 14 Nr. 3) und Interleaving ab Lektion 3 (A2)
-- Punkte und Abzeichen (Spec 7), Lehrkraft-Ansicht (A3), Offline-Lektionen (D-019)
+- Punkte und Abzeichen (Spec 7), Lektionen freischalten und Niveau setzen durch die Lehrkraft (Spec 12, D-017), Offline-Lektionen (D-019)
 - Druckansicht des Arbeitsblatts als PDF (optional, D-012)
 - Erkennung von F9, dafür fehlen Angaben in der Transkription
 - Prüfung von Transkription und Rückmeldung mit einem echten Modell am Golden Set

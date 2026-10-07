@@ -6,10 +6,12 @@ import { manifest } from "./module.ts";
 import { PROMPTS } from "./prompts/index.ts";
 import { ACTIONS } from "./server/actions.ts";
 import { resultsOfSheet, worksheet, type Worksheet } from "./server/store.ts";
+import { TEACHER_ACTIONS } from "./server/teacher.ts";
 import { LessonPage } from "./ui/LessonPage.tsx";
 import { PracticePage } from "./ui/PracticePage.tsx";
 import { ConfirmPage, PhotoPage, ResultPage, SolutionPage, WorksheetPage } from "./ui/SheetPages.tsx";
 import { StartPage } from "./ui/StartPage.tsx";
+import { TeacherLearnerPage, TeacherOverview } from "./ui/TeacherPages.tsx";
 
 /**
  * Platform entry point of the module (docs/module-sdk.md). Routes below /klasse10/m/mathematik-trigonometrie:
@@ -21,6 +23,9 @@ import { StartPage } from "./ui/StartPage.tsx";
  *   blatt/<id>/pruefen?upload=<id>  transcription and "Habe ich dich richtig gelesen?"
  *   blatt/<id>/ergebnis             verified result with feedback
  *   blatt/<id>/loesung/<task>       full solution after the second failed attempt
+ * Teacher view below /klasse10/lehrkraft/m/mathematik-trigonometrie (D-030, D-031):
+ *   (start)                         error picture of the class, learners
+ *   lernende/<id>                   results of one learner with corrections
  */
 export const definition = defineModuleDefinition({
   manifest,
@@ -32,6 +37,15 @@ export const definition = defineModuleDefinition({
     feedback: (request) => mockFeedback(parseRequestInput(request.userText) as FeedbackInput),
   },
   actions: ACTIONS,
+  teacher: {
+    async render(ctx, path, search) {
+      const [section, id, extra] = path;
+      if (section === undefined) return <TeacherOverview ctx={ctx} />;
+      if (section === "lernende" && id && extra === undefined) return <TeacherLearnerPage ctx={ctx} learnerId={id} search={search} />;
+      return null;
+    },
+    actions: TEACHER_ACTIONS,
+  },
   async render(ctx, path, search) {
     const [section, id, sub, extra] = path;
     if (section === undefined) return <StartPage ctx={ctx} />;

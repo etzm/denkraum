@@ -2,9 +2,10 @@ import { z } from "zod";
 import type { Niveau } from "@denkraum/core";
 import type { ModuleContext } from "@denkraum/sdk";
 import { and, asc, desc, eq, feedback, inArray, learners, transcripts } from "@denkraum/sdk/db";
-import { trigChecks, trigResults, trigWorksheets } from "../db.ts";
-import { aiFeedbackSchema, aiTranscriptionSchema, type AiFeedback, type AiTranscription } from "../domain/ai.ts";
+import { trigChecks, trigOverrides, trigResults, trigWorksheets } from "../db.ts";
+import { aiFeedbackSchema, parseStoredTranscription, type AiFeedback, type AiTranscription } from "../domain/ai.ts";
 import type { PriorResult } from "../domain/lesson.ts";
+import { applyOverrides, countedResults, type EffectiveResult, type OverrideEntry } from "../domain/overrides.ts";
 import { transcribedTaskSchema, type TranscribedTask } from "../domain/schema.ts";
 
 /** Database access of the module. Every query is scoped to the current learner. */
@@ -69,8 +70,30 @@ export function resultsOfSheet(ctx: ModuleContext, worksheetId: string): Promise
     .where(and(eq(trigResults.learnerId, ctx.learner.id), eq(trigResults.worksheetId, worksheetId)));
 }
 
+/** Results as stored, before any correction: only for numbering new attempts (planWorksheet, T-33). */
 export function asPrior(results: readonly Result[]): PriorResult[] {
   return results.map((r) => ({ taskId: r.taskId, attemptNo: r.attemptNo, status: r.status, solutionViewed: r.solutionViewed }));
+}
+
+export type Override = typeof trigOverrides.$inferSelect;
+
+export function asOverrideEntries(rows: readonly Override[]): OverrideEntry[] {
+  return rows.map((o) => ({ resultId: o.resultId, kind: o.kind, status: o.status, reason: o.reason, createdAt: o.createdAt }));
+}
+
+/** Results with the teacher's corrections applied (D-031). */
+export async function effectiveResultsOf(ctx: ModuleContext, results: readonly Result[]): Promise<EffectiveResult[]> {
+  if (results.length === 0) return [];
+  const overrides = await ctx.db
+    .select()
+    .from(trigOverrides)
+    .where(and(eq(trigOverrides.learnerId, ctx.learner.id), inArray(trigOverrides.resultId, results.map((r) => r.id))));
+  return applyOverrides(results, asOverrideEntries(overrides));
+}
+
+/** What the lesson rules count for these tasks: corrected results, without attempts that do not count. */
+export async function countedOf(ctx: ModuleContext, taskIds: readonly string[]): Promise<EffectiveResult[]> {
+  return countedResults(await effectiveResultsOf(ctx, await resultsOf(ctx, taskIds)));
 }
 
 export async function addResults(ctx: ModuleContext, rows: Omit<typeof trigResults.$inferInsert, "learnerId">[]): Promise<void> {
@@ -107,11 +130,11 @@ export async function transcriptOf(ctx: ModuleContext, uploadId: string): Promis
     .limit(1);
   if (!row) return null;
   const raw = row.raw as { transcription?: unknown; failure?: string };
-  const parsed = aiTranscriptionSchema.safeParse(raw.transcription);
+  const transcription = parseStoredTranscription(raw.transcription);
   return {
     id: row.id,
-    transcription: parsed.success ? parsed.data : null,
-    failure: parsed.success ? null : (raw.failure ?? "error"),
+    transcription,
+    failure: transcription ? null : (raw.failure ?? "error"),
     confirmed: row.confirmedAt !== null,
   };
 }

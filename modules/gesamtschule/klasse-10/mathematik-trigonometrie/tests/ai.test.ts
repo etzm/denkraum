@@ -11,6 +11,8 @@ import {
   mockTranscription,
   needsNewPhoto,
   parseRequestInput,
+  parseStoredTranscription,
+  readingCheck,
   revealsResult,
   transcribedFor,
   transcribeInput,
@@ -33,10 +35,11 @@ describe("prompts", () => {
   it("are versioned files with frontmatter: transcribe on the vision tier, feedback on the light tier", () => {
     const transcribe = pickPrompt(PROMPTS, "transcribe");
     const feedback = pickPrompt(PROMPTS, "feedback");
-    expect(transcribe).toMatchObject({ name: "transcribe", version: 1, model_tier: "vision" });
+    expect(transcribe).toMatchObject({ name: "transcribe", version: 2, model_tier: "vision" });
     expect(feedback).toMatchObject({ name: "feedback", version: 1, model_tier: "light" });
     expect(transcribe.body).toContain("{{task_ids}}");
     expect(transcribe.body).toContain("Bewerte nichts, korrigiere nichts");
+    expect(transcribe.body).toContain("uncertain = true");
     expect(feedback.body).toContain("Verrate nie das Endergebnis");
   });
 
@@ -124,6 +127,35 @@ describe("transcription schema and confirm screen", () => {
     expect(confirmed.intermediate_values).toEqual(original.intermediate_values);
     expect(confirmed.sketch_present).toBe(false);
     expect(changedShare(task, "M", original, confirmed)).toEqual({ changed: 4, total: 6 });
+  });
+
+  it("marks unreadable and uncertain values for checking, not tasks that were not found (D-032)", () => {
+    const sought = getTask("L4-A2").levels.M!.sought;
+    expect(sought).toEqual(["a", "b"]);
+    expect(readingCheck(read.tasks[0], sought)).toEqual({ fields: {}, lowConfidence: false });
+    // The mock marks the last value of the last task, so the marked field shows in development.
+    const last = read.tasks.at(-1)!;
+    const lastSought = getTask(last.task_id).levels.M!.sought;
+    expect(readingCheck(last, lastSought).fields).toEqual({ [lastSought.at(-1)!]: "uncertain" });
+
+    const unsure = structuredClone(read.tasks[0]!);
+    unsure.final_answers = [{ ...unsure.final_answers[0]!, uncertain: true }, { ...unsure.final_answers[1]!, value: null }];
+    unsure.transcription_confidence = 0.5;
+    expect(readingCheck(unsure, sought)).toEqual({ fields: { a: "uncertain", b: "unreadable" }, lowConfidence: true });
+    expect(readingCheck({ ...unsure, final_answers: [] }, sought).fields).toEqual({ a: "unreadable", b: "unreadable" });
+    expect(readingCheck({ ...unsure, found: false }, sought)).toEqual({ fields: {}, lowConfidence: false });
+    expect(readingCheck(undefined, sought)).toEqual({ fields: {}, lowConfidence: false });
+  });
+
+  it("requires the uncertain flag from the model, but reads stored version 1 transcriptions as certain", () => {
+    const v1 = structuredClone(read) as { tasks: { final_answers: Record<string, unknown>[] }[] };
+    for (const task of v1.tasks) for (const answer of task.final_answers) delete answer.uncertain;
+    expect(aiTranscriptionSchema.safeParse(v1).success).toBe(false);
+    const upgraded = parseStoredTranscription(v1);
+    expect(upgraded?.tasks[0]!.final_answers.every((a) => a.uncertain === false)).toBe(true);
+    expect(parseStoredTranscription(read)).toEqual(read);
+    expect(parseStoredTranscription({ failure: "timeout" })).toBeNull();
+    expect(parseStoredTranscription(undefined)).toBeNull();
   });
 
   it("counts a task as found when the learner typed values for a task the model missed", () => {
