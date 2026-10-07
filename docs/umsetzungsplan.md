@@ -332,6 +332,14 @@ Umgesetzt am 7. Oktober 2026:
 - Startseite und Einstieg je Klasse unter `denkraum.martinetzrodt.com` (D-026).
 - **P1:** Foto-Pipeline (D-027), Modul-SDK (D-025, docs/module-sdk.md), Adapter für OpenAI-kompatible Modelle (D-004), Seite "Meine Fotos".
 
+- **B1:** Mission m-04-01 mit getipptem Plan und Text, KI-Rückmeldungen P2, P4, P5 mit Kennzeichnung, Planfreigabe und Abschluss per Code, Textlupe mit geprüften Zitaten, formative Sterne ohne Rechtschreibung, Pfad `held_for_adult` (Modul-DECISIONS SW-29 bis SW-38).
+
+Offene Plattform-Punkte aus B1 (für P2):
+- Export je Pseudonym enthält noch keine Modul-Tabellen (zum Beispiel `sw_mission_runs`); Module brauchen einen Export-Haken. Die Löschung ist über die Fremdschlüssel bereits vollständig.
+- Hilfsfunktion für getippte Abgaben im SDK (heute schreibt das Modul `uploads`, `transcripts`, `feedback` selbst).
+- Der Mock-Provider kann noch keine Ablehnung (`refusal`) simulieren.
+- Eine angehaltene Mission (`held_for_adult`) kann erst mit der Erwachsenen-Ansicht freigegeben werden.
+
 Als Nächstes:
 
 1. **P1 (erledigt):** Foto-Pipeline im Browser (Neukodierung, Skalierung, mehrseitig), S3-Speicher in der EU, Upload-Route mit Metadaten-Prüfung, Transkriptions-Bestätigung als gemeinsame Komponente.
