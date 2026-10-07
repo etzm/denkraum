@@ -32,6 +32,7 @@ export default defineConfig({
       BLOB_ENCRYPTION_KEY: Buffer.alloc(32).toString("base64"),
       NEXT_TELEMETRY_DISABLED: "1",
       LLM_PROVIDER: "mock",
+      DENKRAUM_SHOW_UNAPPROVED: "true",
     },
     reuseExistingServer: false,
     timeout: 120_000,

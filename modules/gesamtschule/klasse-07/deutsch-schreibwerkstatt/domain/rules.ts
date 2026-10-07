@@ -69,6 +69,14 @@ export function isBossStartable(missions: readonly Mission[], ctx: ProgressConte
   return currentStufe(missions, ctx) === "boss";
 }
 
+/**
+ * Content approval (D-022, SW-26): unapproved missions are shown only when the operator sets
+ * DENKRAUM_SHOW_UNAPPROVED=true (tests, review of drafts). Otherwise they wait for approval.
+ */
+export function isMissionShown(mission: Pick<Mission, "approved">, showUnapproved: boolean): boolean {
+  return mission.approved || showUnapproved;
+}
+
 export type StartBlocker =
   | "not_approved"
   | "niveau_e_required"
@@ -123,11 +131,16 @@ export type CompletionFacts = {
   revisionAttempts: number;
   /** Result of the latest revision check; null while none arrived. */
   revisionFulfilled: boolean | null;
+  /** The latest attempt could not be checked because the model gave no result (SW-29). */
+  revisionUnchecked?: boolean;
 };
 
-/** Revision is done when it was fulfilled or a second attempt was made (spec 4). */
-export function isRevisionDone(attempts: number, fulfilled: boolean | null): boolean {
-  return attempts >= 2 || (attempts >= 1 && fulfilled === true);
+/**
+ * Revision is done when it was fulfilled or a second attempt was made (spec 4). An attempt the
+ * model could not check also counts: completion never waits for the model (SW-29).
+ */
+export function isRevisionDone(attempts: number, fulfilled: boolean | null, unchecked = false): boolean {
+  return attempts >= 2 || (attempts >= 1 && (fulfilled === true || unchecked));
 }
 
 /** Mission completed: only code-checkable facts, never stars (SW-02). */
@@ -136,7 +149,7 @@ export function isMissionCompleted(f: CompletionFacts): boolean {
     f.textConfirmed &&
     f.wordCount >= f.minWords &&
     f.selfCheckSubmitted &&
-    isRevisionDone(f.revisionAttempts, f.revisionFulfilled)
+    isRevisionDone(f.revisionAttempts, f.revisionFulfilled, f.revisionUnchecked ?? false)
   );
 }
 
@@ -260,6 +273,39 @@ export function sumScores(s: Scores): number {
   return s.aufbau + s.argumentation + s.sprache + s.richtigkeit;
 }
 
+/** What the student sees after P4 (D-020: for the child only, gates nothing). */
+export type FormativeStars = {
+  aufbau: Star;
+  argumentation: Star;
+  sprache: Star;
+  /** Null while no rule based count exists (D-021: no spelling stars for typed text in B1). Shown as "kommt später". */
+  richtigkeit: Star | null;
+  /** Sum of the dimensions that are shown. */
+  shown: number;
+  /** 9 without dimension D, 12 with it. */
+  max: number;
+  capped: boolean;
+};
+
+/**
+ * Formative stars for display. Dimension D comes only from `richtigkeit` (SW-06); the model's own
+ * D stars are ignored. Without an error count, D is left out instead of guessed.
+ */
+export function formativeStars(input: {
+  ai: Pick<TextReview, "scores">;
+  richtigkeit: ErrorDensityInput | null;
+  stufe: Stufe;
+  typedFallback: boolean;
+}): FormativeStars {
+  const { aufbau, argumentation, sprache } = input.ai.scores;
+  const richtigkeit = input.richtigkeit ? richtigkeitStars(input.richtigkeit.errorsPer100Words) : null;
+  const sum = aufbau + argumentation + sprache + (richtigkeit ?? 0);
+  // Spec 6.6 caps a typed fallback at 10 of 12; without D the maximum is 9, so the cap cannot bite.
+  const capApplies = richtigkeit !== null && input.typedFallback && (input.stufe === 4 || input.stufe === 6);
+  const shown = capApplies ? Math.min(sum, TYPED_FALLBACK_STAR_CAP) : sum;
+  return { aufbau, argumentation, sprache, richtigkeit, shown, max: richtigkeit === null ? 9 : 12, capped: shown < sum };
+}
+
 /** Restart or joker: the better of two passes counts, never the sum (spec 3.4). Ties keep the first. */
 export function betterStars(first: StarSummary, second: StarSummary): StarSummary {
   return second.display + second.bonus > first.display + first.bonus ? second : first;
@@ -334,6 +380,12 @@ export const XP = {
   revisionSubmitted: 20,
   streakDay: 10,
 } as const;
+
+/** XP of one mission run: completion plus the revision, both checked by code (SW-07). Streak XP comes with the progress layer. */
+export function missionXp(input: { completed: boolean; revisionsSubmitted: number }): number {
+  if (!input.completed) return 0;
+  return XP.missionCompleted + (input.revisionsSubmitted > 0 ? XP.revisionSubmitted : 0);
+}
 
 /** A key only for the first pass of a station (anti farming, spec 3.4); XP for every pass. */
 export function stationRewards(input: { passed: boolean; firstPass: boolean }): { keys: number; xp: number } {
