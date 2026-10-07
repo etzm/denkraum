@@ -1,0 +1,109 @@
+# Production on one server shared with other services (for example a Minecraft server).
+# Memory and CPU are capped so Denkraum cannot crowd out the game server (DECISIONS.md D-028).
+#
+#   cp infra/env.production.example infra/.env     # fill in, never commit
+#   docker compose -f infra/docker-compose.prod.yml --profile caddy up -d --build
+#
+# Without the "caddy" profile the app listens on 127.0.0.1:3000 for a reverse proxy that
+# already runs on the host. Details: docs/betrieb.md
+name: denkraum
+
+x-hardening: &hardening
+  restart: unless-stopped
+  security_opt: ["no-new-privileges:true"]
+  logging:
+    driver: json-file
+    options: { max-size: "10m", max-file: "3" }
+
+services:
+  postgres:
+    <<: *hardening
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: denkraum
+      POSTGRES_DB: denkraum
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD fehlt in infra/.env}
+    command: ["postgres", "-c", "shared_buffers=128MB", "-c", "max_connections=30", "-c", "log_min_messages=warning"]
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks: [internal]
+    mem_limit: 512m
+    cpus: 1.0
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U denkraum -d denkraum"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    <<: *hardening
+    build: { context: .., dockerfile: Dockerfile, target: app }
+    image: denkraum-app:latest
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://denkraum:${POSTGRES_PASSWORD}@postgres:5432/denkraum
+    volumes:
+      - blobs:/data/blobs
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [internal, web]
+    ports:
+      - "127.0.0.1:3000:3000"
+    read_only: true
+    tmpfs: ["/tmp", "/app/apps/web/.next/cache"]
+    cap_drop: [ALL]
+    mem_limit: 768m
+    cpus: 1.5
+
+  caddy:
+    <<: *hardening
+    profiles: ["caddy"]
+    image: caddy:2-alpine
+    environment:
+      DENKRAUM_DOMAIN: ${DENKRAUM_DOMAIN:-denkraum.martinetzrodt.com}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on: [app]
+    networks: [web]
+    mem_limit: 128m
+    cpus: 0.5
+
+  # One-off admin commands, for example:
+  #   docker compose -f infra/docker-compose.prod.yml --profile tools run --rm tools \
+  #     node apps/web/scripts/create-group.ts --klasse 10 --label "10b Mathe" --ende 2027-07-31
+  tools:
+    <<: *hardening
+    profiles: ["tools"]
+    restart: "no"
+    build: { context: .., dockerfile: Dockerfile, target: tools }
+    image: denkraum-tools:latest
+    env_file: .env
+    environment:
+      DATABASE_URL: postgres://denkraum:${POSTGRES_PASSWORD}@postgres:5432/denkraum
+      BLOB_STORE: fs
+      BLOB_DIR: /data/blobs
+    volumes:
+      - blobs:/data/blobs
+    depends_on:
+      postgres: { condition: service_healthy }
+    networks: [internal]
+    mem_limit: 512m
+    cpus: 1.0
+
+networks:
+  # No route to the outside world: only the app and the admin tools reach the database.
+  internal:
+    internal: true
+  web: {}
+
+volumes:
+  postgres-data:
+  blobs:
+  caddy-data:
+  caddy-config:

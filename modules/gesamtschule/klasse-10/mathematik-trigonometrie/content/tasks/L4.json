@@ -1,5 +1,70 @@
 [
   {
+    "id": "L4-A1",
+    "lesson": 4,
+    "type": "worked_example",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und α = {{alpha}}°. Wie lang ist die Seite a?",
+        "sought": ["a"],
+        "steps": [
+          "Skizze: Zeichne ein rechtwinkliges Dreieck mit γ = 90° bei C. Markiere den Winkel α bei A, die Hypotenuse c und die gesuchte Seite a.",
+          "Seiten benennen: c liegt dem rechten Winkel gegenüber, ist also die Hypotenuse. a liegt α gegenüber, ist also die Gegenkathete von α.",
+          "Verhältnis wählen: Gegenkathete und Hypotenuse stehen im Sinus. Also gilt sin α = a/c.",
+          "Gleichung aufstellen: sin {{alpha}}° = a/{{c}} cm",
+          "Umstellen: Multipliziere beide Seiten mit {{c}} cm. Dann gilt a = {{c}} cm · sin {{alpha}}°.",
+          "Berechnen: a = {{c}} cm · {{sin_alpha}} ≈ {{a}} cm. Runde erst am Ende.",
+          "Antwortsatz: Die Seite a ist ungefähr {{a}} cm lang."
+        ]
+      },
+      "M": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und α = {{alpha}}°. Berechne a und b und kontrolliere mit dem Satz des Pythagoras.",
+        "sought": ["a", "b"],
+        "steps": [
+          "Skizze: Zeichne ein rechtwinkliges Dreieck mit γ = 90° bei C. Markiere den Winkel α bei A, die Hypotenuse c und die gesuchte Seite a.",
+          "Seiten benennen: c liegt dem rechten Winkel gegenüber, ist also die Hypotenuse. a liegt α gegenüber, ist also die Gegenkathete von α.",
+          "Verhältnis wählen: Gegenkathete und Hypotenuse stehen im Sinus. Also gilt sin α = a/c.",
+          "Gleichung aufstellen: sin {{alpha}}° = a/{{c}} cm",
+          "Umstellen: Multipliziere beide Seiten mit {{c}} cm. Dann gilt a = {{c}} cm · sin {{alpha}}°.",
+          "Berechnen: a = {{c}} cm · {{sin_alpha}} ≈ {{a}} cm. Runde erst am Ende.",
+          "Für b: b liegt an α an, ist also die Ankathete von α. Ankathete und Hypotenuse stehen im Kosinus: cos α = b/c, also b = {{c}} cm · cos {{alpha}}° ≈ {{b}} cm.",
+          "Kontrolle mit dem Satz des Pythagoras: a² + b² ≈ {{pythagoras_check}} cm² und c² = ({{c}} cm)². Das passt.",
+          "Antwortsatz: Die Seite a ist ungefähr {{a}} cm lang, die Seite b ungefähr {{b}} cm."
+        ],
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      },
+      "E": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und α = {{alpha}}°. Berechne a und b und kontrolliere mit dem Satz des Pythagoras.",
+        "sought": ["a", "b"],
+        "steps": [
+          "Skizze: Zeichne ein rechtwinkliges Dreieck mit γ = 90° bei C. Markiere den Winkel α bei A, die Hypotenuse c und die gesuchte Seite a.",
+          "Seiten benennen: c liegt dem rechten Winkel gegenüber, ist also die Hypotenuse. a liegt α gegenüber, ist also die Gegenkathete von α.",
+          "Verhältnis wählen: Gegenkathete und Hypotenuse stehen im Sinus. Also gilt sin α = a/c.",
+          "Gleichung aufstellen: sin {{alpha}}° = a/{{c}} cm",
+          "Umstellen: Multipliziere beide Seiten mit {{c}} cm. Dann gilt a = {{c}} cm · sin {{alpha}}°.",
+          "Berechnen: a = {{c}} cm · {{sin_alpha}} ≈ {{a}} cm. Runde erst am Ende.",
+          "Für b: b liegt an α an, ist also die Ankathete von α. Ankathete und Hypotenuse stehen im Kosinus: cos α = b/c, also b = {{c}} cm · cos {{alpha}}° ≈ {{b}} cm.",
+          "Kontrolle mit dem Satz des Pythagoras: a² + b² ≈ {{pythagoras_check}} cm² und c² = ({{c}} cm)². Das passt.",
+          "Antwortsatz: Die Seite a ist ungefähr {{a}} cm lang, die Seite b ungefähr {{b}} cm."
+        ],
+        "extra": "Überlege: Warum geht die Kontrolle mit gerundeten Werten nur ungefähr auf?",
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      }
+    },
+    "parameters": {
+      "c": { "min": 5, "max": 5, "step": 1, "unit": "cm" },
+      "alpha": { "min": 40, "max": 40, "step": 1, "unit": "°" }
+    },
+    "solution_fn": "L4-A2",
+    "requires_sketch": false,
+    "requires_answer_sentence": false,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F6"],
+    "hints": [],
+    "interleaving_of": null
+  },
+  {
     "id": "L4-A2",
     "lesson": 4,
     "type": "paper",
@@ -87,7 +152,10 @@
           "Umstellen: b = c · sin β",
           "Ergebnis: b = {{c}} cm · sin {{beta}}° ≈ {{b}} cm"
         ],
-        "hidden_steps": [2, 3]
+        "hidden_steps": [2, 3],
+        "choices": {
+          "2": ["Umstellen: b = sin β : c", "Umstellen: b = c : sin β"]
+        }
       },
       "E": {
         "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt c = {{c}} cm und β = {{beta}}°. Berechne die Seite b. Ergänze die fehlenden Schritte.",
@@ -98,7 +166,11 @@
           "Umstellen: b = c · sin β",
           "Ergebnis: b = {{c}} cm · sin {{beta}}° ≈ {{b}} cm"
         ],
-        "hidden_steps": [1, 2, 3]
+        "hidden_steps": [1, 2, 3],
+        "choices": {
+          "1": ["Ansatz: cos β = b/c", "Ansatz: tan β = b/c"],
+          "2": ["Umstellen: b = sin β : c", "Umstellen: b = c : sin β"]
+        }
       }
     },
     "parameters": {
@@ -114,6 +186,251 @@
       "Welche Seite liegt β gegenüber?",
       "Welches Verhältnis enthält b und c?",
       "Multipliziere beide Seiten mit c."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L4-A4",
+    "lesson": 4,
+    "type": "faded",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt b = {{b}} cm und α = {{alpha}}°. Berechne die Seite a. Ergänze die fehlenden Schritte.",
+        "sought": ["a"],
+        "steps": [
+          "a liegt α gegenüber, ist also die Gegenkathete von α. b liegt an α an, ist also die Ankathete von α.",
+          "Ansatz: tan α = a/b",
+          "Umstellen: a = b · tan α",
+          "Ergebnis: a = {{b}} cm · tan {{alpha}}° ≈ {{a}} cm"
+        ],
+        "hidden_steps": [3]
+      },
+      "M": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt b = {{b}} cm und α = {{alpha}}°. Berechne die Seite a. Ergänze die fehlenden Schritte.",
+        "sought": ["a"],
+        "steps": [
+          "a liegt α gegenüber, ist also die Gegenkathete von α. b liegt an α an, ist also die Ankathete von α.",
+          "Ansatz: tan α = a/b",
+          "Umstellen: a = b · tan α",
+          "Ergebnis: a = {{b}} cm · tan {{alpha}}° ≈ {{a}} cm"
+        ],
+        "hidden_steps": [2, 3],
+        "choices": {
+          "2": ["Umstellen: a = b : tan α", "Umstellen: a = tan α : b"]
+        }
+      },
+      "E": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt b = {{b}} cm und α = {{alpha}}°. Berechne die Seite a. Ergänze die fehlenden Schritte.",
+        "sought": ["a"],
+        "steps": [
+          "a liegt α gegenüber, ist also die Gegenkathete von α. b liegt an α an, ist also die Ankathete von α.",
+          "Ansatz: tan α = a/b",
+          "Umstellen: a = b · tan α",
+          "Ergebnis: a = {{b}} cm · tan {{alpha}}° ≈ {{a}} cm"
+        ],
+        "hidden_steps": [1, 2, 3],
+        "choices": {
+          "1": ["Ansatz: tan α = b/a", "Ansatz: sin α = a/b"],
+          "2": ["Umstellen: a = b : tan α", "Umstellen: a = tan α : b"]
+        }
+      }
+    },
+    "parameters": {
+      "b": { "min": 6, "max": 6, "step": 1, "unit": "cm" },
+      "alpha": { "min": 35, "max": 35, "step": 1, "unit": "°" }
+    },
+    "solution_fn": "L4-A5",
+    "requires_sketch": false,
+    "requires_answer_sentence": false,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F6", "F8"],
+    "hints": [
+      "Welche Seite liegt α gegenüber, welche liegt an α an?",
+      "Welches Verhältnis enthält a und b?",
+      "Multipliziere beide Seiten mit b."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L4-A5",
+    "lesson": 4,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt b = {{b}} cm und α = {{alpha}}°. Berechne die Seite a.",
+        "sought": ["a"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a und die Ankathete b.",
+          "tan α = a/b, also a = b · tan α",
+          "a = {{b}} cm · tan {{alpha}}° ≈ {{a}} cm",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "M": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt b = {{b}} cm und α = {{alpha}}°. Berechne die Seite a. Berechne dann die Hypotenuse c mit dem Satz des Pythagoras.",
+        "sought": ["a", "c"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a, die Ankathete b und die Hypotenuse c.",
+          "tan α = a/b, also a = b · tan α",
+          "a = {{b}} cm · tan {{alpha}}° ≈ {{a}} cm",
+          "c = √(a² + b²) ≈ {{c}} cm",
+          "Antwortsatz mit Einheit"
+        ],
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      },
+      "E": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt b = {{b}} cm und α = {{alpha}}°. Berechne a und c.",
+        "sought": ["a", "c"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a, die Ankathete b und die Hypotenuse c.",
+          "tan α = a/b, also a = b · tan α",
+          "a = {{b}} cm · tan {{alpha}}° ≈ {{a}} cm",
+          "c = √(a² + b²) ≈ {{c}} cm",
+          "Zweiter Weg: cos α = b/c, also c = b : cos α ≈ {{c}} cm",
+          "Antwortsatz mit Einheit"
+        ],
+        "extra": "Berechne c auf zwei Wegen: mit dem Satz des Pythagoras und mit dem Kosinus. Erkläre, warum beide Wege fast dasselbe ergeben.",
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      }
+    },
+    "parameters": {
+      "b": { "min": 4, "max": 9, "step": 0.5, "unit": "cm" },
+      "alpha": { "min": 25, "max": 60, "step": 1, "unit": "°" }
+    },
+    "solution_fn": "L4-A5",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F5", "F6", "F7", "F8", "F11", "F13"],
+    "hints": [
+      "Welche Seite liegt α gegenüber, welche liegt an α an?",
+      "Gegenkathete und Ankathete stehen im Tangens.",
+      "Multipliziere beide Seiten mit b."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L4-A6",
+    "lesson": 4,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt a = {{a}} cm und α = {{alpha}}°. Berechne die Hypotenuse c.",
+        "sought": ["c"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a und die Hypotenuse c.",
+          "sin α = a/c",
+          "Umstellen: Multipliziere beide Seiten mit c und teile dann durch sin α. Also c = a : sin α",
+          "c = {{a}} cm : sin {{alpha}}° ≈ {{c}} cm",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "M": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt a = {{a}} cm und α = {{alpha}}°. Berechne die Hypotenuse c und die Seite b.",
+        "sought": ["c", "b"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a, die Ankathete b und die Hypotenuse c.",
+          "sin α = a/c",
+          "Umstellen: Multipliziere beide Seiten mit c und teile dann durch sin α. Also c = a : sin α",
+          "c = {{a}} cm : sin {{alpha}}° ≈ {{c}} cm",
+          "tan α = a/b, also b = a : tan α",
+          "b = {{a}} cm : tan {{alpha}}° ≈ {{b}} cm",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "E": {
+        "text": "Im rechtwinkligen Dreieck ABC mit γ = 90° gilt a = {{a}} cm und α = {{alpha}}°. Berechne die Hypotenuse c und die Seite b.",
+        "sought": ["c", "b"],
+        "steps": [
+          "Skizze: Dreieck mit γ = 90°. Markiere α, die Gegenkathete a, die Ankathete b und die Hypotenuse c.",
+          "sin α = a/c",
+          "Umstellen: Multipliziere beide Seiten mit c und teile dann durch sin α. Also c = a : sin α",
+          "c = {{a}} cm : sin {{alpha}}° ≈ {{c}} cm",
+          "tan α = a/b, also b = a : tan α",
+          "b = {{a}} cm : tan {{alpha}}° ≈ {{b}} cm",
+          "Kontrolle: a² + b² ≈ c²",
+          "Antwortsatz mit Einheit"
+        ],
+        "extra": "Kontrolliere deine Ergebnisse mit dem Satz des Pythagoras.",
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      }
+    },
+    "parameters": {
+      "a": { "min": 3, "max": 9, "step": 0.5, "unit": "cm" },
+      "alpha": { "min": 25, "max": 65, "step": 1, "unit": "°" }
+    },
+    "solution_fn": "L4-A6",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F5", "F6", "F7", "F8", "F11", "F13"],
+    "hints": [
+      "Welche Seite ist die Hypotenuse?",
+      "Welches Verhältnis enthält a und c?",
+      "Multipliziere beide Seiten mit c. Teile dann durch sin α."
+    ],
+    "interleaving_of": null
+  },
+  {
+    "id": "L4-A7",
+    "lesson": 4,
+    "type": "paper",
+    "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_10_03(1)"],
+    "levels": {
+      "G": {
+        "text": "Eine {{l}} m lange Leiter lehnt an einer senkrechten Wand. Sie bildet mit dem waagerechten Boden einen Winkel von {{alpha}}°. In welcher Höhe berührt die Leiter die Wand?",
+        "sought": ["h"],
+        "steps": [
+          "Skizze: Wand, Boden und Leiter bilden ein rechtwinkliges Dreieck. Die Leiter ist die Hypotenuse. Markiere den Winkel α am Boden.",
+          "Die Höhe h liegt α gegenüber: sin α = h/l, also h = l · sin α",
+          "h = {{l}} m · sin {{alpha}}° ≈ {{h}} m",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "M": {
+        "text": "Eine {{l}} m lange Leiter lehnt an einer senkrechten Wand. Sie bildet mit dem waagerechten Boden einen Winkel von {{alpha}}°. In welcher Höhe berührt die Leiter die Wand? Wie weit steht ihr Fuß von der Wand entfernt?",
+        "sought": ["h", "d"],
+        "steps": [
+          "Skizze: Wand, Boden und Leiter bilden ein rechtwinkliges Dreieck. Die Leiter ist die Hypotenuse. Markiere den Winkel α am Boden.",
+          "Die Höhe h liegt α gegenüber: sin α = h/l, also h = l · sin α",
+          "h = {{l}} m · sin {{alpha}}° ≈ {{h}} m",
+          "Der Abstand d liegt an α an: cos α = d/l, also d = l · cos α",
+          "d = {{l}} m · cos {{alpha}}° ≈ {{d}} m",
+          "Antwortsatz mit Einheit"
+        ]
+      },
+      "E": {
+        "text": "Eine {{l}} m lange Leiter lehnt an einer senkrechten Wand. Sie bildet mit dem waagerechten Boden einen Winkel von {{alpha}}°. In welcher Höhe berührt die Leiter die Wand? Wie weit steht ihr Fuß von der Wand entfernt?",
+        "sought": ["h", "d"],
+        "steps": [
+          "Skizze: Wand, Boden und Leiter bilden ein rechtwinkliges Dreieck. Die Leiter ist die Hypotenuse. Markiere den Winkel α am Boden.",
+          "Die Höhe h liegt α gegenüber: sin α = h/l, also h = l · sin α",
+          "h = {{l}} m · sin {{alpha}}° ≈ {{h}} m",
+          "Der Abstand d liegt an α an: cos α = d/l, also d = l · cos α",
+          "d = {{l}} m · cos {{alpha}}° ≈ {{d}} m",
+          "Kontrolle: h² + d² ≈ l²",
+          "Antwortsatz mit Einheit"
+        ],
+        "extra": "Prüfe mit dem Satz des Pythagoras, ob h, d und die Leiterlänge zusammenpassen.",
+        "bildungsplan": ["BP2016BW_ALLG_SEK1_M_IK_7-8-9_03(21)"]
+      }
+    },
+    "parameters": {
+      "l": { "min": 3, "max": 6, "step": 0.5, "unit": "m" },
+      "alpha": { "min": 60, "max": 80, "step": 1, "unit": "°" }
+    },
+    "solution_fn": "L4-A7",
+    "requires_sketch": true,
+    "requires_answer_sentence": true,
+    "tolerance": { "relative": 0.01, "absolute_angle_deg": 0.5 },
+    "expected_misconceptions": ["F1", "F2", "F3", "F5", "F6", "F7", "F11", "F13"],
+    "hints": [
+      "Zeichne Wand, Boden und Leiter. Wo ist der rechte Winkel?",
+      "Die Leiter ist die Hypotenuse. Welche Seite liegt dem Winkel am Boden gegenüber?",
+      "Multipliziere beide Seiten mit der Leiterlänge."
     ],
     "interleaving_of": null
   }

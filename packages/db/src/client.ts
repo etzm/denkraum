@@ -13,7 +13,8 @@ import * as schema from "./schema.ts";
 export type Schema = typeof schema;
 export type Db = PgDatabase<PgQueryResultHKT, Schema>;
 
-const MIGRATIONS = join(dirname(fileURLToPath(import.meta.url)), "..", "drizzle");
+// The container sets DATABASE_MIGRATIONS_DIR, because bundled code has no stable source path.
+const MIGRATIONS = process.env.DATABASE_MIGRATIONS_DIR ?? join(dirname(fileURLToPath(import.meta.url)), "..", "drizzle");
 
 /**
  * DATABASE_URL:

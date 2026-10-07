@@ -15,7 +15,8 @@
     "test:watch": "vitest",
     "typecheck": "pnpm -r --filter=!@denkraum/web --filter=!denkraum exec tsc -p .",
     "db:generate": "pnpm --filter @denkraum/db generate",
-    "lint:dashes": "node scripts/check-dashes.mjs"
+    "lint:dashes": "node scripts/check-dashes.mjs",
+    "prompts:gen": "node scripts/gen-prompts.mjs"
   },
   "devDependencies": {
     "@types/node": "^22.19.0",

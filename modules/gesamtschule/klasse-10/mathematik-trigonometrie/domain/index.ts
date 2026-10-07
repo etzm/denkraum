@@ -58,3 +58,7 @@ export { createRng, drawOnGrid, fnv1a, mulberry32, type Rng } from "./random.ts"
 export { acceptsValue, decimalPlaces, isRoundingOf, roundTo, truncateTo } from "./compare.ts";
 export { fillTemplate, placeholders } from "./template.ts";
 export { TASKS, TASK_FILES, checkTask, getTask, loadTasks } from "./tasks.ts";
+// Lesson flow (A1): display format, unlock and pass rules, model inputs and outputs.
+export * from "./format.ts";
+export * from "./lesson.ts";
+export * from "./ai.ts";

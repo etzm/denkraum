@@ -3,6 +3,7 @@ import { z } from "zod";
 import { IdentityLeakError } from "@denkraum/privacy";
 import {
   createAnthropicProvider,
+  createOpenAiCompatibleProvider,
   createMockProvider,
   generateStructured,
   loadLlmConfig,
@@ -180,5 +181,55 @@ describe("Anthropic provider", () => {
     expect(messages[0]!.content.map((c) => c.type)).toEqual(["image", "text"]);
     expect(params).toHaveProperty("output_config.format");
     expect(params.system).toBe("Transkribiere.");
+  });
+});
+
+describe("OpenAI-compatible provider", () => {
+  it("sends images as data URLs with a JSON schema and parses the answer", async () => {
+    let sent: { url: string; body: Record<string, unknown>; headers: Record<string, string> } | undefined;
+    const fakeFetch = (async (url: string, init: RequestInit) => {
+      sent = { url, body: JSON.parse(String(init.body)), headers: init.headers as Record<string, string> };
+      return new Response(
+        JSON.stringify({ model: "qwen-vl", choices: [{ finish_reason: "stop", message: { content: '{"ok":2}' } }], usage: { prompt_tokens: 7, completion_tokens: 3 } }),
+        { status: 200, headers: { "content-type": "application/json" } },
+      );
+    }) as unknown as typeof fetch;
+    const provider = createOpenAiCompatibleProvider({ baseUrl: "http://llm.local/v1/", apiKey: "k", fetch: fakeFetch });
+    const response = await provider.complete({
+      promptName: "plan_transcribe",
+      model: "qwen-vl",
+      system: "Transkribiere.",
+      userText: "{}",
+      images: [{ mediaType: "image/jpeg", data: "AAAA" }],
+      schema: z.object({ ok: z.number() }),
+      maxTokens: 500,
+      signal: AbortSignal.timeout(1000),
+    });
+    expect(response).toMatchObject({ json: { ok: 2 }, model: "qwen-vl", inputTokens: 7, outputTokens: 3, stopReason: "stop" });
+    expect(sent!.url).toBe("http://llm.local/v1/chat/completions");
+    expect(sent!.headers.authorization).toBe("Bearer k");
+    const messages = sent!.body.messages as Array<{ role: string; content: unknown }>;
+    expect(messages[0]).toEqual({ role: "system", content: "Transkribiere." });
+    expect(JSON.stringify(messages[1])).toContain("data:image/jpeg;base64,AAAA");
+    expect(sent!.body).toHaveProperty("response_format.json_schema.schema.properties.ok");
+  });
+
+  it("maps refusals and unparseable answers", async () => {
+    const reply = (choice: object) =>
+      (async () => new Response(JSON.stringify({ choices: [choice] }), { status: 200 })) as unknown as typeof fetch;
+    const base = { promptName: "p", model: "m", system: "s", userText: "{}", images: [], schema: z.object({}), maxTokens: 10, signal: AbortSignal.timeout(1000) };
+    const refused = await createOpenAiCompatibleProvider({ baseUrl: "http://x", fetch: reply({ message: { refusal: "nein" } }) }).complete(base);
+    expect(refused.stopReason).toBe("refusal");
+    const garbled = await createOpenAiCompatibleProvider({ baseUrl: "http://x", fetch: reply({ finish_reason: "stop", message: { content: "kein json" } }) }).complete(base);
+    expect(garbled.json).toBeNull();
+  });
+
+  it("needs a base URL, all models, and an EU confirmation in production", () => {
+    expect(() => loadLlmConfig({ LLM_PROVIDER: "openai-compatible" })).toThrow(/LLM_BASE_URL/);
+    const models = { MODEL_VISION: "v", MODEL_HARD: "h", MODEL_LIGHT: "l" };
+    expect(() => loadLlmConfig({ LLM_PROVIDER: "openai-compatible", LLM_BASE_URL: "http://x" })).toThrow(/MODEL_VISION/);
+    expect(() => loadLlmConfig({ LLM_PROVIDER: "openai-compatible", LLM_BASE_URL: "http://x", NODE_ENV: "production", ...models })).toThrow(/LLM_ENDPOINT_IN_EU/);
+    const ok = loadLlmConfig({ LLM_PROVIDER: "openai-compatible", LLM_BASE_URL: "http://x", NODE_ENV: "production", LLM_ENDPOINT_IN_EU: "true", ...models });
+    expect(ok.models).toEqual({ vision: "v", hard: "h", light: "l" });
   });
 });

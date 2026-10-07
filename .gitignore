@@ -24,8 +24,9 @@ eval/golden/
 **/eval/golden/
 eval/reports/
 **/eval/reports/
-uploads/
-exports/
+# Only stray data folders at the repository root; never code folders such as app/api/uploads.
+/uploads/
+/exports/
 *.heic
 *.HEIC
 
@@ -41,3 +42,5 @@ next-env.d.ts
 test-results/
 playwright-report/
 .vitest/
+infra/.env
+.claude/worktrees/

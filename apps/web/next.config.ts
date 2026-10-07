@@ -1,3 +1,4 @@
+import { resolve } from "node:path";
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV !== "production";
@@ -29,6 +30,9 @@ const securityHeaders = [
 
 const config: NextConfig = {
   poweredByHeader: false,
+  // Self-contained server for the container image (Dockerfile); the build runs in apps/web.
+  output: "standalone",
+  outputFileTracingRoot: resolve(process.cwd(), "../.."),
   transpilePackages: [
     "@denkraum/core",
     "@denkraum/db",

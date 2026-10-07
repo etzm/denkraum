@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { NIVEAUS, type Niveau } from "@denkraum/core";
 import { MISCONCEPTION_CODES } from "./misconceptions.ts";
+import { placeholders } from "./template.ts";
 
 export const TASK_TYPES = ["worked_example", "faded", "quick_check", "paper"] as const;
 export type TaskType = (typeof TASK_TYPES)[number];
@@ -68,6 +69,12 @@ export const levelSchema = z
     steps: z.array(z.string().min(1)),
     /** Faded tasks: indices into `steps` that are hidden on this level. */
     hidden_steps: z.array(z.number().int().nonnegative()).optional(),
+    /**
+     * Faded tasks: wrong alternatives for a hidden step that is chosen, not typed, keyed by the
+     * step index. The step text itself is the right option. A hidden step without choices must
+     * contain exactly one sought value (`{{b}}`); the learner types that value.
+     */
+    choices: z.record(z.string().regex(/^\d+$/), z.array(z.string().min(1)).min(1).max(4)).optional(),
     extra: z.string().min(1).optional(),
     /** Codes that apply on this level in addition to the task's codes. */
     bildungsplan: z.array(bildungsplanCodeSchema).optional(),
@@ -75,6 +82,10 @@ export const levelSchema = z
   .refine((l) => (l.hidden_steps ?? []).every((i) => i < l.steps.length), {
     message: "hidden_steps index out of range",
     path: ["hidden_steps"],
+  })
+  .refine((l) => Object.keys(l.choices ?? {}).every((key) => (l.hidden_steps ?? []).includes(Number(key))), {
+    message: "choices are only allowed for hidden steps",
+    path: ["choices"],
   });
 export type Level = z.infer<typeof levelSchema>;
 
@@ -106,6 +117,23 @@ export const taskSchema = z
     if (task.type !== "paper" && (task.requires_sketch || task.requires_answer_sentence)) {
       issue("only paper tasks can require a sketch or an answer sentence", ["type"]);
     }
+    for (const level of levelsOf(task)) {
+      const def = task.levels[level];
+      if (!def) continue;
+      if (task.type !== "faded" && (def.hidden_steps !== undefined || def.choices !== undefined)) {
+        issue("only faded tasks hide steps", ["levels", level]);
+      }
+      if (task.type === "faded" && (def.hidden_steps ?? []).length === 0) {
+        issue("a faded task hides at least one step", ["levels", level, "hidden_steps"]);
+      }
+      for (const index of def.hidden_steps ?? []) {
+        const typed = placeholders(def.steps[index] ?? "").filter((name) => def.sought.includes(name));
+        const chosen = def.choices?.[String(index)] !== undefined;
+        if (chosen === (new Set(typed).size === 1)) {
+          issue(`hidden step ${index} needs either choices or exactly one sought value`, ["levels", level, "hidden_steps"]);
+        }
+      }
+    }
 
     const levels = levelsOf(task);
     if (levels.length === 0) issue("at least one level is required", ["levels"]);
@@ -118,7 +146,7 @@ export const taskSchema = z
       }
       const def = task.levels[level];
       if (level === "G" && def && codes.includes(SIN_TAN_ONLY_ON_G)) {
-        const texts = [def.text, ...def.steps, def.extra ?? "", ...task.hints];
+        const texts = [def.text, ...def.steps, def.extra ?? "", ...Object.values(def.choices ?? {}).flat(), ...task.hints];
         if (texts.some((t) => COSINE.test(t))) {
           issue(`${SIN_TAN_ONLY_ON_G} on level G covers sine and tangent only, no cosine`, ["levels", "G"]);
         }

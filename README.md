@@ -21,7 +21,7 @@ modules/
     klasse-10/mathematik-trigonometrie/   Workstream A: Trigonometrie-Einstieg
   gymnasium/
     klasse-11/                            noch kein Modul
-infra/                              Docker Compose (Postgres)
+infra/                              Docker Compose für Entwicklung und Produktion, Caddy
 docs/
   umsetzungsplan.md                 Plan für beide Workstreams, Stand und nächste Schritte
   datenschutz/README.md             verbindliche Datenschutz-Leitplanken
@@ -40,7 +40,7 @@ pnpm dev         # http://localhost:3000, Code eingeben
 pnpm test        # alle Tests, ohne Datenbank-Server und ohne API-Schlüssel
 ```
 
-Ohne `DATABASE_URL` läuft die Datenbank lokal als PGlite in `.data/`. Für Postgres: `docker compose -f infra/docker-compose.yml up -d` und `DATABASE_URL` in `.env` umstellen. KI-Aufrufe laufen standardmäßig gegen einen Mock (`LLM_PROVIDER=mock`).
+Ohne `DATABASE_URL` läuft die Datenbank lokal als PGlite in `.data/`. Betrieb auf dem Server: [docs/betrieb.md](docs/betrieb.md). Für Postgres: `docker compose -f infra/docker-compose.yml up -d` und `DATABASE_URL` in `.env` umstellen. KI-Aufrufe laufen standardmäßig gegen einen Mock (`LLM_PROVIDER=mock`).
 
 ## Geräte
 

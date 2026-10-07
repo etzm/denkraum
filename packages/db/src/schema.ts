@@ -69,6 +69,8 @@ export const uploads = pgTable(
     learnerId: text("learner_id").notNull().references(() => learners.id, { onDelete: "cascade" }),
     moduleId: text("module_id").notNull(),
     kind: text("kind").notNull(),
+    /** Module reference, for example a worksheet or mission run id. Never learner data. */
+    ref: text("ref"),
     round: integer("round").notNull().default(1),
     typed: boolean("typed").notNull().default(false),
     /** Object storage keys, in page order. Emptied when the images are deleted. */

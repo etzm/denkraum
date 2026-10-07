@@ -31,7 +31,7 @@ describe("task files", () => {
   });
 
   it("contain all example tasks of spec A 4.2", () => {
-    expect(TASKS.map((t) => t.id)).toEqual(SPEC_TASKS);
+    expect(TASKS.map((t) => t.id)).toEqual(expect.arrayContaining(SPEC_TASKS));
   });
 
   it("are consistent with the solution functions", () => {
@@ -43,11 +43,27 @@ describe("task files", () => {
     expect(levels).toMatchObject({ "L5-A1": "ME", "L5-A2": "G", "L6-A2": "ME", "L6-A3": "ME", "L7-A1": "E", "L4-A2": "GME" });
   });
 
+  it("lesson 4 has 1 worked example, 2 faded tasks and at least 4 paper tasks, each in G, M and E (spec A 14.3)", () => {
+    const lesson4 = TASKS.filter((t) => t.lesson === 4);
+    const ofType = (type: string) => lesson4.filter((t) => t.type === type);
+    expect(ofType("worked_example")).toHaveLength(1);
+    expect(ofType("faded")).toHaveLength(2);
+    expect(ofType("paper").length).toBeGreaterThanOrEqual(4);
+    for (const task of lesson4) expect(levelsOf(task).join(""), task.id).toBe("GME");
+  });
+
+  it("lesson 4 paper tasks are parametrised and require sketch and answer sentence", () => {
+    for (const task of TASKS.filter((t) => t.lesson === 4 && t.type === "paper")) {
+      expect(Object.values(task.parameters).some((r) => r.max > r.min), task.id).toBe(true);
+      expect(task.requires_sketch && task.requires_answer_sentence, task.id).toBe(true);
+    }
+  });
+
   it("contain no en or em dash", () => {
     expect(JSON.stringify(TASK_FILES)).not.toMatch(/[\u2013\u2014]/);
   });
 
-  it.todo("each lesson has 1 worked example, 2 faded tasks and 4 paper tasks in G, M, E (phase A2)");
+  it.todo("lessons 1 to 3 and 5 to 7 have 1 worked example, 2 faded tasks and 4 paper tasks in G, M, E (phase A2)");
 });
 
 describe("Bildungsplan level constraints", () => {
@@ -136,6 +152,26 @@ describe("task schema", () => {
     expect(broken("L4-A2", (t) => (t.id = "L5-A2"))).toBe(false);
     expect(broken("L4-A3", (t) => (t.requires_sketch = true))).toBe(false);
   });
+
+  it("checks the choices of faded tasks", () => {
+    // A hidden step is either chosen (choices) or typed (exactly one sought value).
+    expect(broken("L4-A3", (t) => delete t.levels.M.choices)).toBe(false);
+    expect(broken("L4-A3", (t) => (t.levels.G.choices = { "3": ["b = 1 cm"] }))).toBe(false);
+    // Choices only for hidden steps, and only in faded tasks.
+    expect(broken("L4-A3", (t) => (t.levels.M.choices = { "0": ["c ist die Gegenkathete."], ...t.levels.M.choices }))).toBe(false);
+    expect(broken("L4-A2", (t) => (t.levels.M.choices = { "1": ["a = c : sin α"] }))).toBe(false);
+    // A faded task hides at least one step.
+    expect(broken("L4-A4", (t) => (t.levels.G.hidden_steps = []))).toBe(false);
+  });
+
+  it("rejects cosine in the choices of level G", () => {
+    const task = raw("L4-A4");
+    task.levels.G.hidden_steps = [1, 3];
+    task.levels.G.choices = { "1": ["Ansatz: cos α = a/b"] };
+    expect(taskSchema.safeParse(task).success).toBe(false);
+    task.levels.G.choices = { "1": ["Ansatz: sin α = a/b"] };
+    expect(taskSchema.safeParse(task).success).toBe(true);
+  });
 });
 
 describe("checkTask", () => {
@@ -144,6 +180,10 @@ describe("checkTask", () => {
     change(task);
     return checkTask(task);
   };
+
+  it("finds unknown placeholders in choices", () => {
+    expect(problems("L4-A3", (t) => t.levels.M?.choices?.["2"]?.push("Umstellen: b = {{d}} · sin β")).join()).toMatch(/\{\{d\}\}/);
+  });
 
   it("finds unknown solution functions, sought values and placeholders", () => {
     expect(problems("L4-A2", (t) => (t.solution_fn = "L9-A9"))).toHaveLength(1);

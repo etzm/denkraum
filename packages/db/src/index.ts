@@ -1,4 +1,7 @@
-export { createMemoryBlobStore } from "./blob-store.ts";
+export { createBlobStoreFromEnv } from "./blob-config.ts";
+export { createEncryptingBlobStore, createFsBlobStore, createMemoryBlobStore } from "./blob-store.ts";
+export { createS3BlobStore } from "./s3-store.ts";
+export type { S3Config } from "./s3-store.ts";
 export type { BlobStore } from "./blob-store.ts";
 export { connectDb } from "./client.ts";
 export type { Db, Schema } from "./client.ts";

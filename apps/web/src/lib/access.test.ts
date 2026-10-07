@@ -27,7 +27,7 @@ describe("enterWithCode", () => {
     const joined = await enterWithCode(db, "KXAS-SE29", now);
     const learner = await db.query.learners.findFirst();
     const resumed = await enterWithCode(db, learner!.personalCode, now);
-    expect(resumed).toEqual({ ok: true, kind: "resumed", learnerId: joined.ok ? joined.learnerId : "" });
+    expect(resumed).toEqual({ ok: true, kind: "resumed", learnerId: joined.ok ? joined.learnerId : "", klasse: 10 });
   });
 
   it("rejects malformed, unknown and ended codes", async () => {

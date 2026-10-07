@@ -1,6 +1,6 @@
 # Mathematik Klasse 10: Trigonometrie-Einstieg
 
-Workstream A. Status: Planung.
+Workstream A. Status: Entwicklung. Lektion 4 läuft als Durchstich (A1).
 
 ## Inhalt
 
@@ -44,13 +44,49 @@ Umgesetzt: reine Fachlogik in `domain/`, ohne Oberfläche, Datenbank und Sprachm
 
 Die Entscheidungen dazu stehen in [DECISIONS.md](DECISIONS.md).
 
+## Durchstich Lektion 4 (A1)
+
+Lektion 4 „Seitenlängen berechnen“ läuft vollständig auf der Plattform, vom Niveau bis zur Rückmeldung. Die Entscheidungen dazu sind T-28 bis T-41 in [DECISIONS.md](DECISIONS.md).
+
+Ablauf und Seiten unter `/klasse10/m/mathematik-trigonometrie`:
+
+| Pfad | Inhalt |
+|---|---|
+| (Start) | Niveau G, M oder E wählen (gespeichert in `learners.niveau`), Lektionen 1 bis 7 mit Stand von Lektion 4 |
+| `lektion/4` | Erklärung, Dreieck zum Antippen (α oder β, Seiten färben sich um), Verhältnisse, Vorgehen, Taschenrechner-Check, Beispiel Schritt für Schritt |
+| `lektion/4/uebung` | Zwei Lückenaufgaben mit sofortiger Prüfung durch Code und Hinweisen; nach 3 Fehlversuchen der Lösungsweg „mit Hilfe“ |
+| `blatt/<id>` | Arbeitsblatt am iPad mit eigenen Zahlen und Blatt-Code, gelöst auf Blanko-Papier (D-012) |
+| `blatt/<id>/foto` | Foto aufnehmen mit `PhotoCapture` (Art `worksheet`, 1600 px) |
+| `blatt/<id>/pruefen?upload=<id>` | Die KI liest die Lösung („Ich lese deine Lösung …“), dann „Habe ich dich richtig gelesen?“ mit Foto und änderbaren Feldern |
+| `blatt/<id>/ergebnis` | richtig, fast oder nochmal je Aufgabe, ein Hinweis (als KI-Rückmeldung gekennzeichnet oder Katalogtext), „Nochmal mit neuen Zahlen“, „Lösungsweg ansehen“ ab dem zweiten Fehlversuch, Fotos löschen |
+| `blatt/<id>/loesung/<aufgabe>` | Vollständiger Lösungsweg, erst nachdem das Öffnen gespeichert ist |
+
+Wer was entscheidet:
+- Code (`domain/`): richtig oder falsch (`verify`), Fehlertypen, Freischaltung des Arbeitsblatts, Versuche, „Lektion geschafft“ (3 von 4 Papieraufgaben richtig im ersten oder zweiten Versuch), wann der Lösungsweg sichtbar wird.
+- KI, Tier `vision`: Abschrift der Fotos (`prompts/transcribe.v1.md`, Schema in `domain/ai.ts`). Sie bewertet nichts; die Person bestätigt oder korrigiert.
+- KI, Tier `light`: Formulierung der Rückmeldung (`prompts/feedback.v1.md`). Status, Codes und nächster Schritt setzt der Code; ein Text mit einem richtigen Endwert wird verworfen.
+
+Aufbau:
+- `content/tasks/L4.json`: L4-A1 Beispiel, L4-A3 und L4-A4 Lückenaufgaben, L4-A2, L4-A5, L4-A6, L4-A7 Papieraufgaben, alle in G, M und E.
+- `domain/lesson.ts`: Regeln des Ablaufs; `domain/format.ts`: Anzeige mit Dezimalkomma und Eingabe; `domain/ai.ts`: Ein- und Ausgaben der KI, Mock-Antworten, Schutz gegen verratene Ergebnisse.
+- `db.ts`: Tabellen `trig_worksheets`, `trig_checks`, `trig_results` (Migration `packages/db/drizzle/0003_trig.sql`). Abschrift und Rückmeldung liegen in den Plattform-Tabellen `transcripts` und `feedback`.
+- `server/`: Datenzugriff und Server-Actions; `ui/`: Seiten und Client-Komponenten; `app.tsx`: Einstieg für die Plattform.
+- Prompts ändern: neue Datei `prompts/<name>.v<N+1>.md`, dann `pnpm prompts:gen`.
+
 Prüfen im Wurzelverzeichnis des Repos:
 
 ```
 npx vitest run modules/gesamtschule/klasse-10/mathematik-trigonometrie
 npx tsc -p modules/gesamtschule/klasse-10/mathematik-trigonometrie
+pnpm build
+PW_CHROMIUM_PATH=... pnpm --filter @denkraum/web test:e2e trig-lesson4
 ```
 
+Der E2E-Test `apps/web/e2e/trig-lesson4.spec.ts` läuft mit `LLM_PROVIDER=mock` und einem im Browser gezeichneten Testbild.
+
 Noch offen:
-- vollständige Aufgabenbank je Lektion (Spec A 14 Nr. 3) und Parameterbereiche für alle Aufgaben außer L4-A2 (A2)
+- Lektionen 1 bis 3 und 5 bis 7 mit vollständiger Aufgabenbank (Spec 14 Nr. 3) und Interleaving ab Lektion 3 (A2)
+- Punkte und Abzeichen (Spec 7), Lehrkraft-Ansicht (A3), Offline-Lektionen (D-019)
+- Druckansicht des Arbeitsblatts als PDF (optional, D-012)
 - Erkennung von F9, dafür fehlen Angaben in der Transkription
+- Prüfung von Transkription und Rückmeldung mit einem echten Modell am Golden Set

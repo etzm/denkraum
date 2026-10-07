@@ -52,6 +52,13 @@ export const MAX_REVIEW_TRIES = 2;
 /** Revision: one retry, then the mission continues with a note (spec 4). */
 export const MAX_REVISION_ATTEMPTS = 2;
 
+/**
+ * Why a model call gave no usable result (platform `StructuredResult.reason`). The mission
+ * never waits for the model: it shows a neutral message and goes on (D-006, D-014, SW-29).
+ */
+export const AI_FAILURE_REASONS = ["schema_error", "refused", "timeout", "error"] as const;
+export type AiFailureReason = (typeof AI_FAILURE_REASONS)[number];
+
 // ---------------------------------------------------------------------------
 // Stage variants (spec 4, "Weitere Regeln")
 
@@ -89,7 +96,13 @@ export type RunNote =
   | "transcription_failed"
   | "text_too_short"
   | "quotes_unverified"
-  | "held_for_adult";
+  | "held_for_adult"
+  /** P2, P4 or P5 gave no usable result; the student went on without it (SW-29). */
+  | "plan_review_unavailable"
+  | "text_review_unavailable"
+  | "revision_check_unavailable"
+  /** The model refused at least once; kept for the adult view. */
+  | "ai_refused";
 
 export type MissionRun = {
   missionId: string;
@@ -110,6 +123,8 @@ export type MissionRun = {
     editCheck: EditCheck | null;
     /** P2 result of the current round; null while pending. */
     review: PlanReview | null;
+    /** P2 gave no usable result for the current round; the code gate still decides (SW-29). */
+    reviewUnavailable: AiFailureReason | null;
     /** Optional answer to the review question (spec 12, question 6). */
     answer: string | null;
     gate: { approved: boolean; missing: PlanGap[] } | null;
@@ -136,12 +151,14 @@ export type MissionRun = {
     tries: number;
     quotesVerified: boolean | null;
     jokerUsed: boolean;
+    /** P4 gave no usable result in the current pass; the revision falls back to a task chosen by code (SW-30). */
+    unavailable: AiFailureReason | null;
   };
   revision: {
     /** Submitted revisions, at most two. */
     texts: string[];
-    /** P5 results, one per submitted revision once checked. */
-    checks: RevisionCheck[];
+    /** P5 results, one per submitted revision once checked; null when P5 gave no usable result (SW-29). */
+    checks: (RevisionCheck | null)[];
   };
   /** Set while held for an adult (spec 7.6). No feedback is shown. */
   hold: { from: "plan_feedback" | "ai_feedback"; reason: "input_filter" | "review_flag" } | null;
@@ -165,13 +182,14 @@ export function createRun(input: { missionId: string; stufe: Stufe; niveauEEnabl
       typed: false,
       editCheck: null,
       review: null,
+      reviewUnavailable: null,
       answer: null,
       gate: null,
       approvedInRound: null,
     },
     text: { round: 0, transcriptionFailures: 0, raw: null, confirmed: null, typed: false, wordCount: null, editCheck: null },
     selfCheck: null,
-    feedback: { review: null, firstPassReview: null, tries: 0, quotesVerified: null, jokerUsed: false },
+    feedback: { review: null, firstPassReview: null, tries: 0, quotesVerified: null, jokerUsed: false, unavailable: null },
     revision: { texts: [], checks: [] },
     hold: null,
     adultReleased: false,
@@ -192,6 +210,8 @@ export type MissionEvent =
   /** "Ja, das steht da", with the student's corrections. */
   | { type: "PLAN_CONFIRMED"; plan: PlanTranscript }
   | { type: "PLAN_REVIEWED"; review: PlanReview }
+  /** P2 failed or refused; the student sees a neutral message and goes on. */
+  | { type: "PLAN_REVIEW_UNAVAILABLE"; reason: AiFailureReason }
   /** The student read the plan feedback, optionally answering the question. */
   | { type: "PLAN_FEEDBACK_DONE"; answer?: string }
   /** "Ich fange an zu schreiben" */
@@ -209,12 +229,16 @@ export type MissionEvent =
   /** The content filter before P2 or P4 found inappropriate content (spec 7.6). */
   | { type: "CONTENT_FLAGGED" }
   | { type: "TEXT_REVIEWED"; review: TextReview }
+  /** P4 failed or refused; no stars, the revision task comes from code. */
+  | { type: "TEXT_REVIEW_UNAVAILABLE"; reason: AiFailureReason }
   /** Second review pass; `keys` is the student's current key balance. */
   | { type: "USE_JOKER"; keys: number }
   /** "Zur Überarbeitung" */
   | { type: "START_REVISION" }
   | { type: "REVISION_SUBMITTED"; text: string }
   | { type: "REVISION_CHECKED"; check: RevisionCheck }
+  /** P5 failed or refused; the attempt counts and the mission continues with a note. */
+  | { type: "REVISION_CHECK_UNAVAILABLE"; reason: AiFailureReason }
   /** The adult with read access looked at the held content and lets the run continue. */
   | { type: "ADULT_RELEASED" };
 
@@ -290,7 +314,7 @@ export function transition(run: MissionRun, event: MissionEvent): TransitionResu
       break;
 
     case "plan_feedback": {
-      const pending = run.plan.review === null;
+      const pending = isPlanReviewPending(run);
       if (event.type === "CONTENT_FLAGGED") {
         if (!pending) return guard("review already shown");
         if (run.adultReleased) return guard("an adult already released this content");
@@ -299,6 +323,14 @@ export function transition(run: MissionRun, event: MissionEvent): TransitionResu
       if (event.type === "PLAN_REVIEWED") {
         if (!pending) return guard("review already received");
         return ok({ ...run, plan: { ...run.plan, review: event.review } });
+      }
+      if (event.type === "PLAN_REVIEW_UNAVAILABLE") {
+        if (!pending) return guard("review already received");
+        return ok({
+          ...run,
+          notes: unavailableNotes(run.notes, "plan_review_unavailable", event.reason),
+          plan: { ...run.plan, reviewUnavailable: event.reason },
+        });
       }
       if (event.type === "PLAN_FEEDBACK_DONE") {
         if (pending) return guard("review still pending");
@@ -363,13 +395,13 @@ export function transition(run: MissionRun, event: MissionEvent): TransitionResu
           ...run,
           state: "ai_feedback",
           selfCheck: event.selfCheck,
-          feedback: { ...run.feedback, review: null, tries: 0, quotesVerified: null },
+          feedback: { ...run.feedback, review: null, tries: 0, quotesVerified: null, unavailable: null },
         });
       }
       break;
 
     case "ai_feedback": {
-      const pending = run.feedback.review === null;
+      const pending = isTextReviewPending(run);
       if (event.type === "CONTENT_FLAGGED") {
         if (!pending) return guard("review already shown");
         if (run.adultReleased) return guard("an adult already released this content");
@@ -379,8 +411,17 @@ export function transition(run: MissionRun, event: MissionEvent): TransitionResu
         if (!pending) return guard("review already received");
         return ok(receiveReview(run, event.review));
       }
+      if (event.type === "TEXT_REVIEW_UNAVAILABLE") {
+        if (!pending) return guard("review already received");
+        return ok({
+          ...run,
+          notes: unavailableNotes(run.notes, "text_review_unavailable", event.reason),
+          feedback: { ...run.feedback, unavailable: event.reason },
+        });
+      }
       if (event.type === "USE_JOKER") {
         if (pending) return guard("review still pending");
+        if (run.feedback.review === null) return guard("no review to repeat");
         if (!canUseJoker({ keys: event.keys, jokerUsed: run.feedback.jokerUsed })) {
           return guard("joker not available: needs 2 keys and at most one per mission");
         }
@@ -393,6 +434,7 @@ export function transition(run: MissionRun, event: MissionEvent): TransitionResu
             review: null,
             tries: 0,
             quotesVerified: null,
+            unavailable: null,
           },
         });
       }
@@ -417,6 +459,16 @@ export function transition(run: MissionRun, event: MissionEvent): TransitionResu
         if (!isMissionCompleted(completionFacts(next))) return ok(next);
         const notes = event.check.fulfilled ? next.notes : addNote(next.notes, "revision_unfulfilled");
         return ok({ ...next, state: "completed", notes });
+      }
+      if (event.type === "REVISION_CHECK_UNAVAILABLE") {
+        if (!pendingCheck) return guard("no revision waiting for a check");
+        const next = {
+          ...run,
+          notes: unavailableNotes(run.notes, "revision_check_unavailable", event.reason),
+          revision: { ...run.revision, checks: [...run.revision.checks, null] },
+        };
+        // Without a check the attempt counts as done: completion never waits for the model (SW-29).
+        return ok(isMissionCompleted(completionFacts(next)) ? { ...next, state: "completed" } : next);
       }
       break;
     }
@@ -452,6 +504,21 @@ function backToPlanUpload(run: MissionRun): MissionRun {
   return { ...run, state: round === 0 ? "planning" : "plan_revise", plan: { ...run.plan, round, raw: null } };
 }
 
+/** P2 not received and not given up on. */
+export function isPlanReviewPending(run: MissionRun): boolean {
+  return run.plan.review === null && run.plan.reviewUnavailable === null;
+}
+
+/** P4 not received and not given up on. */
+export function isTextReviewPending(run: MissionRun): boolean {
+  return run.feedback.review === null && run.feedback.unavailable === null;
+}
+
+function unavailableNotes(notes: RunNote[], note: RunNote, reason: AiFailureReason): RunNote[] {
+  const withNote = addNote(notes, note);
+  return reason === "refused" ? addNote(withNote, "ai_refused") : withNote;
+}
+
 function submitPlan(run: MissionRun, plan: PlanTranscript, typed: boolean, editCheck: EditCheck | null): MissionRun {
   let notes = run.notes;
   if (typed) notes = addNote(notes, "plan_typed");
@@ -461,7 +528,7 @@ function submitPlan(run: MissionRun, plan: PlanTranscript, typed: boolean, editC
     state: "plan_feedback",
     notes,
     adultReleased: false,
-    plan: { ...run.plan, confirmed: plan, typed, editCheck, review: null, answer: null, gate: null },
+    plan: { ...run.plan, confirmed: plan, typed, editCheck, review: null, reviewUnavailable: null, answer: null, gate: null },
   };
 }
 
@@ -532,6 +599,7 @@ export function completionFacts(run: MissionRun): CompletionFacts {
     // Checked attempts: the student sees the feedback on the second attempt before the mission completes.
     revisionAttempts: run.revision.checks.length,
     revisionFulfilled: lastCheck ? lastCheck.fulfilled : null,
+    revisionUnchecked: lastCheck === null,
   };
 }
 
@@ -561,11 +629,11 @@ export function pendingSystemAction(run: MissionRun): SystemAction | null {
     case "plan_uploaded":
       return "transcribe_plan";
     case "plan_feedback":
-      return run.plan.review === null ? "review_plan" : null;
+      return isPlanReviewPending(run) ? "review_plan" : null;
     case "text_uploaded":
       return "transcribe_text";
     case "ai_feedback":
-      return run.feedback.review === null ? "review_text" : null;
+      return isTextReviewPending(run) ? "review_text" : null;
     case "revision":
       return run.revision.texts.length > run.revision.checks.length ? "check_revision" : null;
     case "held_for_adult":

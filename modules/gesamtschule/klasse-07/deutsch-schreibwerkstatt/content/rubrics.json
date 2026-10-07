@@ -1,0 +1,51 @@
+[
+  {
+    "id": "stellungnahme-m",
+    "schreibform": "stellungnahme",
+    "niveau": "M",
+    "dimensions": [
+      {
+        "id": "aufbau",
+        "label": "A Aufbau",
+        "levels": [
+          "keine erkennbare Gliederung",
+          "Teile vorhanden, aber vermischt oder ohne Absätze",
+          "Einleitung, Hauptteil, Schluss erkennbar, Absätze gesetzt",
+          "wie 2, Einleitung nennt Thema und Standpunkt, Schluss zieht Fazit ohne neues Argument"
+        ]
+      },
+      {
+        "id": "argumentation",
+        "label": "B Argumentation",
+        "levels": [
+          "nur Meinung, keine Begründung",
+          "Behauptungen mit Begründung, aber ohne oder mit unpassenden Beispielen",
+          "mindestens 2 vollständige B-B-B-Argumente",
+          "3 vollständige Argumente, Reihenfolge erkennbar begründet (stärkstes zuletzt), alle passen zum Standpunkt"
+        ]
+      },
+      {
+        "id": "sprache",
+        "label": "C Sprache und Formulierung",
+        "levels": [
+          "Sätze unverbunden, überwiegend Umgangssprache",
+          "einige Verknüpfungswörter, viele Wiederholungen oder gleiche Satzanfänge",
+          "Argumente mit Textprozeduren eingeleitet, verschiedene Satzanfänge, überwiegend sachlich",
+          "flüssig, sachlich, Überleitungen zwischen Absätzen, Adressat angesprochen"
+        ]
+      },
+      {
+        "id": "richtigkeit",
+        "label": "D Richtigkeit",
+        "note": "Rechtschreibung, Zeichensetzung, Grammatik; Fehler je 100 Wörter",
+        "levels": ["mehr als 8 Fehler, Verständnis gestört", "5 bis 8 Fehler", "2 bis 4 Fehler", "0 bis 1 Fehler"]
+      }
+    ],
+    "eBonus": [
+      "Gegenargument genannt",
+      "Gegenargument entkräftet",
+      "Schlussregel für das stärkste Argument erkennbar"
+    ],
+    "approved": false
+  }
+]

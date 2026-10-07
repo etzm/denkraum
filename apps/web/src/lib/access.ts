@@ -6,7 +6,7 @@ export const SESSION_DAYS = 30;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 export type EnterResult =
-  | { ok: true; kind: "joined" | "resumed"; learnerId: string }
+  | { ok: true; kind: "joined" | "resumed"; learnerId: string; klasse: number }
   | { ok: false; error: "format" | "unknown" | "ended" };
 
 function hashToken(token: string): string {
@@ -28,7 +28,7 @@ export async function enterWithCode(db: Db, input: string, now = new Date()): Pr
     const group = await db.query.groups.findFirst({ where: eq(schema.groups.id, existing.groupId) });
     if (!group || group.endsAt <= now) return { ok: false, error: "ended" };
     await db.update(schema.learners).set({ lastActiveAt: now }).where(eq(schema.learners.id, existing.id));
-    return { ok: true, kind: "resumed", learnerId: existing.id };
+    return { ok: true, kind: "resumed", learnerId: existing.id, klasse: group.klasse };
   }
 
   const group = await db.query.groups.findFirst({ where: eq(schema.groups.joinCode, code) });
@@ -47,7 +47,7 @@ export async function enterWithCode(db: Db, input: string, now = new Date()): Pr
     .insert(schema.learners)
     .values({ groupId: group.id, pseudonym, personalCode: generateAccessCode(), lastActiveAt: now })
     .returning({ id: schema.learners.id });
-  return { ok: true, kind: "joined", learnerId: learner!.id };
+  return { ok: true, kind: "joined", learnerId: learner!.id, klasse: group.klasse };
 }
 
 /** Returns the cookie token. Only its hash is stored. */
