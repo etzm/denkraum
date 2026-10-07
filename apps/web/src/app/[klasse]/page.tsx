@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { classBySlug, slugForKlasse } from "@/lib/classes.ts";
+import { notFound, redirect } from "next/navigation";
+import { canonicalSlug, classBySlug, slugForKlasse } from "@/lib/classes.ts";
 import { modulesFor } from "@/lib/modules.ts";
 import { currentLearner } from "@/lib/session.ts";
 import { enter, leave } from "../actions.ts";
@@ -19,7 +19,11 @@ export default async function Klasse({
   searchParams: Promise<{ fehler?: string }>;
 }) {
   const { klasse } = await params;
-  const entry = classBySlug(klasse)!;
+  // Layout and page render in parallel, so the page checks the slug itself too.
+  const slug = canonicalSlug(klasse);
+  if (!slug) notFound();
+  if (slug !== klasse) redirect(`/${slug}`);
+  const entry = classBySlug(slug)!;
   const session = await currentLearner();
 
   if (session) {
@@ -33,12 +37,17 @@ export default async function Klasse({
             <p className="text-sm text-muted">Angemeldet als</p>
             <p className="font-semibold">{session.learner.pseudonym}</p>
           </div>
-          <form action={leave}>
-            <input type="hidden" name="klasse" value={klasse} />
-            <button type="submit" className="min-h-11 rounded-lg border border-line bg-card px-4">
-              Abmelden
-            </button>
-          </form>
+          <div className="flex flex-wrap gap-2">
+            <Link href={`/${klasse}/fotos`} className="min-h-11 inline-flex items-center rounded-lg border border-line bg-card px-4">
+              Meine Fotos
+            </Link>
+            <form action={leave}>
+              <input type="hidden" name="klasse" value={klasse} />
+              <button type="submit" className="min-h-11 rounded-lg border border-line bg-card px-4">
+                Abmelden
+              </button>
+            </form>
+          </div>
         </header>
         <h1 className="text-2xl font-semibold">Deine Module</h1>
         {modules.length === 0 ? (

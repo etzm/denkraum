@@ -1,18 +1,16 @@
 {
-  "name": "@denkraum/mod-deutsch-schreibwerkstatt",
+  "name": "@denkraum/sdk",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./module.ts",
-    "./domain": "./domain/index.ts",
-    "./schemas": "./schemas/index.ts",
-    "./app": "./app.tsx"
+    ".": "./src/index.ts"
   },
   "dependencies": {
-    "@denkraum/capture": "workspace:*",
     "@denkraum/core": "workspace:*",
-    "@denkraum/sdk": "workspace:*",
+    "@denkraum/db": "workspace:*",
+    "@denkraum/llm": "workspace:*",
+    "@denkraum/privacy": "workspace:*",
     "zod": "^4.6.5"
   },
   "peerDependencies": {

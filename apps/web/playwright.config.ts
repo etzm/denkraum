@@ -16,7 +16,14 @@ export default defineConfig({
   webServer: {
     command: `node scripts/seed.ts --e2e && next start -p ${port}`,
     url: `http://127.0.0.1:${port}`,
-    env: { DATABASE_URL: dataDir, NEXT_TELEMETRY_DISABLED: "1", LLM_PROVIDER: "mock" },
+    env: {
+      DATABASE_URL: dataDir,
+      BLOB_STORE: "memory",
+      // Test-only key (32 zero bytes); production refuses to start without a real one.
+      BLOB_ENCRYPTION_KEY: Buffer.alloc(32).toString("base64"),
+      NEXT_TELEMETRY_DISABLED: "1",
+      LLM_PROVIDER: "mock",
+    },
     reuseExistingServer: false,
     timeout: 120_000,
   },

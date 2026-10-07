@@ -1,4 +1,4 @@
-import { connectDb, createMemoryBlobStore, type BlobStore, type Db } from "@denkraum/db";
+import { connectDb, createBlobStoreFromEnv, type BlobStore, type Db } from "@denkraum/db";
 
 // One connection per server process. Without DATABASE_URL, local development uses PGlite
 // on disk, so `pnpm dev` works without Docker.
@@ -9,8 +9,8 @@ export function getDb(): Promise<Db> {
   return globalForDb.denkraumDb;
 }
 
-/** P1 replaces this with the S3 store for the private EU bucket. */
+/** Encrypted photo storage: local directory or S3 (BLOB_STORE, see .env.example). */
 export function getBlobStore(): BlobStore {
-  globalForDb.denkraumBlobs ??= createMemoryBlobStore();
+  globalForDb.denkraumBlobs ??= createBlobStoreFromEnv();
   return globalForDb.denkraumBlobs;
 }

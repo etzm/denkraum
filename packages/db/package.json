@@ -4,9 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./schema": "./src/schema.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.900.0",
     "@denkraum/core": "workspace:*",
     "@denkraum/privacy": "workspace:*",
     "@electric-sql/pglite": "^0.5.8",

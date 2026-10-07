@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@source "../../../../packages/capture/src";
+@source "../../../../modules";
 
 /*
  * Identity: squared exercise paper, ink blue, and the three side colours of the right triangle

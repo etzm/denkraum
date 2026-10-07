@@ -24,3 +24,13 @@ export async function leave(formData: FormData): Promise<void> {
   await endSession();
   redirect(`/${canonicalSlug(String(formData.get("klasse") ?? "")) ?? ""}`);
 }
+
+export async function deletePhotos(formData: FormData): Promise<void> {
+  const { deleteUploadImages } = await import("@denkraum/sdk");
+  const { currentLearner } = await import("@/lib/session.ts");
+  const { getBlobStore } = await import("@/lib/db.ts");
+  const session = await currentLearner();
+  if (!session) redirect("/");
+  await deleteUploadImages(await getDb(), getBlobStore(), session.learner.id, String(formData.get("upload") ?? ""));
+  redirect(`/${slugForKlasse(session.group.klasse)}/fotos?geloescht=1`);
+}

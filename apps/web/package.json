@@ -12,12 +12,14 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@denkraum/capture": "workspace:*",
     "@denkraum/core": "workspace:*",
     "@denkraum/db": "workspace:*",
     "@denkraum/llm": "workspace:*",
     "@denkraum/mod-deutsch-schreibwerkstatt": "workspace:*",
     "@denkraum/mod-mathematik-trigonometrie": "workspace:*",
     "@denkraum/privacy": "workspace:*",
+    "@denkraum/sdk": "workspace:*",
     "next": "^16.3.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0"

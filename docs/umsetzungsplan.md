@@ -327,9 +327,14 @@ Umgesetzt am 5. Oktober 2026:
   - Für "keine Wiederholung in 10 Ziehungen" braucht jede Station mindestens 14 freigegebene Übungen; vorhanden sind 14 insgesamt.
   - Alle Inhalte sind `approved: false`, bis sie freigegeben sind.
 
+Umgesetzt am 7. Oktober 2026:
+
+- Startseite und Einstieg je Klasse unter `denkraum.martinetzrodt.com` (D-026).
+- **P1:** Foto-Pipeline (D-027), Modul-SDK (D-025, docs/module-sdk.md), Adapter für OpenAI-kompatible Modelle (D-004), Seite "Meine Fotos".
+
 Als Nächstes:
 
-1. **P1:** Foto-Pipeline im Browser (Neukodierung, Skalierung, mehrseitig), S3-Speicher in der EU, Upload-Route mit Metadaten-Prüfung, Transkriptions-Bestätigung als gemeinsame Komponente.
+1. **P1 (erledigt):** Foto-Pipeline im Browser (Neukodierung, Skalierung, mehrseitig), S3-Speicher in der EU, Upload-Route mit Metadaten-Prüfung, Transkriptions-Bestätigung als gemeinsame Komponente.
 2. **A1:** Lektion 4 als Durchstich auf der Plattform, mit Arbeitsblatt am iPad (D-012).
 3. **B1:** Mission m-04-01 mit getipptem Text.
 4. **P2:** Ansicht für Lehrkraft und Eltern (Lesecode), PWA-Manifest und Offline, Container für die App.
