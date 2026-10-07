@@ -1,5 +1,6 @@
 /**
- * Creates two demo groups for local development and prints their join codes.
+ * Creates two demo groups for local development and prints their join codes, and the
+ * teacher code of the class.
  * Usage: pnpm --filter @denkraum/web seed
  * With --e2e the codes are fixed, for the end-to-end tests.
  */
@@ -17,4 +18,10 @@ const groups = await db
   ])
   .returning();
 for (const g of groups) console.log(`${g.label}: ${g.joinCode}`);
+const klasse10 = groups.find((g) => g.klasse === 10)!;
+const [teacher] = await db
+  .insert(schema.viewers)
+  .values({ groupId: klasse10.id, role: "teacher", readCode: e2e ? "E2ET-EACH" : generateAccessCode() })
+  .returning();
+console.log(`${klasse10.label}, Lehrkraft: ${teacher!.readCode}`);
 process.exit(0);

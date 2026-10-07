@@ -1,7 +1,18 @@
 export { createModuleAi, pickPrompt } from "./ai.ts";
 export type { ModuleAi, ModuleAiDeps, ModuleAiRequest } from "./ai.ts";
 export { defineModuleDefinition } from "./module.ts";
-export type { ActionResult, BoundAction, GroupInfo, LearnerInfo, ModuleAction, ModuleContext, ModuleDefinition } from "./module.ts";
+export type {
+  ActionResult,
+  BoundAction,
+  GroupInfo,
+  LearnerInfo,
+  ModuleAction,
+  ModuleContext,
+  ModuleDefinition,
+  TeacherAction,
+  TeacherContext,
+  TeacherView,
+} from "./module.ts";
 export {
   acceptUpload,
   createModuleUploads,

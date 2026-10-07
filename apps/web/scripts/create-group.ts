@@ -1,5 +1,6 @@
 /**
- * Creates a class or a home pilot group and prints its join code (DECISIONS.md D-017).
+ * Creates a class or a home pilot group and prints its join code; a class also gets a teacher
+ * code for the teacher view (DECISIONS.md D-017, D-030).
  * Usage:
  *   node apps/web/scripts/create-group.ts --klasse 10 --label "10b Mathe" --ende 2027-07-31
  *   node apps/web/scripts/create-group.ts --klasse 7 --kind individual --label "Pilot Schreibwerkstatt" --ende 2027-07-31
@@ -34,5 +35,12 @@ const [group] = await db
   .returning();
 console.log(`Gruppe "${group!.label}" (${schulart}, Klasse ${klasse}) bis ${values.ende}`);
 console.log(`Code für die Schülerinnen und Schüler: ${group!.joinCode}`);
+if (group!.kind === "class") {
+  const [teacher] = await db
+    .insert(schema.viewers)
+    .values({ groupId: group!.id, role: "teacher", readCode: generateAccessCode() })
+    .returning();
+  console.log(`Code für die Lehrkraft: ${teacher!.readCode} (nur an die Lehrkraft geben)`);
+}
 console.log(`Einstieg: https://denkraum.martinetzrodt.com/klasse${klasse}`);
 process.exit(0);

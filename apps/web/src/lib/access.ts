@@ -7,6 +7,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 export type EnterResult =
   | { ok: true; kind: "joined" | "resumed"; learnerId: string; klasse: number }
+  | { ok: true; kind: "teacher"; viewerId: string; klasse: number }
   | { ok: false; error: "format" | "unknown" | "ended" };
 
 function hashToken(token: string): string {
@@ -14,8 +15,9 @@ function hashToken(token: string): string {
 }
 
 /**
- * One input field for children: a group code creates a new learner with a generated
- * pseudonym; a personal code continues as that learner.
+ * One input field for everyone: a group code creates a new learner with a generated
+ * pseudonym; a personal code continues as that learner; a teacher code opens the
+ * group for its teacher (DECISIONS.md D-017). Parent codes follow with the parent view.
  */
 export async function enterWithCode(db: Db, input: string, now = new Date()): Promise<EnterResult> {
   const code = normalizeAccessCode(input);
@@ -29,6 +31,15 @@ export async function enterWithCode(db: Db, input: string, now = new Date()): Pr
     if (!group || group.endsAt <= now) return { ok: false, error: "ended" };
     await db.update(schema.learners).set({ lastActiveAt: now }).where(eq(schema.learners.id, existing.id));
     return { ok: true, kind: "resumed", learnerId: existing.id, klasse: group.klasse };
+  }
+
+  const viewer = await db.query.viewers.findFirst({
+    where: and(eq(schema.viewers.readCode, code), eq(schema.viewers.role, "teacher")),
+  });
+  if (viewer) {
+    const group = await db.query.groups.findFirst({ where: eq(schema.groups.id, viewer.groupId) });
+    if (!group || group.endsAt <= now) return { ok: false, error: "ended" };
+    return { ok: true, kind: "teacher", viewerId: viewer.id, klasse: group.klasse };
   }
 
   const group = await db.query.groups.findFirst({ where: eq(schema.groups.joinCode, code) });
@@ -50,16 +61,25 @@ export async function enterWithCode(db: Db, input: string, now = new Date()): Pr
   return { ok: true, kind: "joined", learnerId: learner!.id, klasse: group.klasse };
 }
 
-/** Returns the cookie token. Only its hash is stored. */
-export async function createSession(db: Db, learnerId: string, now = new Date()): Promise<string> {
+async function insertSession(db: Db, owner: { learnerId: string } | { viewerId: string }, now: Date): Promise<string> {
   const token = randomBytes(32).toString("base64url");
   await db.insert(schema.sessions).values({
+    ...owner,
     tokenHash: hashToken(token),
-    learnerId,
     createdAt: now,
     expiresAt: new Date(now.getTime() + SESSION_DAYS * DAY_MS),
   });
   return token;
+}
+
+/** Returns the cookie token. Only its hash is stored. */
+export function createSession(db: Db, learnerId: string, now = new Date()): Promise<string> {
+  return insertSession(db, { learnerId }, now);
+}
+
+/** Session of a teacher (viewer). Same cookie, same rules; it never resolves to a learner. */
+export function createViewerSession(db: Db, viewerId: string, now = new Date()): Promise<string> {
+  return insertSession(db, { viewerId }, now);
 }
 
 export async function findLearnerBySession(db: Db, token: string, now = new Date()) {
@@ -69,6 +89,24 @@ export async function findLearnerBySession(db: Db, token: string, now = new Date
     .innerJoin(schema.learners, eq(schema.sessions.learnerId, schema.learners.id))
     .innerJoin(schema.groups, eq(schema.learners.groupId, schema.groups.id))
     .where(and(eq(schema.sessions.tokenHash, hashToken(token)), gt(schema.sessions.expiresAt, now), gt(schema.groups.endsAt, now)));
+  return row ?? null;
+}
+
+/** The teacher of a session, with the group; null for learner sessions, other roles and ended groups. */
+export async function findViewerBySession(db: Db, token: string, now = new Date()) {
+  const [row] = await db
+    .select({ viewer: schema.viewers, group: schema.groups })
+    .from(schema.sessions)
+    .innerJoin(schema.viewers, eq(schema.sessions.viewerId, schema.viewers.id))
+    .innerJoin(schema.groups, eq(schema.viewers.groupId, schema.groups.id))
+    .where(
+      and(
+        eq(schema.sessions.tokenHash, hashToken(token)),
+        gt(schema.sessions.expiresAt, now),
+        gt(schema.groups.endsAt, now),
+        eq(schema.viewers.role, "teacher"),
+      ),
+    );
   return row ?? null;
 }
 
