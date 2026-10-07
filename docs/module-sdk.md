@@ -66,7 +66,7 @@ Die Komponente kodiert jedes Foto im Browser neu (ohne EXIF/GPS), der Server pr�
 ## Eigene Tabellen
 
 ```ts
-import { learners } from "@denkraum/db/schema";
+import { learners, pgTable, text } from "@denkraum/sdk/db";
 export const blaetter = pgTable("trig_worksheets", {
   id: text("id").primaryKey().$defaultFn(() => crypto.randomUUID()),
   learnerId: text("learner_id").notNull().references(() => learners.id, { onDelete: "cascade" }),
@@ -74,6 +74,7 @@ export const blaetter = pgTable("trig_worksheets", {
 });
 ```
 
+- Module importieren Tabellen-Bausteine, Plattform-Tabellen und Abfrage-Operatoren aus `@denkraum/sdk/db`; sie brauchen keine eigene Abhängigkeit auf `drizzle-orm` oder `@denkraum/db`.
 - Tabellennamen mit Modul-Präfix (`trig_`, `sw_`).
 - Immer per Fremdschlüssel mit `onDelete: "cascade"` an `learners` hängen, damit Löschjob und Löschung je Pseudonym auch Modul-Daten entfernen.
 - Die Datei in `packages/db/drizzle.config.ts` unter `schema` eintragen und `pnpm db:generate` ausführen.

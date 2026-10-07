@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./schema": "./src/schema.ts"
+    "./schema": "./src/schema.ts",
+    "./pg-core": "./src/pg-core.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.900.0",
