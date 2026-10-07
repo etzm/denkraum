@@ -336,6 +336,13 @@ Umgesetzt am 7. Oktober 2026:
 
 - **A1:** Lektion 4 vollständig: Niveau, Erklärung mit interaktivem Dreieck, Taschenrechner-Check, Musterbeispiel, Lückenaufgaben, Arbeitsblatt am iPad mit Blatt-Code, Foto, KI-Transkription mit Bestätigung, Prüfung per Code, KI-Rückmeldung mit Kennzeichnung, Lösungsweg nach zwei Fehlversuchen (Modul-DECISIONS T-28 bis T-41). Noch nicht mit einem echten Modell getestet.
 
+Umgesetzt am 7. Oktober 2026 aus dem Marktvergleich (Abschnitt 10):
+
+- **Ansicht für Lehrkräfte, erster Teil (P2):** Anmeldung mit dem Lehrkraft-Code im selben Feld wie die Kinder, Gruppenseite mit Klassencode und Pseudonymen, Modulseiten über `teacher` im SDK, ohne KI und ohne Fotos (D-030).
+- **K1 Fehlerbild der Klasse:** Trigonometrie, Lektion 4, je Aufgabe und für die Lektion (D-030, Modul-DECISIONS T-42).
+- **K5 Korrektur durch die Lehrkraft:** neuer Status oder Versuch ohne Wertung, immer mit Begründung, als Protokoll; das Kind sieht Korrektur und Begründung (D-031, T-43).
+- **K6 Unsichere Stellen markieren:** im Bestätigungsschritt der Trigonometrie, Prompt `transcribe` Version 2 (D-032, T-44). Die Schreibwerkstatt folgt mit der Handschrift (B2).
+
 Offene Plattform-Punkte aus B1 und A1 (für P2):
 - (erledigt, D-029) Export je Pseudonym mit Modul-Tabellen über Export-Haken.
 - Hilfsfunktion für getippte Abgaben im SDK (heute schreibt das Modul `uploads`, `transcripts`, `feedback` selbst).
@@ -347,7 +354,7 @@ Als Nächstes:
 1. **P1 (erledigt):** Foto-Pipeline im Browser (Neukodierung, Skalierung, mehrseitig), S3-Speicher in der EU, Upload-Route mit Metadaten-Prüfung, Transkriptions-Bestätigung als gemeinsame Komponente.
 2. **A1:** Lektion 4 als Durchstich auf der Plattform, mit Arbeitsblatt am iPad (D-012).
 3. **B1:** Mission m-04-01 mit getipptem Text.
-4. **P2:** Ansicht für Lehrkraft und Eltern (Lesecode), PWA-Manifest und Offline, Container für die App.
+4. **P2:** Ansicht für Lehrkraft und Eltern (Lesecode), PWA-Manifest und Offline, Container für die App. Anmeldung der Lehrkraft und erste Modulseiten sind erledigt (D-030); es fehlen Lektionen freischalten und Niveau setzen (D-017) und die Ansicht für Eltern.
 
 ---
 
@@ -383,9 +390,9 @@ Stand: 5. Oktober 2026. Grundlage sind die Website kiddom.co und Pressemitteilun
 
 ### 10.3 Was Denkraum übernehmen kann
 
-Alle Punkte sind Vorschläge. Was angenommen wird, kommt als Entscheidung in `DECISIONS.md`.
+Alle Punkte sind Vorschläge. Was angenommen wird, kommt als Entscheidung in `DECISIONS.md`. Angenommen und umgesetzt sind K1, K5 und K6 (7. Oktober 2026).
 
-**K1. Fehlerbild der Klasse** (nach Atlas)
+**K1. Fehlerbild der Klasse** (angenommen und umgesetzt: D-030; nach Atlas)
 - Die Ansicht für Lehrkräfte zeigt je Lektion und Aufgabe, wie oft welcher Fehlertyp (F1 bis F13) vorkam und bei welchen Pseudonymen.
 - Die Daten entstehen schon heute in `verify()`. Kein Sprachmodell nötig.
 - Phase P2 (Ansicht für Lehrkräfte). Aufwand klein.
@@ -405,12 +412,12 @@ Alle Punkte sind Vorschläge. Was angenommen wird, kommt als Entscheidung in `DE
 - KI-Verordnung: Gruppen, die den Lernprozess steuern, fallen unter Anhang III Nr. 3 lit. b. Deshalb nur ein Vorschlag per Code; die Entscheidung trifft die Lehrkraft, und die Einschätzung nach Art. 6 Abs. 3 wird dokumentiert. Die offene Frage zum Profiling (Abschnitt 5.3) betrifft diesen Punkt direkt.
 - Erweitert die Aktionen des Lehrkraft-Codes (D-017). Phase A3. Aufwand mittel.
 
-**K5. Korrektur durch die Lehrkraft** (nach Atlas)
+**K5. Korrektur durch die Lehrkraft** (angenommen und umgesetzt: D-031; nach Atlas)
 - Die Lehrkraft kann das Ergebnis von `verify()` überstimmen und einen weiteren Versuch freigeben. Jede Korrektur wird mit kurzer Begründung protokolliert.
 - Das stärkt die menschliche Aufsicht (Art. 14 KI-Verordnung) und D-006. Gehäufte Korrekturen zeigen Lücken im Fehlerkatalog, zum Beispiel bei F9.
 - Erweitert die Aktionen des Lehrkraft-Codes (D-017). Phase P2. Aufwand klein bis mittel.
 
-**K6. Unsichere Stellen markieren, Original daneben** (nach Paper Score)
+**K6. Unsichere Stellen markieren, Original daneben** (angenommen und umgesetzt: D-032; nach Paper Score)
 - Die Transkription markiert unsichere Lesungen (`[?]` wie in Spec B), statt zu raten. Im Bestätigungsschritt steht das Foto neben dem Transkript, die markierten Stellen sind hervorgehoben.
 - Gehört in die gemeinsame Bestätigungskomponente beider Module.
 - Phase P1. Aufwand klein.
@@ -484,8 +491,8 @@ Alle Punkte sind Vorschläge. Was angenommen wird, kommt als Entscheidung in `DE
 
 | Phase | Vorschläge |
 |---|---|
-| P1 | K6 |
-| P2 | K1, K5, K9, K13 |
+| P1 | K6 (umgesetzt, D-032) |
+| P2 | K1 (umgesetzt, D-030), K5 (umgesetzt, D-031), K9, K13 |
 | A2 | K2 |
 | A3 | K3, K4, K8, K11 |
 | später | K7, K10, K12, K14 |

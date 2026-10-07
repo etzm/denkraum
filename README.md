@@ -35,7 +35,7 @@ Voraussetzungen: Node 22.12 oder neuer, pnpm 10.
 ```bash
 pnpm install
 cp .env.example .env
-pnpm seed        # legt zwei Demo-Gruppen an und zeigt ihre Codes
+pnpm seed        # legt zwei Demo-Gruppen an und zeigt ihre Codes und den Lehrkraft-Code
 pnpm dev         # http://localhost:3000, Code eingeben
 pnpm test        # alle Tests, ohne Datenbank-Server und ohne API-Schlüssel
 ```
