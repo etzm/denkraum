@@ -91,7 +91,38 @@ export const stationSchema = z.object({
 
 export type ExerciseStation = z.infer<typeof stationSchema>;
 
+/** Rubric dimensions A to D (spec 7.1). */
+export const RUBRIC_DIMENSIONS = ["aufbau", "argumentation", "sprache", "richtigkeit"] as const;
+export type RubricDimension = (typeof RUBRIC_DIMENSIONS)[number];
+
+/** Rubric as P4 receives it (spec 7.1). One per writing form and Niveau. */
+export const rubricSchema = z.object({
+  id: z.string().regex(/^[a-z_]+-[me]$/),
+  schreibform: z.enum(["stellungnahme", "eroerterung_linear"]),
+  niveau: niveauSchema,
+  dimensions: z
+    .array(
+      z.object({
+        id: z.enum(RUBRIC_DIMENSIONS),
+        label: text(40),
+        note: text(200).optional(),
+        /** Descriptions for 0, 1, 2 and 3 stars. */
+        levels: z.array(text(200)).length(4),
+      }),
+    )
+    .length(4)
+    .refine((dims) => dims.map((d) => d.id).join() === RUBRIC_DIMENSIONS.join(), {
+      message: "dimensions must be A to D in order",
+    }),
+  /** E bonus criteria, one star each; rated only with Niveau E (spec 7.1). */
+  eBonus: z.array(text(160)).length(3),
+  approved: z.boolean(),
+});
+
+export type Rubric = z.infer<typeof rubricSchema>;
+
 export const missionFileSchema = z.array(missionSchema);
 export const helpCardFileSchema = z.array(helpCardSchema);
 export const checklistFileSchema = z.array(checklistSchema);
 export const stationFileSchema = z.array(stationSchema);
+export const rubricFileSchema = z.array(rubricSchema);
