@@ -6,7 +6,7 @@ export const metadata = { title: "Datenschutz | Denkraum" };
  */
 export default function Datenschutz() {
   return (
-    <article className="space-y-8 leading-relaxed">
+    <article className="max-w-2xl mx-auto space-y-8 leading-relaxed">
       <h1 className="text-2xl font-semibold">Datenschutz</h1>
       <p className="rounded-lg border border-line p-3 text-sm text-muted">Entwurf. Platzhalter in eckigen Klammern werden vor dem Einsatz ergänzt.</p>
 
