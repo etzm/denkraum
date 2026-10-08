@@ -11,6 +11,7 @@ import {
   transcripts,
   uniqueIndex,
   uploads,
+  viewers,
 } from "@denkraum/sdk/db";
 
 /**
@@ -97,4 +98,28 @@ export const trigResults = pgTable(
     index("trig_results_learner_idx").on(t.learnerId, t.taskId),
     uniqueIndex("trig_results_sheet_task_idx").on(t.worksheetId, t.taskId),
   ],
+);
+
+/**
+ * Corrections by the teacher (DECISIONS.md D-031, module DECISIONS T-43): an event log, never
+ * overwritten. The latest row per result is in force; "clear" takes the correction back.
+ */
+export const trigOverrides = pgTable(
+  "trig_overrides",
+  {
+    id: id(),
+    learnerId: learnerId(),
+    resultId: text("result_id")
+      .notNull()
+      .references(() => trigResults.id, { onDelete: "cascade" }),
+    /** Who corrected; kept as a pseudonymous id, emptied if the teacher code is removed. */
+    viewerId: text("viewer_id").references(() => viewers.id, { onDelete: "set null" }),
+    kind: text("kind", { enum: ["status", "void", "clear"] }).notNull(),
+    /** The new status, only for kind "status". */
+    status: text("status", { enum: ["correct", "partially_correct", "incorrect", "not_found"] }),
+    /** Shown to the learner too. */
+    reason: text("reason").notNull(),
+    createdAt: createdAt(),
+  },
+  (t) => [index("trig_overrides_learner_idx").on(t.learnerId), index("trig_overrides_result_idx").on(t.resultId)],
 );

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { connectDb, eq, schema, type Db } from "@denkraum/db";
-import { createSession, deleteSession, enterWithCode, findLearnerBySession } from "./access.ts";
+import { createSession, createViewerSession, deleteSession, enterWithCode, findLearnerBySession, findViewerBySession } from "./access.ts";
 import { MODULES, modulesFor } from "./modules.ts";
 
 const now = new Date("2026-10-20T08:00:00Z");
@@ -27,7 +27,7 @@ describe("enterWithCode", () => {
     const joined = await enterWithCode(db, "KXAS-SE29", now);
     const learner = await db.query.learners.findFirst();
     const resumed = await enterWithCode(db, learner!.personalCode, now);
-    expect(resumed).toEqual({ ok: true, kind: "resumed", learnerId: joined.ok ? joined.learnerId : "", klasse: 10 });
+    expect(resumed).toEqual({ ok: true, kind: "resumed", learnerId: joined.ok && joined.kind !== "teacher" ? joined.learnerId : "", klasse: 10 });
   });
 
   it("rejects malformed, unknown and ended codes", async () => {
@@ -37,10 +37,44 @@ describe("enterWithCode", () => {
   });
 });
 
+describe("teacher codes", () => {
+  async function addViewer(joinCode: string, role: "teacher" | "parent", readCode: string) {
+    const group = await db.query.groups.findFirst({ where: eq(schema.groups.joinCode, joinCode) });
+    const [viewer] = await db.insert(schema.viewers).values({ groupId: group!.id, role, readCode }).returning();
+    return viewer!;
+  }
+
+  it("opens the group for its teacher without creating a learner", async () => {
+    const viewer = await addViewer("KXAS-SE29", "teacher", "TCHR-CD23");
+    expect(await enterWithCode(db, "tchr cd23", now)).toEqual({ ok: true, kind: "teacher", viewerId: viewer.id, klasse: 10 });
+    expect(await db.select().from(schema.learners)).toHaveLength(0);
+  });
+
+  it("does not accept parent codes yet and refuses ended groups", async () => {
+    await addViewer("KXAS-SE29", "parent", "PRNT-CD23");
+    expect(await enterWithCode(db, "PRNT-CD23", now)).toEqual({ ok: false, error: "unknown" });
+    await addViewer("AXTE-GRPE", "teacher", "TCHR-AXT2");
+    expect(await enterWithCode(db, "TCHR-AXT2", now)).toEqual({ ok: false, error: "ended" });
+  });
+
+  it("keeps teacher and learner sessions apart", async () => {
+    const viewer = await addViewer("KXAS-SE29", "teacher", "TCHR-CD23");
+    const teacherToken = await createViewerSession(db, viewer.id, now);
+    expect((await findViewerBySession(db, teacherToken, now))?.group.label).toBe("10b");
+    expect(await findLearnerBySession(db, teacherToken, now)).toBeNull();
+
+    const joined = await enterWithCode(db, "KXAS-SE29", now);
+    if (!joined.ok || joined.kind === "teacher") throw new Error("join failed");
+    const learnerToken = await createSession(db, joined.learnerId, now);
+    expect(await findViewerBySession(db, learnerToken, now)).toBeNull();
+    expect(await findViewerBySession(db, teacherToken, new Date("2027-08-01"))).toBeNull();
+  });
+});
+
 describe("sessions", () => {
   it("stores only a hash and ends cleanly", async () => {
     const joined = await enterWithCode(db, "KXAS-SE29", now);
-    if (!joined.ok) throw new Error("join failed");
+    if (!joined.ok || joined.kind === "teacher") throw new Error("join failed");
     const token = await createSession(db, joined.learnerId, now);
     const [stored] = await db.select().from(schema.sessions);
     expect(stored!.tokenHash).not.toBe(token);

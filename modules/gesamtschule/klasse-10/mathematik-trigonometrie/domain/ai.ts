@@ -29,7 +29,15 @@ export const aiTranscribedTaskSchema = z.object({
   approach: z.string().max(500).nullable(),
   intermediate_values: z.array(z.object({ label: z.string().max(80), value: z.number().nullable() })).max(20),
   final_answers: z
-    .array(z.object({ quantity: z.string().max(20), value: z.number().nullable(), unit: z.string().max(12).nullable() }))
+    .array(
+      z.object({
+        quantity: z.string().max(20),
+        value: z.number().nullable(),
+        unit: z.string().max(12).nullable(),
+        /** Read, but not sure (prompt version 2, D-032). Unreadable values are null instead. */
+        uncertain: z.boolean(),
+      }),
+    )
     .max(10),
   answer_sentence_present: z.boolean(),
   transcription_confidence: z.number().min(0).max(1),
@@ -47,6 +55,54 @@ export type AiTranscription = z.infer<typeof aiTranscriptionSchema>;
 
 /** Below this confidence the confirm screen asks for a new photo (spec A 5.6). */
 export const LOW_CONFIDENCE = 0.6;
+
+const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
+
+/**
+ * A transcription as stored. Those from prompt version 1 have no `uncertain` flag; their
+ * values read as certain. Returns null when the stored value is no transcription.
+ */
+export function parseStoredTranscription(value: unknown): AiTranscription | null {
+  const upgraded =
+    isRecord(value) && Array.isArray(value.tasks)
+      ? {
+          ...value,
+          tasks: value.tasks.map((task: unknown) =>
+            isRecord(task) && Array.isArray(task.final_answers)
+              ? { ...task, final_answers: task.final_answers.map((a: unknown) => (isRecord(a) && !("uncertain" in a) ? { ...a, uncertain: false } : a)) }
+              : task,
+          ),
+        }
+      : value;
+  const parsed = aiTranscriptionSchema.safeParse(upgraded);
+  return parsed.success ? parsed.data : null;
+}
+
+/** "unreadable": the task was found, but this value could not be read. "uncertain": read, but please check. */
+export type ReadingFlag = "unreadable" | "uncertain";
+
+export interface ReadingCheck {
+  /** Per sought quantity; quantities read with certainty are missing. */
+  fields: Partial<Record<string, ReadingFlag>>;
+  /** The task was found, but read with low confidence as a whole. */
+  lowConfidence: boolean;
+}
+
+/**
+ * Which fields the confirm screen marks for checking (D-032, module DECISIONS T-44): the model
+ * marks what it is unsure about instead of guessing, the learner compares with the photo.
+ * Nothing is marked for a task that was not found; the screen says so for the whole task.
+ */
+export function readingCheck(read: AiTranscribedTask | undefined, sought: readonly string[]): ReadingCheck {
+  if (!read?.found) return { fields: {}, lowConfidence: false };
+  const fields: Partial<Record<string, ReadingFlag>> = {};
+  for (const quantity of sought) {
+    const answer = read.final_answers.find((a) => a.quantity === quantity);
+    if (!answer || answer.value === null) fields[quantity] = "unreadable";
+    else if (answer.uncertain) fields[quantity] = "uncertain";
+  }
+  return { fields, lowConfidence: read.transcription_confidence < LOW_CONFIDENCE };
+}
 
 export interface SheetForAi {
   sheetCode: string;
@@ -279,11 +335,15 @@ export function parseRequestInput(userText: string): unknown {
   return JSON.parse(end >= 0 ? userText.slice(0, end) : userText);
 }
 
-/** Reads every task correctly: the right values with units, sketch and answer sentence present. */
+/**
+ * Reads every task correctly: the right values with units, sketch and answer sentence present.
+ * The last value of the last task is marked as uncertain, so the confirm screen shows a marked
+ * field in development and in the end-to-end tests (D-032).
+ */
 export function mockTranscription(input: TranscribeInput): AiTranscription {
   return {
     sheet_id: input.sheet_code,
-    tasks: input.tasks.map((t) => {
+    tasks: input.tasks.map((t, ti) => {
       const task = getTask(t.task_id);
       const solution = solve(task.solution_fn, t.given, input.niveau);
       const values = solution.kind === "numeric" ? solution.values : {};
@@ -294,10 +354,11 @@ export function mockTranscription(input: TranscribeInput): AiTranscription {
         sketch_labels_ok: "ok" as const,
         approach: null,
         intermediate_values: [],
-        final_answers: t.sought.map(({ quantity, unit }) => ({
+        final_answers: t.sought.map(({ quantity, unit }, qi) => ({
           quantity,
           value: roundTo(values[quantity] ?? 0, 2),
           unit: unit === "" ? null : unit,
+          uncertain: ti === input.tasks.length - 1 && qi === t.sought.length - 1,
         })),
         answer_sentence_present: true,
         transcription_confidence: 0.95,

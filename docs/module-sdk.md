@@ -86,6 +86,33 @@ export const blaetter = pgTable("trig_worksheets", {
 - Module haben `react`, aber kein `react-dom`. Wartezustände beim Absenden (zum Beispiel "Ich lese deine Lösung …") über eigenen Client-Zustand statt `useFormStatus`.
 - Mit `LLM_PROVIDER=mock` antwortet jedes Modul aus seinen eigenen `mockFixtures`; gleiche Promptnamen in verschiedenen Modulen stören sich nicht.
 
+## Ansicht für Lehrkräfte
+
+Optional. Die Lehrkraft meldet sich mit dem Lehrkraft-Code der Gruppe an (D-017, D-030) und sieht unter `/<klasse>/lehrkraft/m/<modul>/<...pfad>` die Seiten des Moduls:
+
+```tsx
+teacher: {
+  async render(ctx, path, search) {               // ctx: TeacherContext
+    if (path[0] === undefined) return <Overview ctx={ctx} />;
+    return null;                                  // "nicht gefunden"
+  },
+  actions: { async korrigieren(ctx, form) { ... } },   // <form action={ctx.action("korrigieren")}>
+},
+```
+
+| Feld | Inhalt |
+|---|---|
+| `viewer` | `id` der Lehrkraft (pseudonym) |
+| `group` | wie bei `ModuleContext`, dazu `label` |
+| `learners` | alle Lernenden der Gruppe mit `id` und `pseudonym`, sortiert |
+| `basePath` | z. B. `/klasse10/lehrkraft/m/mathematik-trigonometrie` |
+| `db`, `action(name)`, `now` | wie bei `ModuleContext` |
+
+Regeln:
+- Kein `ai` und keine `uploads`: Die Lehrkraft sieht bestätigte Transkripte, keine Fotos (Leitplanken, Abschnitt 4).
+- Jede Abfrage wird über `learners.groupId = ctx.group.id` auf die eigene Gruppe begrenzt, auch bei IDs aus Formularen.
+- Erwachsene werden gesiezt (D-009).
+
 ## Tests
 
 - Fachlogik: Vitest in `tests/` oder neben dem Code. Für Datenbank-Tests: `connectDb("pglite:memory")` und `createMemoryBlobStore()` aus `@denkraum/sdk/testing`.

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { canonicalSlug, classBySlug, slugForKlasse } from "@/lib/classes.ts";
 import { modulesFor } from "@/lib/modules.ts";
-import { currentLearner } from "@/lib/session.ts";
+import { currentLearner, currentViewer } from "@/lib/session.ts";
 import { enter, leave } from "../actions.ts";
 
 const ERRORS: Record<string, string> = {
@@ -69,6 +69,9 @@ export default async function Klasse({
       </div>
     );
   }
+
+  const teacher = await currentViewer();
+  if (teacher) redirect(`/${slugForKlasse(teacher.group.klasse)}/lehrkraft`);
 
   const { fehler } = await searchParams;
   const error = fehler ? ERRORS[fehler] : undefined;

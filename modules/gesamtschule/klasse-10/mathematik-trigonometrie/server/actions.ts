@@ -36,6 +36,7 @@ import {
   asPrior,
   checksOf,
   confirmTranscript,
+  countedOf,
   markSolutionViewed,
   resultsOf,
   resultsOfSheet,
@@ -72,9 +73,12 @@ async function fadedProgress(ctx: ModuleContext) {
 
 async function createSheet(ctx: ModuleContext, niveau: Niveau, withHelp: boolean) {
   const { paper } = lessonTasks(LESSON);
-  const prior = asPrior(await resultsOf(ctx, paper.map((t) => t.id)));
+  const taskIds = paper.map((t) => t.id);
+  // Which tasks: by the corrected results (D-031). Attempt numbers: as stored (T-33).
+  const counted = await countedOf(ctx, taskIds);
+  const stored = asPrior(await resultsOf(ctx, taskIds));
   const seed = newSeed();
-  const plan = planWorksheet(tasksForNextSheet(paper, prior), seed, prior);
+  const plan = planWorksheet(tasksForNextSheet(paper, counted), seed, stored);
   return addWorksheet(ctx, {
     lesson: LESSON,
     niveau,
@@ -212,7 +216,7 @@ const bestaetigen: ModuleAction = async (ctx, form) => {
   if (!stored) return { redirect: `${ctx.basePath}/blatt/${sheet.id}/pruefen?upload=${upload.id}` };
 
   const level = sheet.niveau;
-  const prior = asPrior(await resultsOf(ctx, sheet.taskIds));
+  const prior = await countedOf(ctx, sheet.taskIds);
   let changed = 0;
   let total = 0;
   const evaluated = sheet.taskIds.map((taskId, i) => {
@@ -291,7 +295,7 @@ const loesung: ModuleAction = async (ctx, form) => {
   const taskId = field(form, "task");
   const results = await resultsOf(ctx, [taskId]);
   const own = results.find((r) => r.worksheetId === sheet.id);
-  if (!own || !solutionAvailable(asPrior(results), taskId)) return { redirect: `${ctx.basePath}/blatt/${sheet.id}/ergebnis` };
+  if (!own || !solutionAvailable(await countedOf(ctx, [taskId]), taskId)) return { redirect: `${ctx.basePath}/blatt/${sheet.id}/ergebnis` };
   if (!own.solutionViewed) await markSolutionViewed(ctx, own.id);
   return { redirect: `${ctx.basePath}/blatt/${sheet.id}/loesung/${taskId}` };
 };

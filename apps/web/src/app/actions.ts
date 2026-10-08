@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { enterWithCode } from "@/lib/access.ts";
 import { canonicalSlug, slugForKlasse } from "@/lib/classes.ts";
 import { getDb } from "@/lib/db.ts";
-import { endSession, startSession } from "@/lib/session.ts";
+import { endSession, startSession, startViewerSession } from "@/lib/session.ts";
 
 export async function enter(formData: FormData): Promise<void> {
   const slug = canonicalSlug(String(formData.get("klasse") ?? "")) ?? "";
@@ -14,9 +14,13 @@ export async function enter(formData: FormData): Promise<void> {
     await new Promise((resolve) => setTimeout(resolve, 400));
     redirect(`/${slug}?fehler=${result.error}`);
   }
-  await startSession(result.learnerId);
   // A code always leads to its own class, whichever class page it was typed on.
   const target = slugForKlasse(result.klasse);
+  if (result.kind === "teacher") {
+    await startViewerSession(result.viewerId);
+    redirect(`/${target}/lehrkraft`);
+  }
+  await startSession(result.learnerId);
   redirect(result.kind === "joined" ? `/${target}/willkommen` : `/${target}`);
 }
 

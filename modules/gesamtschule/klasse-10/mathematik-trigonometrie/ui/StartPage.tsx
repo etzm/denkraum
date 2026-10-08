@@ -1,7 +1,8 @@
 import { NIVEAUS } from "@denkraum/core";
 import type { ModuleContext } from "@denkraum/sdk";
 import { fadedState, lessonPassed, lessonTasks, OPEN_LESSONS } from "../domain/lesson.ts";
-import { asPrior, checksOf, resultsOf, worksheetsOf } from "../server/store.ts";
+import { countedResults } from "../domain/overrides.ts";
+import { checksOf, effectiveResultsOf, resultsOf, worksheetsOf } from "../server/store.ts";
 import { buttonPrimary, Card, NIVEAU_TEXT } from "./common.tsx";
 
 const LESSONS = [
@@ -23,9 +24,10 @@ export async function StartPage({ ctx }: { ctx: ModuleContext }) {
     resultsOf(ctx, paper.map((t) => t.id)),
     worksheetsOf(ctx, 4),
   ]);
+  const counted = countedResults(await effectiveResultsOf(ctx, results));
   const fadedDone = faded.filter((t) => fadedState(checks.filter((c) => c.taskId === t.id)).done).length;
-  const paperRight = paper.filter((t) => results.some((r) => r.taskId === t.id && r.status === "correct")).length;
-  const passed = lessonPassed(paper, asPrior(results));
+  const paperRight = paper.filter((t) => counted.some((r) => r.taskId === t.id && r.status === "correct")).length;
+  const passed = lessonPassed(paper, counted);
   const latest = sheets[0];
   const latestEvaluated = latest ? results.some((r) => r.worksheetId === latest.id) : false;
 

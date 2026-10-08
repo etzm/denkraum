@@ -39,6 +39,33 @@ export interface ModuleContext {
 export type ActionResult = { redirect?: string } | void;
 export type ModuleAction = (ctx: ModuleContext, form: FormData) => Promise<ActionResult>;
 
+/**
+ * What a module sees in the teacher view (DECISIONS.md D-017, D-030): the group with its
+ * learners' pseudonyms, the database, and its own teacher actions. No model access and no
+ * photos (docs/datenschutz/README.md, sections 3 and 4).
+ */
+export interface TeacherContext {
+  manifest: ModuleManifest;
+  viewer: { id: string };
+  group: GroupInfo & { label: string };
+  /** All learners of the group, sorted by pseudonym. The mapping to real names stays outside the app. */
+  learners: readonly { id: string; pseudonym: string }[];
+  /** URL of the module's teacher page, for example /klasse10/lehrkraft/m/mathematik-trigonometrie */
+  basePath: string;
+  db: Db;
+  /** Server action bound to one of the module's teacher actions. */
+  action(name: string): BoundAction;
+  now: Date;
+}
+
+export type TeacherAction = (ctx: TeacherContext, form: FormData) => Promise<ActionResult>;
+
+export interface TeacherView {
+  /** Server-rendered page for /<klasse>/lehrkraft/m/<module>/<...path>. Return null for "not found". */
+  render(ctx: TeacherContext, path: string[], search: Record<string, string | undefined>): Promise<ReactNode | null>;
+  actions?: Record<string, TeacherAction>;
+}
+
 export interface ModuleDefinition {
   manifest: ModuleManifest;
   /** Server-rendered page for /<klasse>/m/<module>/<...path>. Return null for "not found". */
@@ -55,6 +82,8 @@ export interface ModuleDefinition {
   exportLearner?: (db: Db, learnerId: string) => Promise<Record<string, unknown[]>>;
   /** Upload kinds this module accepts, with limits. Uploads of other kinds are refused. */
   uploadKinds?: Record<string, { maxPages: number }>;
+  /** Pages and actions for the teacher of a group (optional). */
+  teacher?: TeacherView;
 }
 
 export function defineModuleDefinition(definition: ModuleDefinition): ModuleDefinition {

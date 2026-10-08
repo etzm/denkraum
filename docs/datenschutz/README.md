@@ -17,7 +17,7 @@ Wo eine Frist oder Regel als "Vorschlag" markiert ist, wird sie mit der Schule a
 - Pseudonyme erzeugt das System (zum Beispiel "Blauer Falke 42"); sie werden nicht frei gewählt. Die Zuordnung zu echten Namen führt die Lehrkraft außerhalb des Systems.
 - Druckvorlagen haben kein Namensfeld. Der Auftrag sagt: "Schreib deinen Namen nicht auf das Blatt."
 - Keine Geräte-, Standort- oder Browserdaten über das technisch Nötige hinaus.
-- Lehrkräfte melden sich per E-Mail an (Magic-Link). Ihre E-Mail-Adresse wird nur dafür verwendet.
+- Lehrkräfte melden sich mit dem Lehrkraft-Code ihrer Gruppe an, ohne E-Mail-Adresse (DECISIONS.md, D-017).
 
 ## 2. Datenkategorien und Fristen
 
@@ -26,7 +26,7 @@ Wo eine Frist oder Regel als "Vorschlag" markiert ist, wird sie mit der Schule a
 | Zugang | Gruppencode, Pseudonym, Lesecode | bis Ende des Schuljahres oder Pilots (Vorschlag) |
 | Fotos von Handschrift | Arbeitsblatt, Planungsbogen, Text | 14 Tage, Löschung jederzeit per Knopf; Abweichung nur begründet im Modul-Manifest |
 | Inhalte | Transkripte, getippte Texte, KI-Feedback, Selbsteinschätzung | bis Ende des Schuljahres oder Pilots, vorher Export für Lehrkraft oder Eltern (Vorschlag) |
-| Fortschritt | Punkte, Sterne, Abzeichen, Freischaltungen | wie Inhalte |
+| Fortschritt | Punkte, Sterne, Abzeichen, Freischaltungen, Korrekturen der Lehrkraft mit Begründung | wie Inhalte |
 | Modellaufruf-Protokoll | Modul, Modell, Promptversion, Tokens, Latenz, Kosten, ohne Inhalte | 12 Monate (Vorschlag) |
 | Server-Logs | Zugriffe mit gekürzter IP-Adresse | 7 Tage (Vorschlag) |
 
@@ -49,7 +49,7 @@ Jede Kategorie hat einen Löschjob mit Test. "Nie überschreiben" (Versionierung
 - Vor dem Upload steht der Hinweis: nur das Blatt fotografieren, keine Gesichter, keine Namen.
 - Der Client kodiert jedes Bild über Canvas neu und entfernt dabei EXIF-Daten, auch GPS. Der Server prüft das erneut und entfernt verbleibende Metadaten.
 - Ablage in einem privaten EU-Bucket mit Verschlüsselung. Zugriff nur über signierte URLs mit kurzer Laufzeit.
-- Lehrkräfte sehen Fotos nur, wenn die Schülerin oder der Schüler sie aktiv teilt; sonst nur das bestätigte Transkript.
+- Lehrkräfte sehen Fotos nur, wenn die Schülerin oder der Schüler sie aktiv teilt; sonst nur das bestätigte Transkript. Die Ansicht für Lehrkräfte hat keinen Zugriff auf Fotos und keinen auf die KI (D-030).
 
 ## 5. Browser
 

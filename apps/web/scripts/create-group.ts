@@ -1,5 +1,6 @@
 /**
- * Creates a class or a home pilot group and prints its join code (DECISIONS.md D-017).
+ * Creates a class or a home pilot group and prints its join code; a class also gets a teacher
+ * code for the teacher view (DECISIONS.md D-017, D-030).
  * Usage:
  *   node apps/web/scripts/create-group.ts --klasse 10 --label "10b Mathe" --ende 2027-07-31
  *   node apps/web/scripts/create-group.ts --klasse 7 --kind individual --label "Pilot Schreibwerkstatt" --ende 2027-07-31
@@ -7,7 +8,7 @@
  */
 import { parseArgs } from "node:util";
 import { connectDb, schema } from "@denkraum/db";
-import { generateAccessCode } from "@denkraum/privacy";
+import { addTeacherCode, unusedAccessCode } from "../src/lib/teacher-codes.ts";
 
 const { values } = parseArgs({
   options: {
@@ -30,9 +31,13 @@ const schulart = values.schulart ?? (klasse === 11 ? "gymnasium" : "gesamtschule
 const db = await connectDb(process.env.DATABASE_URL ?? "pglite:./.data/pglite");
 const [group] = await db
   .insert(schema.groups)
-  .values({ kind: values.kind, label: values.label, schulart, klasse, joinCode: generateAccessCode(), endsAt })
+  .values({ kind: values.kind, label: values.label, schulart, klasse, joinCode: await unusedAccessCode(db), endsAt })
   .returning();
 console.log(`Gruppe "${group!.label}" (${schulart}, Klasse ${klasse}) bis ${values.ende}`);
 console.log(`Code für die Schülerinnen und Schüler: ${group!.joinCode}`);
+if (group!.kind === "class") {
+  const teacher = await addTeacherCode(db, group!.joinCode);
+  if (teacher.ok) console.log(`Code für die Lehrkraft: ${teacher.code} (nur an die Lehrkraft geben)`);
+}
 console.log(`Einstieg: https://denkraum.martinetzrodt.com/klasse${klasse}`);
 process.exit(0);
